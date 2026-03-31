@@ -508,7 +508,7 @@ async function startServer() {
 ║    • New User Bonus: 65% win chance for first 3 games        ║
 ║    • Loss Streak Protection: Higher chance after losses      ║
 ║                                                              ║
-║  📱 EasyPaisa Number: 0307 5003001                           ║
+║  📱 EasyPaisa Number: 03075030001                         ║
 ║                                                              ║
 ║  👑 Admin Panel: Triple click "WINPAISA" logo               ║
 ║  💰 Withdrawal: Minimum 500 PKR | Instant                    ║

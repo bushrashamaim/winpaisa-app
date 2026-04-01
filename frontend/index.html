@@ -655,7 +655,7 @@
 <div id="depositModal" class="modal">
     <div class="modal-card">
         <h3>💵 Deposit</h3>
-        <div style="background:#8089a8; padding:12px; border-radius:20px; margin-bottom:12px;">
+        <div style="background:#0a0e1c; padding:12px; border-radius:20px; margin-bottom:12px;">
             <strong>📱 EasyPaisa Account:</strong><br>
             Number: <span class="easypaisa-number">0307 503 0001</span><br>
             Title: Azmer Khan<br>
@@ -699,7 +699,6 @@
     let wheelBet = 100, coinBet = 100, cardBet = 100;
     let coinChoice = "TAILS", selectedCard = null;
     let spinning = false;
-    let wheelFirstPlay = true, coinFirstPlay = true, cardFirstPlay = true;
     let liveWins = ["✨ Ali won 35 PKR ✨", "✨ Sana won 40 PKR ✨", "✨ Rayan won 33 PKR ✨"];
     let users = [];
     let deposits = [];
@@ -789,29 +788,30 @@
         document.getElementById('prizeLegend').innerHTML = WHEEL_PRIZES.map(p => `<div class="legend-badge"><div class="legend-color" style="background:${p.color}"></div><span>${p.label}</span></div>`).join('');
     }
 
-    function getWinResult(isFirst) {
-        if(isFirst) return true;
-        return Math.random() < WHEEL_WIN_CHANCE;
-    }
-
+    // ==================== SPIN WHEEL ====================
     function spinWheel() {
         if(spinning) { showToast("Wait...", true); return; }
         if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
         if(balance < wheelBet) { showToast(`Need ${wheelBet} PKR`, true); return; }
+        
         spinning = true;
         balance -= wheelBet;
         updateBalanceUI(); saveUser();
         playSound('spin');
         
-        const isWin = getWinResult(wheelFirstPlay);
-        let winAmount = 0, selectedPrize = null;
+        const winningPrizes = WHEEL_PRIZES.filter(p => p.value > 0);
+        const losingPrizes = WHEEL_PRIZES.filter(p => p.value === 0);
+        
+        // 40% chance to win
+        const isWin = Math.random() < 0.4;
+        let winAmount = 0;
+        let selectedPrize = null;
+        
         if(isWin) {
-            const winningPrizes = WHEEL_PRIZES.filter(p => p.value > 0);
             selectedPrize = winningPrizes[Math.floor(Math.random() * winningPrizes.length)];
             winAmount = selectedPrize.value;
             balance += winAmount;
         } else {
-            const losingPrizes = WHEEL_PRIZES.filter(p => p.value === 0);
             selectedPrize = losingPrizes[Math.floor(Math.random() * losingPrizes.length)];
         }
         
@@ -836,7 +836,6 @@
             }
             updateBalanceUI(); saveUser();
             spinning = false;
-            wheelFirstPlay = false;
             setTimeout(() => { 
                 wheelCanvas.style.transition = "none"; 
                 wheelCanvas.style.transform = `rotate(${finalRotate % 360}deg)`; 
@@ -845,24 +844,28 @@
         }, 3900);
     }
 
+    // ==================== COIN FLIP (FIXED) ====================
     function playCoinFlip() {
-        if(!currentUser) { showToast("Login first", true); return; }
+        if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
         if(balance < coinBet) { showToast(`Need ${coinBet} PKR`, true); return; }
+        
+        // Deduct bet
         balance -= coinBet;
         updateBalanceUI(); saveUser();
         
-        const isWin = getWinResult(coinFirstPlay);
-        let winAmount = 0;
-        if(isWin) { 
-            winAmount = Math.floor(coinBet * 1.8); 
-            balance += winAmount; 
-        }
+        // Get user's choice
+        const userChoice = coinChoice; // "HEADS" or "TAILS"
         
+        // Random result
+        const outcomes = ['HEADS', 'TAILS'];
+        const result = outcomes[Math.floor(Math.random() * 2)];
+        
+        // Check if user won (choice matches result)
+        const isWin = (userChoice === result);
+        
+        // Animation
         const hand = document.getElementById('hand');
         const coinEl = document.getElementById('coin');
-        const outcomes = ['HEADS', 'TAILS'];
-        const finalResult = outcomes[Math.floor(Math.random() * 2)];
-        const userWon = (coinChoice === finalResult) && isWin;
         
         playSound('flip');
         hand.classList.add('hand-throw');
@@ -881,46 +884,53 @@
             
             setTimeout(() => {
                 clearInterval(flipInterval);
-                coinEl.textContent = finalResult === 'HEADS' ? 'H' : 'T';
+                coinEl.textContent = result === 'HEADS' ? 'H' : 'T';
                 coinEl.classList.remove('coin-full-spin');
                 hand.classList.remove('hand-throw');
                 hand.classList.add('hand-catch');
                 setTimeout(() => hand.classList.remove('hand-catch'), 200);
                 
-                if(userWon && winAmount > 0) { 
-                    showToast(`🎉 WON ${winAmount} PKR! 🎉`, false); 
+                if(isWin) {
+                    // WIN - add 1.8x money
+                    let winAmount = Math.floor(coinBet * 1.8);
+                    balance += winAmount;
+                    showToast(`🎉 YOU WON! ${winAmount} PKR! (${result}) 🎉`, false);
                     addLiveWin(winAmount);
                     playSound('win');
-                } else if(isWin && !userWon && winAmount > 0) { 
-                    showToast(`🎉 WON ${winAmount} PKR! (Bonus Win) 🎉`, false); 
-                    addLiveWin(winAmount);
-                    playSound('win');
-                } else { 
-                    showToast(`😞 Lost ${coinBet} PKR | Result: ${finalResult}`, true);
+                } else {
+                    // LOSE
+                    showToast(`😞 YOU LOSE! Result: ${result} | Your choice: ${userChoice}`, true);
                     playSound('lose');
                 }
-                updateBalanceUI(); saveUser();
-                coinFirstPlay = false;
+                
+                updateBalanceUI(); 
+                saveUser();
             }, 700);
         }, 450);
     }
 
+    // ==================== CARD GAME ====================
     function playCardGame() {
         if(!selectedCard) { showToast("Pick a card!", true); return; }
-        if(!currentUser) { showToast("Login first", true); return; }
+        if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
         if(balance < cardBet) { showToast(`Need ${cardBet} PKR`, true); return; }
+        
+        // Deduct bet
         balance -= cardBet;
         updateBalanceUI(); saveUser();
         
-        const isWin = getWinResult(cardFirstPlay);
+        // Random win chance (33%)
+        const isWin = Math.random() < 0.33;
         let winAmount = 0;
-        if(isWin) { 
-            winAmount = Math.floor(cardBet * 1.8); 
-            balance += winAmount; 
+        
+        if(isWin) {
+            winAmount = Math.floor(cardBet * 1.8);
+            balance += winAmount;
         }
         
         const cardEl = document.querySelector(`.card-item[data-card="${selectedCard}"]`);
         cardEl.style.transform = "rotateY(180deg)";
+        
         setTimeout(() => {
             if(isWin && winAmount > 0) { 
                 showToast(`🎉 WON ${winAmount} PKR! 🎉`, false); 
@@ -931,8 +941,8 @@
                 playSound('lose');
             }
             cardEl.style.transform = "";
-            updateBalanceUI(); saveUser();
-            cardFirstPlay = false;
+            updateBalanceUI(); 
+            saveUser();
         }, 400);
     }
 

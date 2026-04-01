@@ -14,14 +14,12 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 
-// ==================== FRONTEND PATH (FIXED FOR RENDER) ====================
+// ==================== FRONTEND PATH ====================
 const frontendPath = path.join(__dirname, '..', 'frontend');
 console.log('📁 Frontend path:', frontendPath);
 
-// Check if frontend folder exists
 if (!fs.existsSync(frontendPath)) {
     console.error('❌ Frontend folder not found at:', frontendPath);
-    // Try alternative path
     const altPath = path.join(__dirname, 'frontend');
     if (fs.existsSync(altPath)) {
         console.log('✅ Found frontend at:', altPath);
@@ -63,18 +61,16 @@ async function initDatabase() {
             driver: sqlite3.Database
         });
 
-        // Create tables
         await db.exec(`
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 mobile TEXT UNIQUE NOT NULL,
                 name TEXT,
-                balance INTEGER DEFAULT 500,
+                balance INTEGER DEFAULT 0,
                 total_deposited INTEGER DEFAULT 0,
                 total_withdrawn INTEGER DEFAULT 0,
                 games_played INTEGER DEFAULT 0,
                 games_won INTEGER DEFAULT 0,
-                is_admin INTEGER DEFAULT 0,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
             
@@ -93,6 +89,8 @@ async function initDatabase() {
                 user_name TEXT,
                 user_mobile TEXT,
                 amount INTEGER NOT NULL,
+                method TEXT,
+                transaction_id TEXT,
                 screenshot TEXT,
                 status TEXT DEFAULT 'pending',
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -104,6 +102,7 @@ async function initDatabase() {
                 user_name TEXT,
                 user_mobile TEXT,
                 amount INTEGER NOT NULL,
+                method TEXT,
                 account TEXT NOT NULL,
                 status TEXT DEFAULT 'pending',
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -129,7 +128,6 @@ async function initDatabase() {
     }
 }
 
-// ==================== HELPERS ====================
 function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
 }
@@ -158,7 +156,7 @@ app.post('/api/send-otp', async (req, res) => {
     }
 });
 
-// 2. VERIFY OTP
+// 2. VERIFY OTP - NEW USER BALANCE = 0
 app.post('/api/verify-otp', async (req, res) => {
     try {
         const { mobile, otp } = req.body;
@@ -179,7 +177,7 @@ app.post('/api/verify-otp', async (req, res) => {
         if (!user) {
             const result = await db.run(
                 'INSERT INTO users (mobile, name, balance) VALUES (?, ?, ?)',
-                [mobile, `Player_${mobile.slice(-4)}`, 500]
+                [mobile, `Player_${mobile.slice(-4)}`, 0]
             );
             user = await db.get('SELECT * FROM users WHERE id = ?', [result.lastID]);
         }
@@ -209,19 +207,22 @@ app.post('/api/verify-otp', async (req, res) => {
 // 3. DEPOSIT
 app.post('/api/deposit', upload.single('screenshot'), async (req, res) => {
     try {
-        const { userId, userName, userMobile, amount } = req.body;
+        const { userId, userName, userMobile, amount, method, transactionId } = req.body;
         const screenshot = req.file ? `/uploads/${req.file.filename}` : null;
         
         if (!userId || amount < 50) {
             return res.status(400).json({ success: false, message: 'Minimum deposit 50 PKR' });
+        }
+        if (!transactionId) {
+            return res.status(400).json({ success: false, message: 'Transaction ID required' });
         }
         if (!screenshot) {
             return res.status(400).json({ success: false, message: 'Screenshot required' });
         }
         
         await db.run(
-            `INSERT INTO deposits (user_id, user_name, user_mobile, amount, screenshot, status) VALUES (?, ?, ?, ?, ?, ?)`,
-            [userId, userName, userMobile, amount, screenshot, 'pending']
+            `INSERT INTO deposits (user_id, user_name, user_mobile, amount, method, transaction_id, screenshot, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [userId, userName, userMobile, amount, method, transactionId, screenshot, 'pending']
         );
         
         res.json({ success: true, message: 'Deposit submitted! Admin will verify.' });
@@ -234,7 +235,7 @@ app.post('/api/deposit', upload.single('screenshot'), async (req, res) => {
 // 4. WITHDRAW
 app.post('/api/withdraw', async (req, res) => {
     try {
-        const { userId, userName, userMobile, amount, account } = req.body;
+        const { userId, userName, userMobile, amount, method, account } = req.body;
         const user = await db.get('SELECT balance FROM users WHERE id = ?', [userId]);
         
         if (amount < 500) {
@@ -247,8 +248,8 @@ app.post('/api/withdraw', async (req, res) => {
         await db.run('UPDATE users SET balance = balance - ? WHERE id = ?', [amount, userId]);
         await db.run('UPDATE users SET total_withdrawn = total_withdrawn + ? WHERE id = ?', [amount, userId]);
         await db.run(
-            `INSERT INTO withdrawals (user_id, user_name, user_mobile, amount, account, status) VALUES (?, ?, ?, ?, ?, ?)`,
-            [userId, userName, userMobile, amount, account, 'pending']
+            `INSERT INTO withdrawals (user_id, user_name, user_mobile, amount, method, account, status) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [userId, userName, userMobile, amount, method, account, 'pending']
         );
         
         res.json({ success: true, message: 'Withdrawal request submitted' });
@@ -317,23 +318,22 @@ app.post('/api/game/spinwheel', async (req, res) => {
         await db.run('UPDATE users SET balance = balance - ? WHERE id = ?', [betAmount, userId]);
         
         const prizes = [
-            { value: 0, name: "0 PKR - Try Again" },
-            { value: 0, name: "0 PKR - Try Again" },
-            { value: 50, name: "WIN 50 PKR" },
-            { value: 50, name: "WIN 50 PKR" },
-            { value: 100, name: "WIN 100 PKR" },
-            { value: 100, name: "WIN 100 PKR" },
-            { value: 150, name: "WIN 150 PKR" },
-            { value: 200, name: "WIN 200 PKR 🎉" },
-            { value: 300, name: "WIN 300 PKR" },
-            { value: 500, name: "WIN 500 PKR" }
+            { value: 0, name: "0 PKR" },
+            { value: 0, name: "0 PKR" },
+            { value: 50, name: "50 PKR" },
+            { value: 50, name: "50 PKR" },
+            { value: 100, name: "100 PKR" },
+            { value: 100, name: "100 PKR" },
+            { value: 150, name: "150 PKR" },
+            { value: 200, name: "200 PKR 🎉" },
+            { value: 300, name: "300 PKR" },
+            { value: 500, name: "500 PKR" }
         ];
         
         const randomIndex = Math.floor(Math.random() * prizes.length);
         const selected = prizes[randomIndex];
         const isWin = selected.value > 0;
         const winAmount = isWin ? selected.value : 0;
-        const multiplier = isWin ? (selected.value / betAmount).toFixed(1) : 0;
         
         if (isWin) {
             await db.run('UPDATE users SET balance = balance + ? WHERE id = ?', [winAmount, userId]);
@@ -352,7 +352,6 @@ app.post('/api/game/spinwheel', async (req, res) => {
         res.json({
             success: true,
             segment: selected.name,
-            multiplier: parseFloat(multiplier),
             isWin,
             winAmount,
             newBalance: updatedUser.balance
@@ -434,18 +433,50 @@ app.get('/api/live-wins', async (req, res) => {
     }
 });
 
-// 10. ADMIN APIs
-app.get('/api/admin/deposits/pending', async (req, res) => {
+// ==================== ADMIN APIs ====================
+
+// Get all users
+app.get('/api/admin/users', async (req, res) => {
     try {
-        const deposits = await db.all(
-            `SELECT * FROM deposits WHERE status = 'pending' ORDER BY created_at DESC`
-        );
+        const users = await db.all('SELECT * FROM users ORDER BY id DESC');
+        res.json({ success: true, users });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Get all deposits
+app.get('/api/admin/deposits/all', async (req, res) => {
+    try {
+        const deposits = await db.all(`
+            SELECT d.*, u.name as user_name, u.mobile as user_mobile 
+            FROM deposits d 
+            JOIN users u ON d.user_id = u.id 
+            ORDER BY d.created_at DESC
+        `);
         res.json({ success: true, deposits });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
+// Get pending deposits
+app.get('/api/admin/deposits/pending', async (req, res) => {
+    try {
+        const deposits = await db.all(`
+            SELECT d.*, u.name as user_name, u.mobile as user_mobile 
+            FROM deposits d 
+            JOIN users u ON d.user_id = u.id 
+            WHERE d.status = 'pending' 
+            ORDER BY d.created_at DESC
+        `);
+        res.json({ success: true, deposits });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Approve deposit
 app.post('/api/admin/deposit/approve', async (req, res) => {
     try {
         const { depositId } = req.body;
@@ -468,6 +499,7 @@ app.post('/api/admin/deposit/approve', async (req, res) => {
     }
 });
 
+// Reject deposit
 app.post('/api/admin/deposit/reject', async (req, res) => {
     try {
         const { depositId } = req.body;
@@ -481,50 +513,86 @@ app.post('/api/admin/deposit/reject', async (req, res) => {
         
         res.json({ success: true, message: 'Deposit rejected' });
     } catch (error) {
-        console.error('Reject error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
+// Get pending withdrawals
 app.get('/api/admin/withdrawals/pending', async (req, res) => {
     try {
-        const withdrawals = await db.all(
-            `SELECT * FROM withdrawals WHERE status = 'pending' ORDER BY created_at DESC`
-        );
+        const withdrawals = await db.all(`
+            SELECT w.*, u.name as user_name, u.mobile as user_mobile 
+            FROM withdrawals w 
+            JOIN users u ON w.user_id = u.id 
+            WHERE w.status = 'pending' 
+            ORDER BY w.created_at DESC
+        `);
         res.json({ success: true, withdrawals });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
+// Approve withdrawal
 app.post('/api/admin/withdrawal/approve', async (req, res) => {
     try {
         const { withdrawalId } = req.body;
+        const withdrawal = await db.get('SELECT * FROM withdrawals WHERE id = ?', [withdrawalId]);
+        
+        if (!withdrawal || withdrawal.status !== 'pending') {
+            return res.status(400).json({ success: false, message: 'Invalid withdrawal' });
+        }
+        
         await db.run('UPDATE withdrawals SET status = "approved" WHERE id = ?', [withdrawalId]);
+        
         res.json({ success: true, message: 'Withdrawal approved!' });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
+// Add balance manually
 app.post('/api/admin/add-balance', async (req, res) => {
     try {
-        const { userId, amount } = req.body;
+        const { userId, amount, reason } = req.body;
+        
+        if (!userId || !amount || amount <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid user or amount' });
+        }
+        
+        const user = await db.get('SELECT * FROM users WHERE id = ?', [userId]);
+        if (!user) {
+            return res.status(400).json({ success: false, message: 'User not found' });
+        }
+        
         await db.run('UPDATE users SET balance = balance + ? WHERE id = ?', [amount, userId]);
+        await db.run('UPDATE users SET total_deposited = total_deposited + ? WHERE id = ?', [amount, userId]);
+        
+        await db.run(
+            `INSERT INTO deposits (user_id, user_name, user_mobile, amount, method, transaction_id, screenshot, status) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [userId, user.name, user.mobile, amount, 'manual', `MANUAL_${Date.now()}`, 'manual', 'approved']
+        );
+        
         const updated = await db.get('SELECT balance FROM users WHERE id = ?', [userId]);
-        res.json({ success: true, newBalance: updated.balance });
+        
+        console.log(`✅ Admin added ${amount} PKR to user ${userId} (${user.name})`);
+        
+        res.json({ success: true, message: 'Balance added!', newBalance: updated.balance });
     } catch (error) {
+        console.error('Add balance error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
-// Admin stats
+// Get admin stats
 app.get('/api/admin/stats', async (req, res) => {
     try {
         const totalUsers = await db.get('SELECT COUNT(*) as count FROM users');
         const totalDeposits = await db.get('SELECT SUM(amount) as total FROM deposits WHERE status = "approved"');
         const totalWithdrawals = await db.get('SELECT SUM(amount) as total FROM withdrawals WHERE status = "approved"');
         const pendingDeposits = await db.get('SELECT COUNT(*) as count FROM deposits WHERE status = "pending"');
+        const totalGames = await db.get('SELECT COUNT(*) as count FROM game_history');
         
         res.json({
             success: true,
@@ -532,7 +600,8 @@ app.get('/api/admin/stats', async (req, res) => {
                 totalUsers: totalUsers?.count || 0,
                 totalDeposits: totalDeposits?.total || 0,
                 totalWithdrawals: totalWithdrawals?.total || 0,
-                pendingDeposits: pendingDeposits?.count || 0
+                pendingDeposits: pendingDeposits?.count || 0,
+                totalGames: totalGames?.count || 0
             }
         });
     } catch (error) {
@@ -555,7 +624,7 @@ app.get('/admin.html', (req, res) => {
     if (fs.existsSync(adminPath)) {
         res.sendFile(adminPath);
     } else {
-        res.send('<h1>Admin page not found.</h1>');
+        res.send('<h1>Admin page not found. Please create admin.html in frontend folder.</h1>');
     }
 });
 
@@ -565,6 +634,15 @@ async function startServer() {
         console.log('🚀 Starting WINPAISA Server...');
         console.log('📁 __dirname:', __dirname);
         console.log('📁 Frontend path:', frontendPath);
+        
+        // Delete old database if exists (to avoid column mismatch)
+        if (!process.env.RENDER) {
+            const oldDbPath = path.join(__dirname, 'database', 'winpaisa.db');
+            if (fs.existsSync(oldDbPath)) {
+                console.log('🗑️ Removing old database...');
+                fs.unlinkSync(oldDbPath);
+            }
+        }
         
         const dbInit = await initDatabase();
         if (!dbInit) {
@@ -580,8 +658,17 @@ async function startServer() {
 ║  API: http://localhost:${PORT}/api                             ║
 ║  Admin: http://localhost:${PORT}/admin.html                    ║
 ║                                                              ║
-║  🎮 3 GAMES AVAILABLE                                         ║
-║  📱 Default Admin: 03075030001                                ║
+║  🎮 3 GAMES AVAILABLE:                                        ║
+║    • Prize Wheel (Bet: 50-500 PKR)                           ║
+║    • Coin Flip (Bet: 50-500 PKR | Win: 1.8x)                 ║
+║    • Card Game (Bet: 50-500 PKR | Win: 1.8x)                 ║
+║                                                              ║
+║  💰 NEW USER BALANCE: 0 PKR                                   ║
+║  📱 EasyPaisa: 0307 503 0001                                  ║
+║  📞 Support: 0320 8146556 (WhatsApp/Telegram)                 ║
+║                                                              ║
+║  👑 ADMIN PANEL: http://localhost:${PORT}/admin.html           ║
+║  🔐 Admin Password: admin123                                  ║
 ╚══════════════════════════════════════════════════════════════╝
             `);
         });

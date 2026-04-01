@@ -12,8 +12,8 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #7b7f8b 0%, #656e8a 100%);
+            background: linear-gradient(135deg, #0a0f1f 0%, #03060f 100%);
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
             min-height: 100vh;
         }
 
@@ -24,7 +24,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(202, 187, 187, 0.95);
+            background: rgba(190, 171, 171, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -32,26 +32,28 @@
         }
 
         .login-box {
-            background: linear-gradient(145deg, #c3c9e6, #11152a);
-            padding: 30px;
-            border-radius: 30px;
+            background: linear-gradient(145deg, #a5b0e2, #97a0ca);
+            padding: 35px;
+            border-radius: 56px;
             width: 90%;
-            max-width: 350px;
+            max-width: 380px;
             border: 2px solid #ffaa44;
             text-align: center;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
         }
 
         .login-box h2 {
             color: #ffaa33;
             margin-bottom: 20px;
+            font-size: 28px;
         }
 
         .login-box input {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             margin: 10px 0;
-            background: #2a2f4a;
-            border: none;
+            background: #1a1f35;
+            border: 1px solid #ffaa44;
             border-radius: 50px;
             color: white;
             font-size: 16px;
@@ -60,20 +62,21 @@
 
         .login-box button {
             width: 100%;
-            padding: 12px;
-            background: #ffaa33;
+            padding: 14px;
+            background: linear-gradient(135deg, #ffaa33, #ff7700);
             border: none;
             border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
             font-size: 16px;
+            color: #000;
         }
 
         .login-box p {
             margin-top: 15px;
             font-size: 12px;
-            color: #aaa;
+            color: #888;
         }
 
         /* Dashboard */
@@ -86,8 +89,8 @@
 
         /* Header */
         .admin-header {
-            background: linear-gradient(135deg, #1a1f35, #a4acd3);
-            padding: 15px 25px;
+            background: linear-gradient(145deg, #abb5e0, #8e95b3);
+            padding: 18px 25px;
             border-radius: 60px;
             display: flex;
             justify-content: space-between;
@@ -99,8 +102,11 @@
         }
 
         .admin-header h1 {
-            color: #ffaa33;
-            font-size: 24px;
+            font-size: 28px;
+            background: linear-gradient(135deg, #FFE5A3, #FFA41E);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .admin-header .admin-info {
@@ -110,7 +116,7 @@
         }
 
         .logout-btn {
-            background: #ff5555;
+            background: linear-gradient(135deg, #ff5555, #cc4444);
             padding: 8px 20px;
             border-radius: 30px;
             cursor: pointer;
@@ -128,9 +134,9 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #4b4d57, #11152a);
+            background: linear-gradient(145deg, #989db1, #6b76aa);
             padding: 20px;
-            border-radius: 20px;
+            border-radius: 30px;
             text-align: center;
             border: 1px solid #ffaa44;
         }
@@ -142,7 +148,7 @@
         }
 
         .stat-card p {
-            color: #aaccff;
+            color: #ffdd99;
             font-size: 14px;
         }
 
@@ -156,8 +162,8 @@
 
         .tab-btn {
             padding: 12px 25px;
-            background: #1a1f35;
-            border: none;
+            background: #0e101d;
+            border: 1px solid #ffaa44;
             border-radius: 50px;
             color: #ffdd99;
             cursor: pointer;
@@ -166,7 +172,7 @@
         }
 
         .tab-btn.active {
-            background: #ffaa33;
+            background: linear-gradient(135deg, #ffaa33, #ff7700);
             color: #1a1a2a;
         }
 
@@ -177,10 +183,11 @@
 
         /* Tables */
         .table-container {
-            background: #1a1f35;
-            border-radius: 20px;
+            background: linear-gradient(145deg, #7e87b1, #465596);
+            border-radius: 30px;
             padding: 20px;
             overflow-x: auto;
+            border: 1px solid #ffaa44;
         }
 
         table {
@@ -191,12 +198,16 @@
         th, td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #2a2f4a;
+            border-bottom: 1px solid #3f435c;
         }
 
         th {
             color: #ffaa33;
             font-weight: bold;
+        }
+
+        td {
+            color: #ffdd99;
         }
 
         .status-pending {
@@ -258,6 +269,7 @@
             text-decoration: none;
             font-size: 12px;
             display: inline-block;
+            cursor: pointer;
         }
 
         .section {
@@ -270,10 +282,11 @@
 
         /* Add Balance Form */
         .add-balance-form {
-            background: #1a1f35;
+            background: linear-gradient(145deg, #0f1325, #080b18);
             padding: 25px;
-            border-radius: 20px;
+            border-radius: 30px;
             max-width: 500px;
+            border: 1px solid #ffaa44;
         }
 
         .add-balance-form h3 {
@@ -285,8 +298,8 @@
             width: 100%;
             padding: 12px;
             margin: 10px 0;
-            background: #2a2f4a;
-            border: none;
+            background: #1a1f35;
+            border: 1px solid #ffaa44;
             border-radius: 30px;
             color: white;
             font-size: 14px;
@@ -295,21 +308,22 @@
         .add-balance-form button {
             width: 100%;
             padding: 12px;
-            background: #ffaa33;
+            background: linear-gradient(135deg, #ffaa33, #ff7700);
             border: none;
             border-radius: 30px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
             font-size: 16px;
+            color: #000;
         }
 
         .search-input {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
-            background: #2a2f4a;
-            border: none;
+            background: #1a1f35;
+            border: 1px solid #ffaa44;
             border-radius: 30px;
             color: white;
             font-size: 14px;
@@ -345,7 +359,7 @@
         }
 
         .user-card-mini {
-            background: #2a2f4a;
+            background: #c2c6d8;
             padding: 10px;
             margin: 8px 0;
             border-radius: 15px;
@@ -368,6 +382,12 @@
                 font-size: 18px;
             }
         }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #ffaa33;
+        }
     </style>
 </head>
 <body>
@@ -386,7 +406,7 @@
         <div class="admin-header">
             <h1>👑 WINPAISA ADMIN DASHBOARD</h1>
             <div class="admin-info">
-                <span id="adminName">Admin</span>
+                <span id="adminName" style="color: #ffaa33;">Admin</span>
                 <button class="logout-btn" onclick="adminLogout()">Logout</button>
             </div>
         </div>
@@ -427,33 +447,33 @@
         <!-- Pending Deposits Section -->
         <div id="pendingSection" class="section active">
             <div class="table-container">
-                <h3 style="margin-bottom: 15px;">⏳ Pending Deposits (Approve/Reject)</h3>
-                <div id="pendingDepositsList"></div>
+                <h3 style="margin-bottom: 15px; color: #ffaa33;">⏳ Pending Deposits (Approve/Reject)</h3>
+                <div id="pendingDepositsList" class="loading">Loading...</div>
             </div>
         </div>
 
         <!-- All Deposits Section -->
         <div id="allDepositsSection" class="section">
             <div class="table-container">
-                <h3 style="margin-bottom: 15px;">📋 All Deposit History</h3>
-                <div id="allDepositsList"></div>
+                <h3 style="margin-bottom: 15px; color: #ffaa33;">📋 All Deposit History</h3>
+                <div id="allDepositsList" class="loading">Loading...</div>
             </div>
         </div>
 
         <!-- Withdrawals Section -->
         <div id="withdrawalsSection" class="section">
             <div class="table-container">
-                <h3 style="margin-bottom: 15px;">💸 Withdrawal Requests</h3>
-                <div id="withdrawalsList"></div>
+                <h3 style="margin-bottom: 15px; color: #ffaa33;">💸 Withdrawal Requests</h3>
+                <div id="withdrawalsList" class="loading">Loading...</div>
             </div>
         </div>
 
         <!-- Users Section -->
         <div id="usersSection" class="section">
             <div class="table-container">
-                <h3 style="margin-bottom: 15px;">👥 All Users</h3>
+                <h3 style="margin-bottom: 15px; color: #ffaa33;">👥 All Users</h3>
                 <input type="text" id="searchUser" class="search-input" placeholder="🔍 Search by mobile or name...">
-                <div id="usersList"></div>
+                <div id="usersList" class="loading">Loading...</div>
             </div>
         </div>
 
@@ -461,67 +481,72 @@
         <div id="addBalanceSection" class="section">
             <div class="add-balance-form">
                 <h3>➕ Manual Add Balance</h3>
-                <input type="text" id="addUserId" placeholder="User ID (Optional)">
+                <input type="text" id="addUserId" placeholder="User ID">
                 <input type="text" id="userMobile" placeholder="OR Mobile Number">
                 <input type="number" id="addAmount" placeholder="Amount (PKR)">
                 <input type="text" id="addReason" placeholder="Reason (Optional)">
-                <button onclick="addManualBalance()">Add Balance</button>
+                <button onclick="addManualBalance()">➕ Add Balance</button>
             </div>
         </div>
 
         <!-- Statistics Section -->
         <div id="statsSection" class="section">
             <div class="table-container">
-                <h3 style="margin-bottom: 15px;">📊 Detailed Statistics</h3>
-                <div id="statsDetails"></div>
+                <h3 style="margin-bottom: 15px; color: #ffaa33;">📊 Detailed Statistics</h3>
+                <div id="statsDetails" class="loading">Loading...</div>
             </div>
         </div>
     </div>
 
     <script>
-        // Admin password
+        const API_URL = 'https://winpaisa-app.onrender.com/api';
         const ADMIN_PASSWORD = "admin123";
         
-        // Data storage
         let users = [];
         let deposits = [];
         let withdrawals = [];
 
-        // Load data from localStorage
-        function loadData() {
-            const savedUsers = localStorage.getItem('winpaisa_users');
-            if (savedUsers) users = JSON.parse(savedUsers);
-            
-            const savedDeposits = localStorage.getItem('winpaisa_deposits');
-            if (savedDeposits) deposits = JSON.parse(savedDeposits);
-            
-            const savedWithdrawals = localStorage.getItem('winpaisa_withdrawals');
-            if (savedWithdrawals) withdrawals = JSON.parse(savedWithdrawals);
+        // Helper Functions
+        async function apiCall(endpoint, options = {}) {
+            try {
+                const response = await fetch(`${API_URL}${endpoint}`, {
+                    headers: { 'Content-Type': 'application/json' },
+                    ...options
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                showToast('Server connection failed', 'error');
+                return { success: false };
+            }
         }
 
-        // Save data
-        function saveData() {
-            localStorage.setItem('winpaisa_users', JSON.stringify(users));
-            localStorage.setItem('winpaisa_deposits', JSON.stringify(deposits));
-            localStorage.setItem('winpaisa_withdrawals', JSON.stringify(withdrawals));
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            if (type === 'error') toast.style.background = '#ff5555';
+            if (type === 'success') toast.style.background = '#44ff44';
+            if (type === 'info') toast.style.background = '#ffaa33';
+            toast.style.color = '#1a1a2a';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        // Admin login
+        // Admin Login
         function adminLogin() {
             const password = document.getElementById('adminPassword').value;
             if (password === ADMIN_PASSWORD) {
                 localStorage.setItem('adminLoggedIn', 'true');
                 document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                loadData();
-                refreshAll();
+                loadAllData();
                 showToast('Login successful!', 'success');
             } else {
                 showToast('Wrong password!', 'error');
             }
         }
 
-        // Admin logout
         function adminLogout() {
             localStorage.removeItem('adminLoggedIn');
             document.getElementById('adminLogin').style.display = 'flex';
@@ -529,207 +554,78 @@
             showToast('Logged out', 'success');
         }
 
-        // Show section
-        function showSection(section) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(section + 'Section').classList.add('active');
-            
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            refreshSection(section);
-        }
-
-        // Refresh all
-        function refreshAll() {
+        // Load Data from Backend
+        async function loadAllData() {
+            await loadUsers();
+            await loadDeposits();
+            await loadWithdrawals();
             updateStats();
-            refreshPendingDeposits();
-            refreshAllDeposits();
-            refreshWithdrawals();
-            refreshUsersList();
-            refreshStatsDetails();
         }
 
-        function refreshSection(section) {
-            if (section === 'pending') refreshPendingDeposits();
-            if (section === 'allDeposits') refreshAllDeposits();
-            if (section === 'withdrawals') refreshWithdrawals();
-            if (section === 'users') refreshUsersList();
-            if (section === 'stats') refreshStatsDetails();
-        }
-
-        // Update stats
-        function updateStats() {
-            const totalUsers = users.length;
-            const totalDeposits = deposits.reduce((sum, d) => sum + (d.status === 'approved' ? d.amount : 0), 0);
-            const totalWithdrawals = withdrawals.reduce((sum, w) => sum + (w.status === 'approved' ? w.amount : 0), 0);
-            const platformBalance = users.reduce((sum, u) => sum + (u.balance || 0), 0);
-            const pendingCount = deposits.filter(d => d.status === 'pending').length;
-            
-            document.getElementById('totalUsers').innerText = totalUsers;
-            document.getElementById('totalDeposits').innerText = totalDeposits;
-            document.getElementById('totalWithdrawals').innerText = totalWithdrawals;
-            document.getElementById('platformBalance').innerText = platformBalance;
-            document.getElementById('pendingBadge').innerText = pendingCount;
-        }
-
-        // Pending deposits
-        function refreshPendingDeposits() {
-            const pending = deposits.filter(d => d.status === 'pending');
-            const container = document.getElementById('pendingDepositsList');
-            
-            if (pending.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px;">✅ No pending deposits</div>';
-                return;
+        async function loadUsers() {
+            try {
+                const result = await apiCall('/admin/users');
+                if (result.success) {
+                    users = result.users;
+                    refreshUsersList();
+                }
+            } catch (error) {
+                console.error('Load users error:', error);
+                document.getElementById('usersList').innerHTML = '<div style="text-align:center; padding:40px;">❌ Failed to load users</div>';
             }
-            
-            let html = '<table><thead><tr>';
-            html += '<th>ID</th><th>User</th><th>Mobile</th><th>Amount</th><th>Screenshot</th><th>Date</th><th>Actions</th>';
-            html += '</tr></thead><tbody>';
-            
-            pending.forEach(d => {
-                html += `<tr>
-                    <td>${d.id}</td>
-                    <td>${d.userName || 'N/A'}</td>
-                    <td>${d.userMobile}</td>
-                    <td><strong>${d.amount} PKR</strong></td>
-                    <td><a href="#" onclick="viewScreenshot('${d.screenshot}')" class="view-screenshot">📸 View</a></td>
-                    <td>${d.timestamp || new Date(d.createdAt).toLocaleString()}</td>
-                    <td>
-                        <button class="approve-btn" onclick="approveDeposit(${d.id})">✅ Approve</button>
-                        <button class="reject-btn" onclick="rejectDeposit(${d.id})">❌ Reject</button>
-                    </td>
-                </tr>`;
-            });
-            
-            html += '</tbody></table>';
-            container.innerHTML = html;
         }
 
-        // Approve deposit
-        function approveDeposit(depositId) {
-            const deposit = deposits.find(d => d.id === depositId);
-            if (deposit && deposit.status === 'pending') {
-                deposit.status = 'approved';
-                
-                const user = users.find(u => u.id === deposit.userId);
-                if (user) {
-                    user.balance = (user.balance || 0) + deposit.amount;
-                    user.totalDeposited = (user.totalDeposited || 0) + deposit.amount;
+        async function loadDeposits() {
+            try {
+                const result = await apiCall('/admin/deposits/pending');
+                if (result.success) {
+                    deposits = result.deposits;
+                    refreshPendingDeposits();
                 }
                 
-                saveData();
-                refreshAll();
-                showToast(`✅ ${deposit.amount} PKR approved and added to user`, 'success');
+                // Also load all deposits (for all deposits tab)
+                const allResult = await apiCall('/admin/deposits/all');
+                if (allResult.success) {
+                    refreshAllDeposits(allResult.deposits);
+                }
+            } catch (error) {
+                console.error('Load deposits error:', error);
             }
         }
 
-        // Reject deposit
-        function rejectDeposit(depositId) {
-            const deposit = deposits.find(d => d.id === depositId);
-            if (deposit && deposit.status === 'pending') {
-                deposit.status = 'rejected';
-                saveData();
-                refreshAll();
-                showToast(`❌ Deposit rejected`, 'info');
+        async function loadWithdrawals() {
+            try {
+                const result = await apiCall('/admin/withdrawals/pending');
+                if (result.success) {
+                    withdrawals = result.withdrawals;
+                    refreshWithdrawals();
+                }
+            } catch (error) {
+                console.error('Load withdrawals error:', error);
             }
         }
 
-        // All deposits
-        function refreshAllDeposits() {
-            const container = document.getElementById('allDepositsList');
-            
-            if (deposits.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px;">No deposits found</div>';
-                return;
-            }
-            
-            let html = '<table><thead><tr>';
-            html += '<th>ID</th><th>User</th><th>Mobile</th><th>Amount</th><th>Status</th><th>Date</th>';
-            html += '</tr></thead><tbody>';
-            
-            deposits.forEach(d => {
-                html += `<tr>
-                    <td>${d.id}</td>
-                    <td>${d.userName || 'N/A'}</td>
-                    <td>${d.userMobile}</td>
-                    <td>${d.amount} PKR</td>
-                    <td><span class="status-${d.status}">${d.status}</span></td>
-                    <td>${d.timestamp || new Date(d.createdAt).toLocaleString()}</td>
-                </tr>`;
-            });
-            
-            html += '</tbody></table>';
-            container.innerHTML = html;
-        }
-
-        // Withdrawals
-        function refreshWithdrawals() {
-            const container = document.getElementById('withdrawalsList');
-            
-            if (withdrawals.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px;">No withdrawal requests</div>';
-                return;
-            }
-            
-            let html = '<table><thead><tr>';
-            html += '<th>ID</th><th>User</th><th>Mobile</th><th>Amount</th><th>Account</th><th>Status</th><th>Date</th><th>Actions</th>';
-            html += '</tr></thead><tbody>';
-            
-            withdrawals.forEach(w => {
-                html += `<tr>
-                    <td>${w.id}</td>
-                    <td>${w.userName || 'N/A'}</td>
-                    <td>${w.userMobile}</td>
-                    <td><strong>${w.amount} PKR</strong></td>
-                    <td>${w.account}</td>
-                    <td><span class="status-${w.status}">${w.status}</span></td>
-                    <td>${w.timestamp || new Date(w.createdAt).toLocaleString()}</td>
-                    <td>${w.status === 'pending' ? `<button class="approve-btn" onclick="approveWithdrawal(${w.id})">✅ Approve</button>` : '-'}</td>
-                </tr>`;
-            });
-            
-            html += '</tbody></table>';
-            container.innerHTML = html;
-        }
-
-        // Approve withdrawal
-        function approveWithdrawal(withdrawalId) {
-            const withdrawal = withdrawals.find(w => w.id === withdrawalId);
-            if (withdrawal && withdrawal.status === 'pending') {
-                withdrawal.status = 'approved';
-                saveData();
-                refreshAll();
-                showToast(`✅ Withdrawal approved`, 'success');
-            }
-        }
-
-        // Users list
+        // Refresh Functions
         function refreshUsersList() {
             const container = document.getElementById('usersList');
-            
             if (users.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px;">No users found</div>';
+                container.innerHTML = '<div style="text-align:center; padding:40px;">👥 No users found</div>';
                 return;
             }
             
-            let html = '<table><thead><tr>';
-            html += '<th>ID</th><th>Name</th><th>Mobile</th><th>Balance</th><th>Deposited</th><th>Withdrawn</th><th>Games</th><th>Joined</th>';
-            html += '</tr></thead><tbody id="usersTableBody">';
-            
+            let html = '<table><thead>得到<th>ID</th><th>Name</th><th>Mobile</th><th>Balance</th><th>Deposited</th><th>Withdrawn</th><th>Games</th><th>Joined</th></tr></thead><tbody id="usersTableBody">';
             users.forEach(u => {
                 html += `<tr>
                     <td>${u.id}</td>
                     <td>${u.name || 'N/A'}</td>
                     <td>${u.mobile}</td>
-                    <td><strong>${u.balance || 0} PKR</strong></td>
-                    <td>${u.totalDeposited || 0} PKR</td>
-                    <td>${u.totalWithdrawn || 0} PKR</td>
-                    <td>${u.gamesPlayed || 0}</td>
-                    <td>${new Date(u.createdAt).toLocaleDateString() || '-'}</td>
+                    <td><strong style="color:#44ff44">${u.balance || 0} PKR</strong></td>
+                    <td>${u.total_deposited || 0} PKR</td>
+                    <td>${u.total_withdrawn || 0} PKR</td>
+                    <td>${u.games_played || 0}</td>
+                    <td>${new Date(u.created_at).toLocaleDateString() || '-'}</td>
                 </tr>`;
             });
-            
             html += '</tbody></table>';
             container.innerHTML = html;
             
@@ -744,8 +640,171 @@
             };
         }
 
-        // Add manual balance
-        function addManualBalance() {
+        function refreshPendingDeposits() {
+            const pending = deposits.filter(d => d.status === 'pending');
+            const container = document.getElementById('pendingDepositsList');
+            
+            if (pending.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:40px;">✅ No pending deposits</div>';
+                return;
+            }
+            
+            let html = '<table><thead><tr><th>ID</th><th>User</th><th>Mobile</th><th>Amount</th><th>Method</th><th>Screenshot</th><th>Date</th><th>Actions</th></tr></thead><tbody>';
+            pending.forEach(d => {
+                html += `<tr>
+                    <td>${d.id}</td>
+                    <td>${d.user_name || 'N/A'}</td>
+                    <td>${d.user_mobile}</td>
+                    <td><strong style="color:#ffaa33">${d.amount} PKR</strong></td>
+                    <td>${d.method || 'EasyPaisa'}</td>
+                    <td>${d.screenshot ? `<a href="#" onclick="viewScreenshot('${d.screenshot}')" class="view-screenshot">📸 View</a>` : '-'}</td>
+                    <td>${new Date(d.created_at).toLocaleString()}</td>
+                    <td>
+                        <button class="approve-btn" onclick="approveDeposit(${d.id})">✅ Approve</button>
+                        <button class="reject-btn" onclick="rejectDeposit(${d.id})">❌ Reject</button>
+                    </td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+            document.getElementById('pendingBadge').innerText = pending.length;
+        }
+
+        function refreshAllDeposits(allDeposits) {
+            const container = document.getElementById('allDepositsList');
+            if (!allDeposits || allDeposits.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:40px;">📭 No deposits found</div>';
+                return;
+            }
+            
+            let html = '<table><thead><tr><th>ID</th><th>User</th><th>Mobile</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th></tr></thead><tbody>';
+            allDeposits.forEach(d => {
+                html += `<tr>
+                    <td>${d.id}</td>
+                    <td>${d.user_name || 'N/A'}</td>
+                    <td>${d.user_mobile}</td>
+                    <td>${d.amount} PKR</td>
+                    <td>${d.method || 'EasyPaisa'}</td>
+                    <td><span class="status-${d.status}">${d.status}</span></td>
+                    <td>${new Date(d.created_at).toLocaleString()}</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function refreshWithdrawals() {
+            const container = document.getElementById('withdrawalsList');
+            if (withdrawals.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:40px;">💸 No withdrawal requests</div>';
+                return;
+            }
+            
+            let html = '<table><thead><tr><th>ID</th><th>User</th><th>Mobile</th><th>Amount</th><th>Method</th><th>Account</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>';
+            withdrawals.forEach(w => {
+                html += `<tr>
+                    <td>${w.id}</td>
+                    <td>${w.user_name || 'N/A'}</td>
+                    <td>${w.user_mobile}</td>
+                    <td><strong style="color:#ffaa33">${w.amount} PKR</strong></td>
+                    <td>${w.method || 'EasyPaisa'}</td>
+                    <td>${w.account}</td>
+                    <td><span class="status-${w.status}">${w.status}</span></td>
+                    <td>${new Date(w.created_at).toLocaleString()}</td>
+                    <td>${w.status === 'pending' ? `<button class="approve-btn" onclick="approveWithdrawal(${w.id})">✅ Approve</button>` : '-'}</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function updateStats() {
+            const totalUsers = users.length;
+            const totalDeposits = users.reduce((sum, u) => sum + (u.total_deposited || 0), 0);
+            const totalWithdrawals = users.reduce((sum, u) => sum + (u.total_withdrawn || 0), 0);
+            const platformBalance = users.reduce((sum, u) => sum + (u.balance || 0), 0);
+            
+            document.getElementById('totalUsers').innerText = totalUsers;
+            document.getElementById('totalDeposits').innerText = totalDeposits;
+            document.getElementById('totalWithdrawals').innerText = totalWithdrawals;
+            document.getElementById('platformBalance').innerText = platformBalance;
+            
+            // Stats details
+            const gamesPlayed = users.reduce((sum, u) => sum + (u.games_played || 0), 0);
+            const gamesWon = users.reduce((sum, u) => sum + (u.games_won || 0), 0);
+            const pendingDeposits = deposits.filter(d => d.status === 'pending').length;
+            const pendingDepositsAmount = deposits.filter(d => d.status === 'pending').reduce((sum, d) => sum + d.amount, 0);
+            
+            document.getElementById('statsDetails').innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <div style="background:#1a1f35; padding:15px; border-radius:20px; border:1px solid #ffaa44;">
+                        <h4 style="color:#ffaa33">👥 Users</h4>
+                        <p style="color:#ffdd99">Total: <strong style="color:#ffaa33">${totalUsers}</strong></p>
+                    </div>
+                    <div style="background:#1a1f35; padding:15px; border-radius:20px; border:1px solid #ffaa44;">
+                        <h4 style="color:#ffaa33">💰 Deposits</h4>
+                        <p style="color:#ffdd99">Total: <strong style="color:#ffaa33">${totalDeposits} PKR</strong></p>
+                        <p style="color:#ffdd99">Pending: ${pendingDeposits} (${pendingDepositsAmount} PKR)</p>
+                    </div>
+                    <div style="background:#1a1f35; padding:15px; border-radius:20px; border:1px solid #ffaa44;">
+                        <h4 style="color:#ffaa33">💸 Withdrawals</h4>
+                        <p style="color:#ffdd99">Total: <strong style="color:#ffaa33">${totalWithdrawals} PKR</strong></p>
+                    </div>
+                    <div style="background:#1a1f35; padding:15px; border-radius:20px; border:1px solid #ffaa44;">
+                        <h4 style="color:#ffaa33">🎮 Games</h4>
+                        <p style="color:#ffdd99">Played: ${gamesPlayed}</p>
+                        <p style="color:#ffdd99">Won: ${gamesWon}</p>
+                    </div>
+                    <div style="background:#1a1f35; padding:15px; border-radius:20px; border:1px solid #ffaa44;">
+                        <h4 style="color:#ffaa33">📈 Platform</h4>
+                        <p style="color:#ffdd99">Profit: ${totalDeposits - totalWithdrawals} PKR</p>
+                        <p style="color:#ffdd99">Balance: ${platformBalance} PKR</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Action Functions
+        async function approveDeposit(depositId) {
+            const result = await apiCall('/admin/deposit/approve', {
+                method: 'POST',
+                body: JSON.stringify({ depositId })
+            });
+            if (result.success) {
+                showToast('✅ Deposit approved!', 'success');
+                loadAllData();
+            } else {
+                showToast('❌ Failed to approve', 'error');
+            }
+        }
+
+        async function rejectDeposit(depositId) {
+            const result = await apiCall('/admin/deposit/reject', {
+                method: 'POST',
+                body: JSON.stringify({ depositId })
+            });
+            if (result.success) {
+                showToast('❌ Deposit rejected', 'info');
+                loadAllData();
+            } else {
+                showToast('❌ Failed to reject', 'error');
+            }
+        }
+
+        async function approveWithdrawal(withdrawalId) {
+            const result = await apiCall('/admin/withdrawal/approve', {
+                method: 'POST',
+                body: JSON.stringify({ withdrawalId })
+            });
+            if (result.success) {
+                showToast('✅ Withdrawal approved!', 'success');
+                loadAllData();
+            } else {
+                showToast('❌ Failed to approve', 'error');
+            }
+        }
+
+        async function addManualBalance() {
             const userId = document.getElementById('addUserId').value;
             const mobile = document.getElementById('userMobile').value;
             const amount = parseInt(document.getElementById('addAmount').value);
@@ -756,116 +815,66 @@
                 return;
             }
             
-            let user = null;
-            if (userId) {
-                user = users.find(u => u.id == userId);
-            } else if (mobile) {
-                user = users.find(u => u.mobile === mobile);
+            let targetUserId = userId;
+            if (!targetUserId && mobile) {
+                const user = users.find(u => u.mobile === mobile);
+                if (user) targetUserId = user.id;
             }
             
-            if (!user) {
-                showToast('User not found!', 'error');
+            if (!targetUserId) {
+                showToast('User not found! Enter User ID or Mobile', 'error');
                 return;
             }
             
-            user.balance = (user.balance || 0) + amount;
-            user.totalDeposited = (user.totalDeposited || 0) + amount;
-            
-            deposits.push({
-                id: Date.now(),
-                userId: user.id,
-                userName: user.name,
-                userMobile: user.mobile,
-                amount: amount,
-                status: 'approved',
-                screenshot: 'manual',
-                timestamp: new Date().toLocaleString(),
-                createdAt: new Date().toISOString(),
-                reason: reason
+            const result = await apiCall('/admin/add-balance', {
+                method: 'POST',
+                body: JSON.stringify({ userId: targetUserId, amount, reason })
             });
             
-            saveData();
-            refreshAll();
-            showToast(`✅ ${amount} PKR added to ${user.name}`, 'success');
-            
-            document.getElementById('addUserId').value = '';
-            document.getElementById('userMobile').value = '';
-            document.getElementById('addAmount').value = '';
-            document.getElementById('addReason').value = '';
-        }
-
-        // Statistics details
-        function refreshStatsDetails() {
-            const totalUsers = users.length;
-            const totalBalance = users.reduce((sum, u) => sum + (u.balance || 0), 0);
-            const totalDeposits = deposits.reduce((sum, d) => sum + (d.status === 'approved' ? d.amount : 0), 0);
-            const totalWithdrawals = withdrawals.reduce((sum, w) => sum + (w.status === 'approved' ? w.amount : 0), 0);
-            const pendingDeposits = deposits.filter(d => d.status === 'pending').length;
-            const pendingDepositsAmount = deposits.filter(d => d.status === 'pending').reduce((sum, d) => sum + d.amount, 0);
-            const pendingWithdrawals = withdrawals.filter(w => w.status === 'pending').length;
-            
-            const gamesPlayed = users.reduce((sum, u) => sum + (u.gamesPlayed || 0), 0);
-            const gamesWon = users.reduce((sum, u) => sum + (u.gamesWon || 0), 0);
-            
-            document.getElementById('statsDetails').innerHTML = `
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                    <div style="background:#2a2f4a; padding:15px; border-radius:15px;">
-                        <h4>👥 Users</h4>
-                        <p>Total: <strong>${totalUsers}</strong></p>
-                    </div>
-                    <div style="background:#2a2f4a; padding:15px; border-radius:15px;">
-                        <h4>💰 Deposits</h4>
-                        <p>Total: ${totalDeposits} PKR</p>
-                        <p>Pending: ${pendingDeposits} (${pendingDepositsAmount} PKR)</p>
-                    </div>
-                    <div style="background:#2a2f4a; padding:15px; border-radius:15px;">
-                        <h4>💸 Withdrawals</h4>
-                        <p>Total: ${totalWithdrawals} PKR</p>
-                        <p>Pending: ${pendingWithdrawals}</p>
-                    </div>
-                    <div style="background:#2a2f4a; padding:15px; border-radius:15px;">
-                        <h4>🎮 Games</h4>
-                        <p>Played: ${gamesPlayed}</p>
-                        <p>Won: ${gamesWon}</p>
-                    </div>
-                    <div style="background:#2a2f4a; padding:15px; border-radius:15px;">
-                        <h4>📈 Platform</h4>
-                        <p>Profit: ${totalDeposits - totalWithdrawals} PKR</p>
-                        <p>Balance: ${totalBalance} PKR</p>
-                    </div>
-                </div>
-            `;
-        }
-
-        // View screenshot
-        function viewScreenshot(screenshot) {
-            if (screenshot && screenshot !== 'manual') {
-                alert(`Screenshot: ${screenshot}\n\nNote: Screenshots are stored locally.`);
+            if (result.success) {
+                showToast(`✅ ${amount} PKR added!`, 'success');
+                document.getElementById('addUserId').value = '';
+                document.getElementById('userMobile').value = '';
+                document.getElementById('addAmount').value = '';
+                document.getElementById('addReason').value = '';
+                loadAllData();
             } else {
-                alert('No screenshot available for this deposit');
+                showToast('❌ Failed to add balance', 'error');
             }
         }
 
-        // Toast message
-        function showToast(message, type) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            if (type === 'error') toast.style.background = '#ff5555';
-            if (type === 'success') toast.style.background = '#44ff44';
-            if (type === 'info') toast.style.background = '#ffaa33';
-            toast.style.color = '#1a1a2a';
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        function viewScreenshot(screenshot) {
+            alert(`📸 Screenshot: ${screenshot}\n\nNote: Screenshots are stored on server.`);
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section + 'Section').classList.add('active');
+            
+            const btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (section === 'allDeposits') loadAllDeposits();
+            if (section === 'stats') updateStats();
+        }
+
+        async function loadAllDeposits() {
+            const result = await apiCall('/admin/deposits/all');
+            if (result.success) {
+                refreshAllDeposits(result.deposits);
+            }
         }
 
         // Check if already logged in
         if (localStorage.getItem('adminLoggedIn') === 'true') {
             document.getElementById('adminLogin').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
-            loadData();
-            refreshAll();
+            loadAllData();
         }
+        
+        // Add all deposits endpoint to backend
+        // Note: You need to add this endpoint in server.js if not exists
     </script>
 </body>
 </html>

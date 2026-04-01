@@ -20,6 +20,7 @@
             justify-content: center;
             align-items: center;
             padding: 16px;
+            position: relative;
         }
 
         .game-app {
@@ -30,6 +31,97 @@
             padding: 20px 18px 28px;
             box-shadow: 0 25px 45px rgba(0,0,0,0.5);
             border: 1px solid rgba(255, 180, 70, 0.4);
+        }
+
+        /* ==================== SUPPORT BUTTON ==================== */
+        .support-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .support-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #ffaa33, #ff7700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            animation: bounce 2s infinite;
+            border: 2px solid rgba(255,255,200,0.3);
+        }
+
+        .support-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255,170,51,0.8);
+        }
+
+        .support-icon i {
+            font-size: 28px;
+            color: #000;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .support-dropdown {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: linear-gradient(135deg, #1a1a2a, #12121f);
+            border-radius: 20px;
+            padding: 12px;
+            border: 1px solid #ffaa33;
+            display: none;
+            z-index: 1001;
+            min-width: 180px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .support-dropdown.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .support-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .support-option:hover {
+            background: rgba(255,170,51,0.2);
+            transform: translateX(5px);
+        }
+
+        .support-option i {
+            font-size: 22px;
+        }
+
+        .support-option .wa { color: #25D366; }
+        .support-option .tg { color: #0088cc; }
+
+        .support-option span {
+            font-size: 13px;
+            font-weight: 500;
         }
 
         .logo {
@@ -166,11 +258,26 @@
             font-size: 14px;
             border: 1px solid #ffcc88;
         }
-        .easypaisa-number {
-            color: #d8e9d8;
-            font-size: 18px;
+
+        .payment-option {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            justify-content: center;
+        }
+        .pay-method {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: #2a2f4a;
+            border-radius: 30px;
+            cursor: pointer;
+            border: 1px solid #ffaa33;
             font-weight: bold;
-            text-shadow: 0 0 3px #44ff44;
+        }
+        .pay-method.active {
+            background: #ffaa33;
+            color: #000;
         }
 
         .game-tabs {
@@ -565,7 +672,7 @@
         </div>
     </div>
 
-    <div class="deposit-btn" id="depositBtn">📱 DEPOSIT NOW (EasyPaisa: <span class="easypaisa-number">0307 503 0001</span>)</div>
+    <div class="deposit-btn" id="depositBtn">📱 DEPOSIT NOW</div>
 
     <div class="game-tabs">
         <div class="game-tab active" data-game="wheel">🎡 WHEEL</div>
@@ -636,6 +743,60 @@
     <div class="footer-note">📱 Min Withdraw 500 PKR | Instant Payout</div>
 </div>
 
+<!-- SUPPORT BUTTON -->
+<div class="support-btn" id="supportBtn">
+    <div class="support-icon" id="supportIcon">
+        <i>💬</i>
+    </div>
+</div>
+<div class="support-dropdown" id="supportDropdown">
+    <a href="https://wa.me/923208146556?text=Hello! I need help with WINPAISA" target="_blank" class="support-option">
+        <i class="wa">📱</i>
+        <span>WhatsApp Support</span>
+    </a>
+    <a href="https://t.me/+923208146556" target="_blank" class="support-option">
+        <i class="tg">📨</i>
+        <span>Telegram Support</span>
+    </a>
+</div>
+
+<!-- Deposit Modal with JazzCash + EasyPaisa -->
+<div id="depositModal" class="modal">
+    <div class="modal-card">
+        <h3>💵 Deposit</h3>
+        <div class="payment-option">
+            <div class="pay-method active" data-method="easypaisa">📱 EasyPaisa</div>
+        </div>
+        <div id="paymentDetails" style="background: #8893bb; padding: 12px; border-radius: 20px; margin-bottom: 12px;">
+            <strong>📱 EasyPaisa Account:</strong><br>
+            Number: <span style="color: #ffaa33; font-size: 18px;">0307 503 0001</span><br>
+            Title: Azmer Khan<br>
+            <small>Send exact amount and upload screenshot</small>
+        </div>
+        <input type="number" id="depositAmount" placeholder="Amount (Min 50 PKR)" value="100">
+        <!-- <input type="text" id="transactionId" placeholder="Transaction ID"> -->
+        <input type="file" id="screenshotInput" accept="image/*">
+        <button id="submitDepositBtn">Submit Payment</button>
+        <button id="closeDepositModal" style="background:#333;">Cancel</button>
+    </div>
+</div>
+
+<!-- Withdraw Modal with JazzCash + EasyPaisa -->
+<div id="withdrawModal" class="modal">
+    <div class="modal-card">
+        <h3>💸 Withdraw</h3>
+        <select id="withdrawMethod" style="width:100%; padding:12px; margin:8px 0; background:#2a2f4a; border-radius:50px; color:white;">
+            <option value="easypaisa">📱 EasyPaisa</option>
+            <option value="jazzcash">💳 JazzCash</option>
+        </select>
+        <input type="number" id="withdrawAmount" placeholder="Amount (Min 500)">
+        <input type="text" id="withdrawAccount" placeholder="Account Number">
+        <button id="confirmWithdrawBtn">Request</button>
+        <button id="closeWithdrawBtn" style="background:#333;">Cancel</button>
+    </div>
+</div>
+
+<!-- Login Modal - Balance 0 on new user -->
 <div id="loginModal" class="modal" style="display:flex;">
     <div class="modal-card">
         <h3>🔐 Login / Signup</h3>
@@ -643,38 +804,12 @@
         <button id="sendOtpBtn">Send OTP</button>
         <div id="otpSection" style="display:none; margin-top:14px;">
             <div style="background:#ffaa3322; border-radius:30px; padding:12px;">
-                <div>📲 OTP: <strong id="demoOtpSpan">------</strong></div>
-                <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6">
-                <button id="verifyOtpBtn">Verify & Login</button>
+                <div>📲 OTP: <strong id="demoOtpSpan" style="font-size:24px;">------</strong></div>
+                <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" style="margin-top:10px;">
+                <button id="verifyOtpBtn" style="margin-top:8px;">Verify & Login</button>
             </div>
         </div>
         <div id="loginMsg" style="font-size:11px; margin-top:10px;"></div>
-    </div>
-</div>
-
-<div id="depositModal" class="modal">
-    <div class="modal-card">
-        <h3>💵 Deposit</h3>
-        <div style="background:#0a0e1c; padding:12px; border-radius:20px; margin-bottom:12px;">
-            <strong>📱 EasyPaisa Account:</strong><br>
-            Number: <span class="easypaisa-number">0307 503 0001</span><br>
-            Title: Azmer Khan<br>
-            <small>Send exact amount and upload screenshot</small>
-        </div>
-        <input type="number" id="depositAmount" placeholder="Amount (Min 50 PKR)" value="100">
-        <input type="file" id="screenshotInput" accept="image/*">
-        <button id="submitDepositBtn">Submit Payment</button>
-        <button id="closeDepositModal" style="background:#333;">Cancel</button>
-    </div>
-</div>
-
-<div id="withdrawModal" class="modal">
-    <div class="modal-card">
-        <h3>💸 Withdraw</h3>
-        <input type="number" id="withdrawAmount" placeholder="Amount (Min 500)">
-        <input type="text" id="withdrawAccount" placeholder="EasyPaisa Number">
-        <button id="confirmWithdrawBtn">Request</button>
-        <button id="closeWithdrawBtn" style="background:#333;">Cancel</button>
     </div>
 </div>
 
@@ -693,7 +828,6 @@
         { value: 500, color: "#f59e0b", label: "500 PKR" }
     ];
     const SEG_COUNT = WHEEL_PRIZES.length;
-    const WHEEL_WIN_CHANCE = 0.40;
 
     let currentUser = null, balance = 0;
     let wheelBet = 100, coinBet = 100, cardBet = 100;
@@ -703,6 +837,7 @@
     let users = [];
     let deposits = [];
     let withdrawals = [];
+    let selectedPaymentMethod = "easypaisa";
 
     function loadData() {
         const savedUsers = localStorage.getItem('winpaisa_users');
@@ -788,6 +923,15 @@
         document.getElementById('prizeLegend').innerHTML = WHEEL_PRIZES.map(p => `<div class="legend-badge"><div class="legend-color" style="background:${p.color}"></div><span>${p.label}</span></div>`).join('');
     }
 
+    function updatePaymentDetails() {
+        const detailsDiv = document.getElementById('paymentDetails');
+        if(selectedPaymentMethod === 'easypaisa') {
+            detailsDiv.innerHTML = `<strong>📱 EasyPaisa Account:</strong><br>Number: <span style="color:#ffaa33; font-size:18px;">0307 503 0001</span><br>Title: Azmer Khan<br><small>Send exact amount and upload screenshot</small>`;
+        } else {
+            detailsDiv.innerHTML = `<strong>💳 JazzCash Account:</strong><br>Number: <span style="color:#ffaa33; font-size:18px;">0301 2345678</span><br>Title: Azmer Khan<br><small>Send exact amount and upload screenshot</small>`;
+        }
+    }
+
     // ==================== SPIN WHEEL ====================
     function spinWheel() {
         if(spinning) { showToast("Wait...", true); return; }
@@ -802,7 +946,6 @@
         const winningPrizes = WHEEL_PRIZES.filter(p => p.value > 0);
         const losingPrizes = WHEEL_PRIZES.filter(p => p.value === 0);
         
-        // 40% chance to win
         const isWin = Math.random() < 0.4;
         let winAmount = 0;
         let selectedPrize = null;
@@ -844,26 +987,19 @@
         }, 3900);
     }
 
-    // ==================== COIN FLIP (FIXED) ====================
+    // ==================== COIN FLIP ====================
     function playCoinFlip() {
         if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
         if(balance < coinBet) { showToast(`Need ${coinBet} PKR`, true); return; }
         
-        // Deduct bet
         balance -= coinBet;
         updateBalanceUI(); saveUser();
         
-        // Get user's choice
-        const userChoice = coinChoice; // "HEADS" or "TAILS"
-        
-        // Random result
+        const userChoice = coinChoice;
         const outcomes = ['HEADS', 'TAILS'];
         const result = outcomes[Math.floor(Math.random() * 2)];
-        
-        // Check if user won (choice matches result)
         const isWin = (userChoice === result);
         
-        // Animation
         const hand = document.getElementById('hand');
         const coinEl = document.getElementById('coin');
         
@@ -891,20 +1027,16 @@
                 setTimeout(() => hand.classList.remove('hand-catch'), 200);
                 
                 if(isWin) {
-                    // WIN - add 1.8x money
                     let winAmount = Math.floor(coinBet * 1.8);
                     balance += winAmount;
                     showToast(`🎉 YOU WON! ${winAmount} PKR! (${result}) 🎉`, false);
                     addLiveWin(winAmount);
                     playSound('win');
                 } else {
-                    // LOSE
-                    showToast(`😞 YOU LOSE! Result: ${result} | Your choice: ${userChoice}`, true);
+                    showToast(`😞 YOU LOSE! Result: ${result}`, true);
                     playSound('lose');
                 }
-                
-                updateBalanceUI(); 
-                saveUser();
+                updateBalanceUI(); saveUser();
             }, 700);
         }, 450);
     }
@@ -915,14 +1047,11 @@
         if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
         if(balance < cardBet) { showToast(`Need ${cardBet} PKR`, true); return; }
         
-        // Deduct bet
         balance -= cardBet;
         updateBalanceUI(); saveUser();
         
-        // Random win chance (33%)
         const isWin = Math.random() < 0.33;
         let winAmount = 0;
-        
         if(isWin) {
             winAmount = Math.floor(cardBet * 1.8);
             balance += winAmount;
@@ -941,8 +1070,7 @@
                 playSound('lose');
             }
             cardEl.style.transform = "";
-            updateBalanceUI(); 
-            saveUser();
+            updateBalanceUI(); saveUser();
         }, 400);
     }
 
@@ -990,8 +1118,10 @@
         totalSpan.innerText = (val + 0.05).toFixed(1) + 'K';
     }
 
-    // Auth
+    // ==================== AUTH (BALANCE 0 ON NEW USER) ====================
     let pendingOtp = null;
+    let pendingMobile = null;
+
     function sendOtp() {
         const mobile = document.getElementById('mobileNumber').value.trim();
         if(!mobile || mobile.length < 10) { 
@@ -1002,23 +1132,25 @@
         document.getElementById('demoOtpSpan').innerText = fakeOtp;
         document.getElementById('otpSection').style.display = 'block';
         pendingOtp = fakeOtp; 
-        window.pendingMobile = mobile;
-        document.getElementById('loginMsg').innerHTML = '<span style="color:#88ff88;">✅ OTP sent! Check above 👆</span>';
+        pendingMobile = mobile;
+        document.getElementById('loginMsg').innerHTML = '<span style="color:#88ff88;">✅ OTP sent! Enter code above 👆</span>';
     }
     
     function verifyOtp() {
-        if(document.getElementById('otpInput').value !== pendingOtp) { 
-            document.getElementById('loginMsg').innerHTML = '<span style="color:#ff8888;">❌ Wrong OTP</span>'; 
+        const enteredOtp = document.getElementById('otpInput').value.trim();
+        if(enteredOtp !== pendingOtp) { 
+            document.getElementById('loginMsg').innerHTML = '<span style="color:#ff8888;">❌ Wrong OTP! Enter the code shown above</span>'; 
             return; 
         }
-        const mobile = window.pendingMobile;
+        const mobile = pendingMobile;
         let user = users.find(u => u.mobile === mobile);
         if(!user) {
+            // NEW USER - BALANCE = 0
             user = { 
                 id: Date.now(), 
                 mobile: mobile, 
                 name: "Player_" + mobile.slice(-4), 
-                balance: 500, 
+                balance: 0, 
                 totalDeposited: 0, 
                 totalWithdrawn: 0,
                 gamesPlayed: 0,
@@ -1038,7 +1170,8 @@
         updateBalanceUI();
         showToast(`Welcome ${currentUser.name}! Balance: ${balance} PKR`, false);
     }
-    
+
+    // ==================== DEPOSIT ====================
     function openDeposit() {
         if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
         document.getElementById('depositModal').style.display = 'flex';
@@ -1046,9 +1179,11 @@
     
     function submitDeposit() {
         const amount = parseInt(document.getElementById('depositAmount').value);
+        const transactionId = document.getElementById('transactionId').value;
         const screenshot = document.getElementById('screenshotInput').files[0];
         
         if(!amount || amount < 50) { showToast("Min 50 PKR", true); return; }
+        if(!transactionId) { showToast("Transaction ID required", true); return; }
         if(!screenshot) { showToast("Screenshot required", true); return; }
         
         const depositRequest = {
@@ -1057,9 +1192,10 @@
             userName: currentUser.name,
             userMobile: currentUser.mobile,
             amount: amount,
+            method: selectedPaymentMethod,
+            transactionId: transactionId,
             screenshot: screenshot.name,
             timestamp: new Date().toLocaleString(),
-            createdAt: new Date().toISOString(),
             status: 'pending'
         };
         deposits.push(depositRequest);
@@ -1068,13 +1204,15 @@
         showToast(`✅ Deposit request submitted! Admin will verify.`, false);
         document.getElementById('depositModal').style.display = 'none';
         document.getElementById('depositAmount').value = '100';
+        document.getElementById('transactionId').value = '';
         document.getElementById('screenshotInput').value = '';
     }
     
     function closeDepositModal() {
         document.getElementById('depositModal').style.display = 'none';
     }
-    
+
+    // ==================== WITHDRAW ====================
     function openWithdraw() {
         if(!currentUser) { showToast("Login first", true); return; }
         if(balance < 500) { showToast("Minimum 500 PKR required for withdrawal", true); return; }
@@ -1083,6 +1221,7 @@
     
     function submitWithdraw() {
         let amount = parseInt(document.getElementById('withdrawAmount').value);
+        const method = document.getElementById('withdrawMethod').value;
         const acc = document.getElementById('withdrawAccount').value;
         if(!amount || amount < 500) { showToast("Min 500 PKR", true); return; }
         if(amount > balance) { showToast("Insufficient balance", true); return; }
@@ -1094,9 +1233,9 @@
             userName: currentUser.name,
             userMobile: currentUser.mobile,
             amount: amount,
+            method: method,
             account: acc,
             timestamp: new Date().toLocaleString(),
-            createdAt: new Date().toISOString(),
             status: 'pending'
         };
         withdrawals.push(withdrawRequest);
@@ -1126,6 +1265,19 @@
         }, 500);
     });
 
+    // Support Button Dropdown
+    const supportBtn = document.getElementById('supportBtn');
+    const supportDropdown = document.getElementById('supportDropdown');
+    supportBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        supportDropdown.classList.toggle('show');
+    });
+    document.addEventListener('click', (e) => {
+        if (!supportBtn.contains(e.target) && !supportDropdown.contains(e.target)) {
+            supportDropdown.classList.remove('show');
+        }
+    });
+
     // Event Listeners
     document.querySelectorAll('.game-tab').forEach(tab => {
         tab.addEventListener('click', () => {
@@ -1147,6 +1299,16 @@
     document.getElementById('withdrawBtnAction').addEventListener('click', openWithdraw);
     document.getElementById('confirmWithdrawBtn').addEventListener('click', submitWithdraw);
     document.getElementById('closeWithdrawBtn').addEventListener('click', () => document.getElementById('withdrawModal').style.display = 'none');
+    
+    // Payment method selection
+    document.querySelectorAll('.pay-method').forEach(el => {
+        el.addEventListener('click', () => {
+            document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('active'));
+            el.classList.add('active');
+            selectedPaymentMethod = el.getAttribute('data-method');
+            updatePaymentDetails();
+        });
+    });
     
     document.querySelectorAll('[data-wheel-bet]').forEach(el => {
         el.addEventListener('click', () => {
@@ -1205,6 +1367,7 @@
         ctx = canvas.getContext('2d');
         drawWheel(); 
         updateLegend();
+        updatePaymentDetails();
         const saved = localStorage.getItem('winpaisa_user');
         if(saved) { 
             try {

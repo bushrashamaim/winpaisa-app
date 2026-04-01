@@ -60,7 +60,6 @@
             color: #ffdd99;
         }
 
-        /* Stats Panel */
         .stats-panel {
             display: flex;
             justify-content: space-between;
@@ -85,7 +84,6 @@
             color: #44ff44;
         }
 
-        /* User Card */
         .user-card {
             display: flex;
             justify-content: space-between;
@@ -156,7 +154,6 @@
             font-weight: bold;
         }
 
-        /* Deposit Button */
         .deposit-btn {
             background: linear-gradient(135deg, #ffaa33, #ff7700);
             color: #000;
@@ -176,7 +173,6 @@
             text-shadow: 0 0 3px #44ff44;
         }
 
-        /* Game Tabs */
         .game-tabs {
             display: flex;
             gap: 8px;
@@ -202,7 +198,6 @@
             box-shadow: 0 0 12px #ffaa55;
         }
 
-        /* Game Boxes */
         .game-box {
             background: linear-gradient(145deg, #131b30, #0c1022);
             border-radius: 48px;
@@ -221,7 +216,6 @@
             margin-bottom: 15px;
         }
 
-        /* Bet Chips */
         .bet-row {
             display: flex;
             gap: 10px;
@@ -245,7 +239,6 @@
             box-shadow: 0 0 10px #ffaa55;
         }
 
-        /* Wheel Styles */
         .wheel-wrapper {
             position: relative;
             width: 280px;
@@ -290,7 +283,6 @@
             z-index: 12;
         }
 
-        /* Coin Flip */
         .hand-area {
             position: relative;
             height: 220px;
@@ -375,7 +367,6 @@
             color: #1a1a2a;
         }
 
-        /* Card Game */
         .cards-container {
             display: flex;
             gap: 15px;
@@ -438,7 +429,6 @@
             border-radius: 50%;
         }
 
-        /* Live Ticker */
         .live-ticker {
             background: #0a0e1c;
             border-radius: 50px;
@@ -575,17 +565,14 @@
         </div>
     </div>
 
-    <!-- DEPOSIT BUTTON -->
     <div class="deposit-btn" id="depositBtn">📱 DEPOSIT NOW (EasyPaisa: <span class="easypaisa-number">0307 503 0001</span>)</div>
 
-    <!-- Game Tabs -->
     <div class="game-tabs">
         <div class="game-tab active" data-game="wheel">🎡 WHEEL</div>
         <div class="game-tab" data-game="coin">🪙 COIN FLIP</div>
         <div class="game-tab" data-game="card">🃏 CARD GAME</div>
     </div>
 
-    <!-- WHEEL GAME -->
     <div id="wheelGame" class="game-box">
         <div class="game-title">🎡 PRIZE WHEEL</div>
         <div class="bet-row" id="wheelBetRow">
@@ -603,7 +590,6 @@
         <div class="prize-legend" id="prizeLegend"></div>
     </div>
 
-    <!-- COIN FLIP GAME -->
     <div id="coinGame" class="game-box" style="display:none;">
         <div class="game-title">🪙 COIN FLIP</div>
         <div class="bet-row" id="coinBetRow">
@@ -623,7 +609,6 @@
         <div class="play-button" id="coinPlayBtn">💰 FLIP COIN</div>
     </div>
 
-    <!-- CARD GAME -->
     <div id="cardGame" class="game-box" style="display:none;">
         <div class="game-title">🃏 PICK A CARD</div>
         <div class="bet-row" id="cardBetRow">
@@ -640,7 +625,6 @@
         <div class="play-button" id="cardPlayBtn">💰 PLAY</div>
     </div>
 
-    <!-- LIVE TICKER -->
     <div class="live-ticker">
         <div class="live-header">🔥 LIVE WIN FEED 🔥</div>
         <div class="ticker-scroll" id="liveTicker">
@@ -652,7 +636,6 @@
     <div class="footer-note">📱 Min Withdraw 500 PKR | Instant Payout</div>
 </div>
 
-<!-- Login Modal -->
 <div id="loginModal" class="modal" style="display:flex;">
     <div class="modal-card">
         <h3>🔐 Login / Signup</h3>
@@ -669,25 +652,22 @@
     </div>
 </div>
 
-<!-- Deposit Modal -->
 <div id="depositModal" class="modal">
     <div class="modal-card">
         <h3>💵 Deposit</h3>
-        <div style="background:#0a0e1c; padding:12px; border-radius:20px; margin-bottom:12px;">
+        <div style="background:#8089a8; padding:12px; border-radius:20px; margin-bottom:12px;">
             <strong>📱 EasyPaisa Account:</strong><br>
             Number: <span class="easypaisa-number">0307 503 0001</span><br>
-            Title: WINPAISA GAMES<br>
+            Title: Azmer Khan<br>
             <small>Send exact amount and upload screenshot</small>
         </div>
         <input type="number" id="depositAmount" placeholder="Amount (Min 50 PKR)" value="100">
-        <input type="text" id="transactionId" placeholder="Transaction ID">
         <input type="file" id="screenshotInput" accept="image/*">
         <button id="submitDepositBtn">Submit Payment</button>
         <button id="closeDepositModal" style="background:#333;">Cancel</button>
     </div>
 </div>
 
-<!-- Withdraw Modal -->
 <div id="withdrawModal" class="modal">
     <div class="modal-card">
         <h3>💸 Withdraw</h3>
@@ -699,7 +679,7 @@
 </div>
 
 <script>
-    // WHEEL PRIZES - UPDATED
+    // WHEEL PRIZES
     const WHEEL_PRIZES = [
         { value: 0, color: "#3b82f6", label: "0 PKR" },
         { value: 0, color: "#0ea5e9", label: "0 PKR" },
@@ -722,13 +702,22 @@
     let wheelFirstPlay = true, coinFirstPlay = true, cardFirstPlay = true;
     let liveWins = ["✨ Ali won 35 PKR ✨", "✨ Sana won 40 PKR ✨", "✨ Rayan won 33 PKR ✨"];
     let users = [];
+    let deposits = [];
+    let withdrawals = [];
 
-    function loadUsers() {
-        const saved = localStorage.getItem('winpaisa_users');
-        if (saved) users = JSON.parse(saved);
+    function loadData() {
+        const savedUsers = localStorage.getItem('winpaisa_users');
+        if (savedUsers) users = JSON.parse(savedUsers);
+        const savedDeposits = localStorage.getItem('winpaisa_deposits');
+        if (savedDeposits) deposits = JSON.parse(savedDeposits);
+        const savedWithdrawals = localStorage.getItem('winpaisa_withdrawals');
+        if (savedWithdrawals) withdrawals = JSON.parse(savedWithdrawals);
     }
-    function saveUsers() {
+    
+    function saveData() {
         localStorage.setItem('winpaisa_users', JSON.stringify(users));
+        localStorage.setItem('winpaisa_deposits', JSON.stringify(deposits));
+        localStorage.setItem('winpaisa_withdrawals', JSON.stringify(withdrawals));
     }
 
     let audioCtx = null;
@@ -805,7 +794,7 @@
         return Math.random() < WHEEL_WIN_CHANCE;
     }
 
-    async function spinWheel() {
+    function spinWheel() {
         if(spinning) { showToast("Wait...", true); return; }
         if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
         if(balance < wheelBet) { showToast(`Need ${wheelBet} PKR`, true); return; }
@@ -817,13 +806,11 @@
         const isWin = getWinResult(wheelFirstPlay);
         let winAmount = 0, selectedPrize = null;
         if(isWin) {
-            // Only winning prizes (non-zero values)
             const winningPrizes = WHEEL_PRIZES.filter(p => p.value > 0);
             selectedPrize = winningPrizes[Math.floor(Math.random() * winningPrizes.length)];
             winAmount = selectedPrize.value;
             balance += winAmount;
         } else {
-            // Lose: only zero prizes
             const losingPrizes = WHEEL_PRIZES.filter(p => p.value === 0);
             selectedPrize = losingPrizes[Math.floor(Math.random() * losingPrizes.length)];
         }
@@ -858,7 +845,7 @@
         }, 3900);
     }
 
-    async function playCoinFlip() {
+    function playCoinFlip() {
         if(!currentUser) { showToast("Login first", true); return; }
         if(balance < coinBet) { showToast(`Need ${coinBet} PKR`, true); return; }
         balance -= coinBet;
@@ -918,7 +905,7 @@
         }, 450);
     }
 
-    async function playCardGame() {
+    function playCardGame() {
         if(!selectedCard) { showToast("Pick a card!", true); return; }
         if(!currentUser) { showToast("Login first", true); return; }
         if(balance < cardBet) { showToast(`Need ${cardBet} PKR`, true); return; }
@@ -977,7 +964,7 @@
             const index = users.findIndex(u => u.id === currentUser.id);
             if(index !== -1) users[index] = currentUser;
             else users.push(currentUser);
-            saveUsers();
+            saveData();
             localStorage.setItem('winpaisa_user', JSON.stringify(currentUser)); 
         } 
     }
@@ -1023,10 +1010,13 @@
                 name: "Player_" + mobile.slice(-4), 
                 balance: 500, 
                 totalDeposited: 0, 
-                totalWithdrawn: 0 
+                totalWithdrawn: 0,
+                gamesPlayed: 0,
+                gamesWon: 0,
+                createdAt: new Date().toISOString()
             };
             users.push(user);
-            saveUsers();
+            saveData();
         }
         currentUser = user; 
         balance = currentUser.balance;
@@ -1046,13 +1036,28 @@
     
     function submitDeposit() {
         const amount = parseInt(document.getElementById('depositAmount').value);
-        const transactionId = document.getElementById('transactionId').value;
+        const screenshot = document.getElementById('screenshotInput').files[0];
+        
         if(!amount || amount < 50) { showToast("Min 50 PKR", true); return; }
-        if(!transactionId) { showToast("Transaction ID required", true); return; }
+        if(!screenshot) { showToast("Screenshot required", true); return; }
+        
+        const depositRequest = {
+            id: Date.now(),
+            userId: currentUser.id,
+            userName: currentUser.name,
+            userMobile: currentUser.mobile,
+            amount: amount,
+            screenshot: screenshot.name,
+            timestamp: new Date().toLocaleString(),
+            createdAt: new Date().toISOString(),
+            status: 'pending'
+        };
+        deposits.push(depositRequest);
+        saveData();
+        
         showToast(`✅ Deposit request submitted! Admin will verify.`, false);
         document.getElementById('depositModal').style.display = 'none';
         document.getElementById('depositAmount').value = '100';
-        document.getElementById('transactionId').value = '';
         document.getElementById('screenshotInput').value = '';
     }
     
@@ -1072,136 +1077,44 @@
         if(!amount || amount < 500) { showToast("Min 500 PKR", true); return; }
         if(amount > balance) { showToast("Insufficient balance", true); return; }
         if(!acc || acc.length < 10) { showToast("Valid account number required", true); return; }
+        
+        const withdrawRequest = {
+            id: Date.now(),
+            userId: currentUser.id,
+            userName: currentUser.name,
+            userMobile: currentUser.mobile,
+            amount: amount,
+            account: acc,
+            timestamp: new Date().toLocaleString(),
+            createdAt: new Date().toISOString(),
+            status: 'pending'
+        };
+        withdrawals.push(withdrawRequest);
+        
         balance -= amount;
         if(currentUser) currentUser.balance = balance;
         if(currentUser) currentUser.totalWithdrawn = (currentUser.totalWithdrawn || 0) + amount;
         saveUser(); 
+        saveData();
         updateBalanceUI();
-        showToast(`✅ Withdraw request of ${amount} PKR submitted to ${acc}`, false);
+        showToast(`✅ Withdraw request of ${amount} PKR submitted!`, false);
         document.getElementById('withdrawModal').style.display = 'none';
         document.getElementById('withdrawAmount').value = '';
         document.getElementById('withdrawAccount').value = '';
     }
 
-    // Admin Panel
+    // Admin Panel Access (Triple Click on Logo)
     let clickCount = 0, clickTimer = null;
     document.getElementById('logo').addEventListener('click', () => {
         clickCount++;
         if (clickTimer) clearTimeout(clickTimer);
         clickTimer = setTimeout(() => {
-            if (clickCount === 3) openAdminPanel();
+            if (clickCount === 3) {
+                window.location.href = '/admin.html';
+            }
             clickCount = 0;
         }, 500);
     });
-
-    function openAdminPanel() {
-        if (!currentUser) { showToast("Please login first", true); return; }
-        let adminPanel = document.getElementById('adminPanelModal');
-        if (!adminPanel) createAdminPanel();
-        document.getElementById('adminPanelModal').style.display = 'flex';
-        loadAdminUsers();
-    }
-
-    function createAdminPanel() {
-        const modal = document.createElement('div');
-        modal.id = 'adminPanelModal';
-        modal.className = 'modal';
-        modal.innerHTML = `
-            <div class="modal-card" style="max-width: 480px; max-height: 80vh; overflow-y: auto;">
-                <h3 style="color:#ffaa33;">👑 ADMIN PANEL</h3>
-                <div style="display: flex; gap: 10px; margin: 15px 0;">
-                    <button id="adminUsersTab" style="flex:1; padding:8px; background:#ffaa33; border-radius:20px;">👥 Users</button>
-                    <button id="adminBalanceTab" style="flex:1; padding:8px; background:#333; border-radius:20px;">➕ Add Balance</button>
-                    <button id="adminStatsTab" style="flex:1; padding:8px; background:#333; border-radius:20px;">📊 Stats</button>
-                </div>
-                <div id="adminUsersContent"><div id="adminUsersList"></div></div>
-                <div id="adminBalanceContent" style="display:none;">
-                    <input type="text" id="adminUserId" placeholder="User ID">
-                    <input type="number" id="adminAmount" placeholder="Amount (PKR)">
-                    <button id="adminAddBalanceBtn">➕ Add Balance</button>
-                </div>
-                <div id="adminStatsContent" style="display:none;"><div id="adminStatsList"></div></div>
-                <button id="closeAdminPanelBtn" style="background:#333; margin-top:15px;">Close</button>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        
-        document.getElementById('adminUsersTab').onclick = () => {
-            document.getElementById('adminUsersContent').style.display = 'block';
-            document.getElementById('adminBalanceContent').style.display = 'none';
-            document.getElementById('adminStatsContent').style.display = 'none';
-            loadAdminUsers();
-        };
-        document.getElementById('adminBalanceTab').onclick = () => {
-            document.getElementById('adminUsersContent').style.display = 'none';
-            document.getElementById('adminBalanceContent').style.display = 'block';
-            document.getElementById('adminStatsContent').style.display = 'none';
-        };
-        document.getElementById('adminStatsTab').onclick = () => {
-            document.getElementById('adminUsersContent').style.display = 'none';
-            document.getElementById('adminBalanceContent').style.display = 'none';
-            document.getElementById('adminStatsContent').style.display = 'block';
-            loadAdminStats();
-        };
-        document.getElementById('closeAdminPanelBtn').onclick = () => {
-            document.getElementById('adminPanelModal').style.display = 'none';
-        };
-        document.getElementById('adminAddBalanceBtn').onclick = addManualBalance;
-    }
-
-    function loadAdminUsers() {
-        const container = document.getElementById('adminUsersList');
-        if (users.length === 0) { container.innerHTML = '<div>No users found</div>'; return; }
-        container.innerHTML = users.map(u => `
-            <div style="background:#2a2f4a; padding:10px; margin:8px 0; border-radius:15px;">
-                <strong>${u.name}</strong> (ID: ${u.id})<br>
-                Mobile: ${u.mobile}<br>
-                Balance: ${u.balance} PKR<br>
-                <button onclick="selectUser(${u.id})" style="background:#ffaa33; padding:3px 12px; border-radius:20px; margin-top:5px;">Select</button>
-            </div>
-        `).join('');
-    }
-    
-    function selectUser(id) {
-        document.getElementById('adminUserId').value = id;
-        showToast(`User ID ${id} selected`, false);
-    }
-    
-    function addManualBalance() {
-        const userId = parseInt(document.getElementById('adminUserId').value);
-        const amount = parseInt(document.getElementById('adminAmount').value);
-        if (!userId || !amount || amount <= 0) { showToast("Enter valid User ID and Amount", true); return; }
-        let user = users.find(u => u.id === userId);
-        if (!user) { showToast("User not found", true); return; }
-        user.balance = (user.balance || 0) + amount;
-        user.totalDeposited = (user.totalDeposited || 0) + amount;
-        saveUsers();
-        if (currentUser && currentUser.id === userId) {
-            currentUser = user;
-            balance = currentUser.balance;
-            updateBalanceUI();
-        }
-        showToast(`✅ ${amount} PKR added to user ${userId}`, false);
-        document.getElementById('adminAmount').value = '';
-        loadAdminUsers();
-    }
-    
-    function loadAdminStats() {
-        const container = document.getElementById('adminStatsList');
-        let totalUsers = users.length;
-        let totalBalance = users.reduce((s, u) => s + (u.balance || 0), 0);
-        let totalDeposits = users.reduce((s, u) => s + (u.totalDeposited || 0), 0);
-        let totalWithdrawals = users.reduce((s, u) => s + (u.totalWithdrawn || 0), 0);
-        container.innerHTML = `
-            <div style="padding: 10px;">
-                👥 Total Users: ${totalUsers}<br><br>
-                💰 Total Deposits: ${totalDeposits} PKR<br>
-                💸 Total Withdrawals: ${totalWithdrawals} PKR<br>
-                📈 Profit: ${totalDeposits - totalWithdrawals} PKR<br>
-                💎 Platform Balance: ${totalBalance} PKR
-            </div>
-        `;
-    }
 
     // Event Listeners
     document.querySelectorAll('.game-tab').forEach(tab => {
@@ -1276,7 +1189,7 @@
     document.getElementById('verifyOtpBtn').addEventListener('click', verifyOtp);
 
     function init() {
-        loadUsers();
+        loadData();
         canvas.width = 500; 
         canvas.height = 500; 
         ctx = canvas.getContext('2d');

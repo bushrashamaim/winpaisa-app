@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ==================== FILE UPLOAD ====================
 const uploadDir = path.join(__dirname, 'uploads');
@@ -55,6 +56,7 @@ async function initDatabase() {
             total_withdrawn INTEGER DEFAULT 0,
             games_played INTEGER DEFAULT 0,
             games_won INTEGER DEFAULT 0,
+            is_admin INTEGER DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
         
@@ -98,9 +100,58 @@ async function initDatabase() {
             user_choice TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
+        
+        CREATE TABLE IF NOT EXISTS admins (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            mobile TEXT UNIQUE NOT NULL,
+            name TEXT,
+            role TEXT DEFAULT 'admin',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
     `);
 
+    // Check if admin exists, if not create default admin
+    const adminCount = await db.get('SELECT COUNT(*) as count FROM admins');
+    if (adminCount.count === 0) {
+        await db.run('INSERT INTO admins (mobile, name, role) VALUES (?, ?, ?)', 
+            ['03075030001', 'Super Admin', 'super_admin']);
+        console.log('✅ Default admin created: 03075030001');
+    }
+
     console.log('✅ Database ready');
+}
+
+// ==================== AUTH MIDDLEWARE ====================
+function verifyToken(req, res, next) {
+    const token = req.headers['authorization'];
+    if (!token) {
+        return res.status(401).json({ success: false, message: 'No token provided' });
+    }
+    
+    try {
+        const decoded = jwt.verify(token.replace('Bearer ', ''), 'winpaisa_secret');
+        req.userId = decoded.id;
+        req.userMobile = decoded.mobile;
+        next();
+    } catch (error) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+    }
+}
+
+// Admin check middleware
+async function checkAdmin(req, res, next) {
+    try {
+        const user = await db.get('SELECT is_admin FROM users WHERE id = ?', [req.userId]);
+        if (!user || !user.is_admin) {
+            const admin = await db.get('SELECT * FROM admins WHERE mobile = ?', [req.userMobile]);
+            if (!admin) {
+                return res.status(403).json({ success: false, message: 'Admin access required' });
+            }
+        }
+        next();
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 }
 
 // ==================== HELPERS ====================
@@ -123,16 +174,16 @@ async function calculateWin(userId, betAmount, choice, result) {
     const lossStreak = recentGames.filter(g => g.win_amount === 0).length;
     const isNewUser = (user.games_played || 0) < 3;
     
-    let winChance = 0.35; // Base 35%
+    let winChance = 0.35;
     
     if (isNewUser) {
-        winChance = 0.65; // 65% for new users
+        winChance = 0.65;
     }
     else if (lossStreak >= 3) {
-        winChance = 0.55; // 55% after 3 losses
+        winChance = 0.55;
     }
     else if (lossStreak >= 2) {
-        winChance = 0.45; // 45% after 2 losses
+        winChance = 0.45;
     }
     
     const rand = Math.random();
@@ -190,14 +241,17 @@ app.post('/api/verify-otp', async (req, res) => {
         let user = await db.get('SELECT * FROM users WHERE mobile = ?', [mobile]);
         
         if (!user) {
+            const admin = await db.get('SELECT * FROM admins WHERE mobile = ?', [mobile]);
+            const isAdmin = admin ? 1 : 0;
+            
             const result = await db.run(
-                'INSERT INTO users (mobile, name, balance, games_played, games_won) VALUES (?, ?, ?, ?, ?)',
-                [mobile, `Player_${mobile.slice(-4)}`, 0, 0, 0]
+                'INSERT INTO users (mobile, name, balance, games_played, games_won, is_admin) VALUES (?, ?, ?, ?, ?, ?)',
+                [mobile, `Player_${mobile.slice(-4)}`, 0, 0, 0, isAdmin]
             );
             user = await db.get('SELECT * FROM users WHERE id = ?', [result.lastID]);
         }
         
-        const token = jwt.sign({ id: user.id, mobile: user.mobile }, 'winpaisa_secret', { expiresIn: '7d' });
+        const token = jwt.sign({ id: user.id, mobile: user.mobile, isAdmin: user.is_admin }, 'winpaisa_secret', { expiresIn: '7d' });
         
         res.json({
             success: true,
@@ -208,7 +262,10 @@ app.post('/api/verify-otp', async (req, res) => {
                 name: user.name,
                 balance: user.balance,
                 games_played: user.games_played || 0,
-                games_won: user.games_won || 0
+                games_won: user.games_won || 0,
+                is_admin: user.is_admin || 0,
+                total_deposited: user.total_deposited || 0,
+                total_withdrawn: user.total_withdrawn || 0
             }
         });
     } catch (error) {
@@ -218,9 +275,10 @@ app.post('/api/verify-otp', async (req, res) => {
 });
 
 // 3. DEPOSIT
-app.post('/api/deposit', upload.single('screenshot'), async (req, res) => {
+app.post('/api/deposit', verifyToken, upload.single('screenshot'), async (req, res) => {
     try {
-        const { userId, amount, method, transactionId } = req.body;
+        const { amount, method, transactionId } = req.body;
+        const userId = req.userId;
         const screenshot = req.file ? `/uploads/${req.file.filename}` : null;
         
         if (!userId || amount < 50) {
@@ -234,8 +292,8 @@ app.post('/api/deposit', upload.single('screenshot'), async (req, res) => {
         }
         
         await db.run(
-            `INSERT INTO deposits (user_id, amount, method, transaction_id, screenshot) VALUES (?, ?, ?, ?, ?)`,
-            [userId, amount, method, transactionId, screenshot]
+            `INSERT INTO deposits (user_id, amount, method, transaction_id, screenshot, status) VALUES (?, ?, ?, ?, ?, ?)`,
+            [userId, amount, method, transactionId, screenshot, 'pending']
         );
         
         res.json({ success: true, message: 'Deposit submitted! Admin will verify.' });
@@ -246,9 +304,10 @@ app.post('/api/deposit', upload.single('screenshot'), async (req, res) => {
 });
 
 // 4. WITHDRAW
-app.post('/api/withdraw', async (req, res) => {
+app.post('/api/withdraw', verifyToken, async (req, res) => {
     try {
-        const { userId, amount, method, account } = req.body;
+        const { amount, method, account } = req.body;
+        const userId = req.userId;
         const user = await db.get('SELECT balance FROM users WHERE id = ?', [userId]);
         
         if (amount < 500) {
@@ -261,8 +320,8 @@ app.post('/api/withdraw', async (req, res) => {
         await db.run('UPDATE users SET balance = balance - ? WHERE id = ?', [amount, userId]);
         await db.run('UPDATE users SET total_withdrawn = total_withdrawn + ? WHERE id = ?', [amount, userId]);
         await db.run(
-            `INSERT INTO withdrawals (user_id, amount, method, account) VALUES (?, ?, ?, ?)`,
-            [userId, amount, method, account]
+            `INSERT INTO withdrawals (user_id, amount, method, account, status) VALUES (?, ?, ?, ?, ?)`,
+            [userId, amount, method, account, 'pending']
         );
         
         res.json({ success: true, message: 'Withdrawal request submitted' });
@@ -273,9 +332,10 @@ app.post('/api/withdraw', async (req, res) => {
 });
 
 // 5. COIN FLIP GAME
-app.post('/api/game/coinflip', async (req, res) => {
+app.post('/api/game/coinflip', verifyToken, async (req, res) => {
     try {
-        const { userId, betAmount, choice } = req.body;
+        const { betAmount, choice } = req.body;
+        const userId = req.userId;
         
         const user = await db.get('SELECT balance, games_played, games_won FROM users WHERE id = ?', [userId]);
         
@@ -316,10 +376,11 @@ app.post('/api/game/coinflip', async (req, res) => {
     }
 });
 
-// 6. SPIN WHEEL GAME
-app.post('/api/game/spinwheel', async (req, res) => {
+// 6. SPIN WHEEL GAME (UPDATED WITH NEW PRIZES)
+app.post('/api/game/spinwheel', verifyToken, async (req, res) => {
     try {
-        const { userId, betAmount } = req.body;
+        const { betAmount } = req.body;
+        const userId = req.userId;
         
         const user = await db.get('SELECT balance, games_played, games_won FROM users WHERE id = ?', [userId]);
         
@@ -329,22 +390,26 @@ app.post('/api/game/spinwheel', async (req, res) => {
         
         await db.run('UPDATE users SET balance = balance - ? WHERE id = ?', [betAmount, userId]);
         
-        // Wheel segments: 8 segments, 4 win (1.2x, 1.5x, 1.8x, 2x), 4 lose (0x)
+        // Updated wheel segments with new prizes
         const wheelSegments = [
-            { multiplier: 0, name: 'LOSE' },
-            { multiplier: 1.2, name: 'WIN 1.2x' },
-            { multiplier: 0, name: 'LOSE' },
-            { multiplier: 1.5, name: 'WIN 1.5x' },
-            { multiplier: 0, name: 'LOSE' },
-            { multiplier: 2, name: 'WIN 2x' },
-            { multiplier: 0, name: 'LOSE' },
-            { multiplier: 1.8, name: 'WIN 1.8x' }
+            { value: 0, multiplier: 0, name: "0 PKR - Try Again" },
+            { value: 0, multiplier: 0, name: "0 PKR - Try Again" },
+            { value: 50, multiplier: 0.5, name: "WIN 50 PKR" },
+            { value: 50, multiplier: 0.5, name: "WIN 50 PKR" },
+            { value: 100, multiplier: 1, name: "WIN 100 PKR" },
+            { value: 100, multiplier: 1, name: "WIN 100 PKR" },
+            { value: 150, multiplier: 1.5, name: "WIN 150 PKR" },
+            { value: 200, multiplier: 2, name: "WIN 200 PKR 🎉" },
+            { value: 300, multiplier: 3, name: "WIN 300 PKR" },
+            { value: 500, multiplier: 5, name: "WIN 500 PKR" }
         ];
         
+        // Random selection
         const randomIndex = Math.floor(Math.random() * wheelSegments.length);
         const selected = wheelSegments[randomIndex];
-        const isWin = selected.multiplier > 0;
-        const winAmount = isWin ? Math.floor(betAmount * selected.multiplier) : 0;
+        const isWin = selected.value > 0;
+        const winAmount = isWin ? selected.value : 0;
+        const multiplier = selected.multiplier;
         
         if (isWin) {
             await db.run('UPDATE users SET balance = balance + ? WHERE id = ?', [winAmount, userId]);
@@ -363,7 +428,7 @@ app.post('/api/game/spinwheel', async (req, res) => {
         res.json({
             success: true,
             segment: selected.name,
-            multiplier: selected.multiplier,
+            multiplier: multiplier,
             isWin,
             winAmount,
             newBalance: updatedUser.balance
@@ -375,9 +440,10 @@ app.post('/api/game/spinwheel', async (req, res) => {
 });
 
 // 7. CARD GAME
-app.post('/api/game/cardgame', async (req, res) => {
+app.post('/api/game/cardgame', verifyToken, async (req, res) => {
     try {
-        const { userId, betAmount, choice } = req.body;
+        const { betAmount, choice } = req.body;
+        const userId = req.userId;
         
         const user = await db.get('SELECT balance, games_played, games_won FROM users WHERE id = ?', [userId]);
         
@@ -432,11 +498,11 @@ app.post('/api/game/cardgame', async (req, res) => {
 });
 
 // 8. GET USER
-app.get('/api/user/:userId', async (req, res) => {
+app.get('/api/user', verifyToken, async (req, res) => {
     try {
         const user = await db.get(
-            'SELECT id, mobile, name, balance, games_played, games_won FROM users WHERE id = ?',
-            [req.params.userId]
+            'SELECT id, mobile, name, balance, games_played, games_won, total_deposited, total_withdrawn, is_admin FROM users WHERE id = ?',
+            [req.userId]
         );
         res.json({ success: true, user });
     } catch (error) {
@@ -444,31 +510,43 @@ app.get('/api/user/:userId', async (req, res) => {
     }
 });
 
-// 9. ADMIN APIs
-app.get('/api/admin/users', async (req, res) => {
+// ==================== ADMIN APIs ====================
+
+// Get all users (Admin only)
+app.get('/api/admin/users', verifyToken, checkAdmin, async (req, res) => {
     try {
-        const users = await db.all('SELECT * FROM users ORDER BY id DESC');
+        const users = await db.all('SELECT id, mobile, name, balance, total_deposited, total_withdrawn, games_played, games_won, is_admin, created_at FROM users ORDER BY id DESC');
         res.json({ success: true, users });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
-app.post('/api/admin/add-balance', async (req, res) => {
+// Add balance manually (Admin only)
+app.post('/api/admin/add-balance', verifyToken, checkAdmin, async (req, res) => {
     try {
         const { userId, amount, reason } = req.body;
+        
+        if (!userId || !amount || amount <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid amount' });
+        }
+        
         await db.run('UPDATE users SET balance = balance + ? WHERE id = ?', [amount, userId]);
         await db.run('UPDATE users SET total_deposited = total_deposited + ? WHERE id = ?', [amount, userId]);
         
         const updated = await db.get('SELECT balance FROM users WHERE id = ?', [userId]);
+        
         console.log(`✅ Admin added ${amount} PKR to user ${userId} - ${reason || 'Manual'}`);
-        res.json({ success: true, newBalance: updated.balance });
+        
+        res.json({ success: true, newBalance: updated.balance, message: 'Balance added successfully' });
     } catch (error) {
+        console.error('Add balance error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
-app.get('/api/admin/deposits/pending', async (req, res) => {
+// Get pending deposits (Admin only)
+app.get('/api/admin/deposits/pending', verifyToken, checkAdmin, async (req, res) => {
     try {
         const deposits = await db.all(
             `SELECT d.*, u.mobile, u.name FROM deposits d 
@@ -482,13 +560,37 @@ app.get('/api/admin/deposits/pending', async (req, res) => {
     }
 });
 
-app.post('/api/admin/deposit/approve', async (req, res) => {
+// Get all deposits (Admin only)
+app.get('/api/admin/deposits/all', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        const deposits = await db.all(
+            `SELECT d.*, u.mobile, u.name FROM deposits d 
+             JOIN users u ON d.user_id = u.id 
+             ORDER BY d.created_at DESC LIMIT 100`
+        );
+        res.json({ success: true, deposits });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Approve deposit (Admin only)
+app.post('/api/admin/deposit/approve', verifyToken, checkAdmin, async (req, res) => {
     try {
         const { depositId } = req.body;
+        
+        if (!depositId) {
+            return res.status(400).json({ success: false, message: 'Deposit ID required' });
+        }
+        
         const deposit = await db.get('SELECT * FROM deposits WHERE id = ?', [depositId]);
         
-        if (!deposit || deposit.status !== 'pending') {
-            return res.status(400).json({ success: false, message: 'Invalid deposit' });
+        if (!deposit) {
+            return res.status(404).json({ success: false, message: 'Deposit not found' });
+        }
+        
+        if (deposit.status !== 'pending') {
+            return res.status(400).json({ success: false, message: 'Deposit already processed' });
         }
         
         await db.run('UPDATE deposits SET status = "approved" WHERE id = ?', [depositId]);
@@ -497,17 +599,95 @@ app.post('/api/admin/deposit/approve', async (req, res) => {
             [deposit.amount, deposit.amount, deposit.user_id]
         );
         
-        res.json({ success: true, message: 'Deposit approved!' });
+        console.log(`✅ Deposit ${depositId} approved: ${deposit.amount} PKR added to user ${deposit.user_id}`);
+        
+        res.json({ success: true, message: 'Deposit approved successfully!' });
     } catch (error) {
         console.error('Approve deposit error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
+// Reject deposit (Admin only)
+app.post('/api/admin/deposit/reject', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        const { depositId, reason } = req.body;
+        
+        if (!depositId) {
+            return res.status(400).json({ success: false, message: 'Deposit ID required' });
+        }
+        
+        const deposit = await db.get('SELECT * FROM deposits WHERE id = ?', [depositId]);
+        
+        if (!deposit) {
+            return res.status(404).json({ success: false, message: 'Deposit not found' });
+        }
+        
+        if (deposit.status !== 'pending') {
+            return res.status(400).json({ success: false, message: 'Deposit already processed' });
+        }
+        
+        await db.run('UPDATE deposits SET status = "rejected" WHERE id = ?', [depositId]);
+        
+        console.log(`❌ Deposit ${depositId} rejected: ${reason || 'No reason provided'}`);
+        
+        res.json({ success: true, message: 'Deposit rejected' });
+    } catch (error) {
+        console.error('Reject deposit error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Get pending withdrawals (Admin only)
+app.get('/api/admin/withdrawals/pending', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        const withdrawals = await db.all(
+            `SELECT w.*, u.mobile, u.name FROM withdrawals w 
+             JOIN users u ON w.user_id = u.id 
+             WHERE w.status = 'pending' 
+             ORDER BY w.created_at DESC`
+        );
+        res.json({ success: true, withdrawals });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Approve withdrawal (Admin only)
+app.post('/api/admin/withdrawal/approve', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        const { withdrawalId } = req.body;
+        
+        if (!withdrawalId) {
+            return res.status(400).json({ success: false, message: 'Withdrawal ID required' });
+        }
+        
+        const withdrawal = await db.get('SELECT * FROM withdrawals WHERE id = ?', [withdrawalId]);
+        
+        if (!withdrawal) {
+            return res.status(404).json({ success: false, message: 'Withdrawal not found' });
+        }
+        
+        if (withdrawal.status !== 'pending') {
+            return res.status(400).json({ success: false, message: 'Withdrawal already processed' });
+        }
+        
+        await db.run('UPDATE withdrawals SET status = "approved" WHERE id = ?', [withdrawalId]);
+        
+        console.log(`✅ Withdrawal ${withdrawalId} approved for user ${withdrawal.user_id}`);
+        
+        res.json({ success: true, message: 'Withdrawal approved successfully!' });
+    } catch (error) {
+        console.error('Approve withdrawal error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Get live wins
 app.get('/api/live-wins', async (req, res) => {
     try {
         const wins = await db.all(
-            `SELECT gh.*, u.name FROM game_history gh 
+            `SELECT gh.*, u.name, u.mobile FROM game_history gh 
              JOIN users u ON gh.user_id = u.id 
              WHERE gh.win_amount > 0 
              ORDER BY gh.created_at DESC LIMIT 10`
@@ -518,11 +698,14 @@ app.get('/api/live-wins', async (req, res) => {
     }
 });
 
-app.get('/api/admin/stats', async (req, res) => {
+// Get admin stats
+app.get('/api/admin/stats', verifyToken, checkAdmin, async (req, res) => {
     try {
         const totalUsers = await db.get('SELECT COUNT(*) as count FROM users');
         const totalDeposits = await db.get('SELECT SUM(amount) as total FROM deposits WHERE status = "approved"');
         const totalWithdrawals = await db.get('SELECT SUM(amount) as total FROM withdrawals WHERE status = "approved"');
+        const pendingDeposits = await db.get('SELECT COUNT(*) as count, SUM(amount) as total FROM deposits WHERE status = "pending"');
+        const pendingWithdrawals = await db.get('SELECT COUNT(*) as count, SUM(amount) as total FROM withdrawals WHERE status = "pending"');
         const totalGames = await db.get('SELECT COUNT(*) as count FROM game_history');
         
         res.json({
@@ -531,9 +714,37 @@ app.get('/api/admin/stats', async (req, res) => {
                 totalUsers: totalUsers?.count || 0,
                 totalDeposits: totalDeposits?.total || 0,
                 totalWithdrawals: totalWithdrawals?.total || 0,
+                pendingDeposits: pendingDeposits?.count || 0,
+                pendingDepositsAmount: pendingDeposits?.total || 0,
+                pendingWithdrawals: pendingWithdrawals?.count || 0,
+                pendingWithdrawalsAmount: pendingWithdrawals?.total || 0,
                 totalGames: totalGames?.count || 0
             }
         });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Make user admin (Super admin only)
+app.post('/api/admin/make-admin', verifyToken, checkAdmin, async (req, res) => {
+    try {
+        const { userId } = req.body;
+        
+        const currentUser = await db.get('SELECT is_admin FROM users WHERE id = ?', [req.userId]);
+        const currentAdmin = await db.get('SELECT role FROM admins WHERE mobile = ?', [req.userMobile]);
+        
+        if (!currentUser.is_admin && (!currentAdmin || currentAdmin.role !== 'super_admin')) {
+            return res.status(403).json({ success: false, message: 'Super admin access required' });
+        }
+        
+        await db.run('UPDATE users SET is_admin = 1 WHERE id = ?', [userId]);
+        
+        const user = await db.get('SELECT mobile FROM users WHERE id = ?', [userId]);
+        await db.run('INSERT OR REPLACE INTO admins (mobile, name, role) VALUES (?, ?, ?)', 
+            [user.mobile, `Admin_${user.mobile.slice(-4)}`, 'admin']);
+        
+        res.json({ success: true, message: 'User is now admin' });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -555,13 +766,26 @@ async function startServer() {
 ║  API: http://localhost:${PORT}/api                             ║
 ║                                                              ║
 ║  🎮 3 GAMES AVAILABLE:                                        ║
-║    • Coin Flip - 35% win chance, 1.7x payout                 ║
-║    • Spin Wheel - 50% win chance (1.2x, 1.5x, 1.8x, 2x)     ║
-║    • Card Game - 33% win chance, 1.7x payout                 ║
+║    • Coin Flip - 35%% win chance, 1.7x payout                 ║
+║    • Spin Wheel - New Prizes: 50, 100, 150, 200, 300, 500 PKR║
+║    • Card Game - 33%% win chance, 1.7x payout                 ║
 ║                                                              ║
-║  📱 EasyPaisa Number: 0307 5030001                           ║
+║  🎡 SPIN WHEEL PRIZES:                                        ║
+║    • 0 PKR (2 segments)                                      ║
+║    • 50 PKR (2 segments) - 0.5x                              ║
+║    • 100 PKR (2 segments) - 1x                               ║
+║    • 150 PKR (1 segment) - 1.5x                              ║
+║    • 200 PKR (1 segment) - 2x                                ║
+║    • 300 PKR (1 segment) - 3x                                ║
+║    • 500 PKR (1 segment) - 5x                                ║
 ║                                                              ║
-║  👑 Admin Panel: Triple click "WINPAISA" logo               ║
+║  👑 ADMIN APIs:                                               ║
+║    GET  /api/admin/users                                      ║
+║    GET  /api/admin/deposits/pending  ← Pending deposits      ║
+║    POST /api/admin/deposit/approve   ← Approve deposit       ║
+║    POST /api/admin/add-balance       ← Manual balance add    ║
+║                                                              ║
+║  📱 Default Admin: 03075030001                                ║
 ║  💰 Withdrawal: Minimum 500 PKR | Instant                    ║
 ╚══════════════════════════════════════════════════════════════╝
             `);

@@ -438,13 +438,14 @@
             border-radius: 50%;
         }
 
-        /* Live Ticker - Clear Text */
+        /* Live Ticker */
         .live-ticker {
             background: #0a0e1c;
             border-radius: 50px;
             padding: 12px;
             margin-top: 15px;
             border: 1px solid #ffaa44;
+            overflow: hidden;
         }
         .live-header {
             font-size: 11px;
@@ -460,8 +461,8 @@
             white-space: nowrap;
         }
         @keyframes scrollMarquee {
-            0% { transform: translateX(5%); }
-            100% { transform: translateX(-100%); }
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
         }
         .ticker-item {
             background: linear-gradient(135deg, #ffaa3355, #ff773355);
@@ -551,7 +552,7 @@
 <div class="game-app">
     <div class="logo" id="logo">WINPAISA</div>
     <div class="owner">Azmer Khan • Official</div>
-    <div style="display: flex; justify-content: center;"><div class="tagline">🎯 50 PKR se jeeto 5000 PKR tak! 🎯</div></div>
+    <div style="display: flex; justify-content: center;"><div class="tagline">🎯 50 PKR se jeeto 500 PKR tak! 🎯</div></div>
 
     <div class="stats-panel">
         <div class="stat"><span class="stat-number live-players" id="onlineCount">187</span>Live Players</div>
@@ -586,7 +587,7 @@
 
     <!-- WHEEL GAME -->
     <div id="wheelGame" class="game-box">
-        <div class="game-title">🎡 PRIZE WHEEL (40% WIN)</div>
+        <div class="game-title">🎡 PRIZE WHEEL</div>
         <div class="bet-row" id="wheelBetRow">
             <div class="bet-chip" data-wheel-bet="50">50 PKR</div>
             <div class="bet-chip active" data-wheel-bet="100">100 PKR</div>
@@ -598,7 +599,7 @@
             <canvas id="wheelCanvas" class="wheel-canvas" width="500" height="500"></canvas>
             <div class="wheel-center">SPIN</div>
         </div>
-        <div class="spin-button" id="spinWheelBtn">🎡 SPIN WHEEL (100 PKR)</div>
+        <div class="spin-button" id="spinWheelBtn">🎡 SPIN WHEEL</div>
         <div class="prize-legend" id="prizeLegend"></div>
     </div>
 
@@ -619,7 +620,7 @@
             <div class="choice-btn" id="headsBtn">🪙 HEADS</div>
             <div class="choice-btn active" id="tailsBtn">🪙 TAILS</div>
         </div>
-        <div class="play-button" id="coinPlayBtn">💰 FLIP COIN (100 PKR)</div>
+        <div class="play-button" id="coinPlayBtn">💰 FLIP COIN</div>
     </div>
 
     <!-- CARD GAME -->
@@ -636,10 +637,10 @@
             <div class="card-item" data-card="2">🎴</div>
             <div class="card-item" data-card="3">🃑</div>
         </div>
-        <div class="play-button" id="cardPlayBtn">💰 PLAY (100 PKR)</div>
+        <div class="play-button" id="cardPlayBtn">💰 PLAY</div>
     </div>
 
-    <!-- LIVE TICKER - CLEAR TEXT -->
+    <!-- LIVE TICKER -->
     <div class="live-ticker">
         <div class="live-header">🔥 LIVE WIN FEED 🔥</div>
         <div class="ticker-scroll" id="liveTicker">
@@ -698,18 +699,18 @@
 </div>
 
 <script>
-    // Beautiful Wheel Colors
+    // WHEEL PRIZES - UPDATED
     const WHEEL_PRIZES = [
-        { value: 33, color: "#3b82f6", label: "33 PKR" },
-        { value: 34, color: "#0ea5e9", label: "34 PKR" },
-        { value: 35, color: "#22c55e", label: "35 PKR" },
-        { value: 36, color: "#84cc16", label: "36 PKR" },
-        { value: 37, color: "#eab308", label: "37 PKR" },
-        { value: 38, color: "#f97316", label: "38 PKR" },
-        { value: 39, color: "#ef4444", label: "39 PKR" },
-        { value: 40, color: "#a855f7", label: "40 PKR 🎉" },
-        { value: 35, color: "#2dd4bf", label: "35 PKR" },
-        { value: 38, color: "#f59e0b", label: "38 PKR" }
+        { value: 0, color: "#3b82f6", label: "0 PKR" },
+        { value: 0, color: "#0ea5e9", label: "0 PKR" },
+        { value: 50, color: "#22c55e", label: "50 PKR" },
+        { value: 50, color: "#84cc16", label: "50 PKR" },
+        { value: 100, color: "#eab308", label: "100 PKR" },
+        { value: 100, color: "#f97316", label: "100 PKR" },
+        { value: 150, color: "#ef4444", label: "150 PKR" },
+        { value: 200, color: "#a855f7", label: "200 PKR 🎉" },
+        { value: 300, color: "#2dd4bf", label: "300 PKR" },
+        { value: 500, color: "#f59e0b", label: "500 PKR" }
     ];
     const SEG_COUNT = WHEEL_PRIZES.length;
     const WHEEL_WIN_CHANCE = 0.40;
@@ -816,11 +817,15 @@
         const isWin = getWinResult(wheelFirstPlay);
         let winAmount = 0, selectedPrize = null;
         if(isWin) {
-            selectedPrize = WHEEL_PRIZES[Math.floor(Math.random() * WHEEL_PRIZES.length)];
+            // Only winning prizes (non-zero values)
+            const winningPrizes = WHEEL_PRIZES.filter(p => p.value > 0);
+            selectedPrize = winningPrizes[Math.floor(Math.random() * winningPrizes.length)];
             winAmount = selectedPrize.value;
             balance += winAmount;
         } else {
-            selectedPrize = WHEEL_PRIZES[Math.floor(Math.random() * WHEEL_PRIZES.length)];
+            // Lose: only zero prizes
+            const losingPrizes = WHEEL_PRIZES.filter(p => p.value === 0);
+            selectedPrize = losingPrizes[Math.floor(Math.random() * losingPrizes.length)];
         }
         
         const angleStepDeg = 360 / SEG_COUNT;
@@ -832,8 +837,8 @@
         wheelCanvas.style.transform = `rotate(${finalRotate}deg)`;
         
         setTimeout(() => {
-            if(isWin) { 
-                showToast(`🎉 WON ${winAmount} PKR!`, false); 
+            if(isWin && winAmount > 0) { 
+                showToast(`🎉 WON ${winAmount} PKR! 🎉`, false); 
                 addLiveWin(winAmount); 
                 playSound('win');
                 wheelCanvas.classList.add('win-pulse'); 
@@ -845,7 +850,11 @@
             updateBalanceUI(); saveUser();
             spinning = false;
             wheelFirstPlay = false;
-            setTimeout(() => { wheelCanvas.style.transition = "none"; wheelCanvas.style.transform = `rotate(${finalRotate % 360}deg)`; setTimeout(() => wheelCanvas.style.transition = "", 50); }, 100);
+            setTimeout(() => { 
+                wheelCanvas.style.transition = "none"; 
+                wheelCanvas.style.transform = `rotate(${finalRotate % 360}deg)`; 
+                setTimeout(() => wheelCanvas.style.transition = "", 50); 
+            }, 100);
         }, 3900);
     }
 
@@ -857,7 +866,10 @@
         
         const isWin = getWinResult(coinFirstPlay);
         let winAmount = 0;
-        if(isWin) { winAmount = Math.floor(coinBet * 1.8); balance += winAmount; }
+        if(isWin) { 
+            winAmount = Math.floor(coinBet * 1.8); 
+            balance += winAmount; 
+        }
         
         const hand = document.getElementById('hand');
         const coinEl = document.getElementById('coin');
@@ -888,12 +900,12 @@
                 hand.classList.add('hand-catch');
                 setTimeout(() => hand.classList.remove('hand-catch'), 200);
                 
-                if(userWon && isWin) { 
-                    showToast(`🎉 WON ${winAmount} PKR!`, false); 
+                if(userWon && winAmount > 0) { 
+                    showToast(`🎉 WON ${winAmount} PKR! 🎉`, false); 
                     addLiveWin(winAmount);
                     playSound('win');
-                } else if(isWin && !userWon) { 
-                    showToast(`🎉 WON ${winAmount} PKR! (First play)`, false); 
+                } else if(isWin && !userWon && winAmount > 0) { 
+                    showToast(`🎉 WON ${winAmount} PKR! (Bonus Win) 🎉`, false); 
                     addLiveWin(winAmount);
                     playSound('win');
                 } else { 
@@ -915,13 +927,16 @@
         
         const isWin = getWinResult(cardFirstPlay);
         let winAmount = 0;
-        if(isWin) { winAmount = Math.floor(cardBet * 1.8); balance += winAmount; }
+        if(isWin) { 
+            winAmount = Math.floor(cardBet * 1.8); 
+            balance += winAmount; 
+        }
         
         const cardEl = document.querySelector(`.card-item[data-card="${selectedCard}"]`);
         cardEl.style.transform = "rotateY(180deg)";
         setTimeout(() => {
-            if(isWin) { 
-                showToast(`🎉 WON ${winAmount} PKR!`, false); 
+            if(isWin && winAmount > 0) { 
+                showToast(`🎉 WON ${winAmount} PKR! 🎉`, false); 
                 addLiveWin(winAmount);
                 playSound('win');
             } else { 
@@ -935,20 +950,27 @@
     }
 
     function showToast(msg, isErr) {
-        const toast = document.createElement('div'); toast.className = 'toast-msg'; toast.textContent = msg;
+        const toast = document.createElement('div'); 
+        toast.className = 'toast-msg'; 
+        toast.textContent = msg;
         if(isErr) toast.style.background = "#ff7777";
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 2200);
     }
+    
     function updateBalanceUI() {
         document.getElementById('balanceAmount').innerText = balance;
         const spinBtn = document.getElementById('spinWheelBtn');
-        if(balance < wheelBet) spinBtn.classList.add('disabled'); else spinBtn.classList.remove('disabled');
+        if(balance < wheelBet) spinBtn.classList.add('disabled'); 
+        else spinBtn.classList.remove('disabled');
         const coinBtn = document.getElementById('coinPlayBtn');
-        if(balance < coinBet) coinBtn.classList.add('disabled'); else coinBtn.classList.remove('disabled');
+        if(balance < coinBet) coinBtn.classList.add('disabled'); 
+        else coinBtn.classList.remove('disabled');
         const cardBtn = document.getElementById('cardPlayBtn');
-        if(balance < cardBet) cardBtn.classList.add('disabled'); else cardBtn.classList.remove('disabled');
+        if(balance < cardBet) cardBtn.classList.add('disabled'); 
+        else cardBtn.classList.remove('disabled');
     }
+    
     function saveUser() { 
         if(currentUser) { 
             currentUser.balance = balance; 
@@ -959,11 +981,13 @@
             localStorage.setItem('winpaisa_user', JSON.stringify(currentUser)); 
         } 
     }
+    
     function addLiveWin(amount) {
-        const names = ["Rayan", "Mehak", "Bilal", "Ayesha", "Hamza", "Zara", "Usman", "Fatima"];
+        const names = ["Rayan", "Mehak", "Bilal", "Ayesha", "Hamza", "Zara", "Usman", "Fatima", "Ali", "Sana"];
         liveWins.unshift(`✨ ${names[Math.floor(Math.random()*names.length)]} won ${amount} PKR ✨`);
-        if(liveWins.length > 5) liveWins.pop();
-        document.getElementById('liveTicker').innerHTML = liveWins.map(w => `<span class="ticker-item">${w}</span>`).join('');
+        if(liveWins.length > 8) liveWins.pop();
+        const tickerDiv = document.getElementById('liveTicker');
+        tickerDiv.innerHTML = liveWins.map(w => `<span class="ticker-item">${w}</span>`).join('');
         let totalSpan = document.getElementById('totalWinCount');
         let val = parseFloat(totalSpan.innerText) || 6.8;
         totalSpan.innerText = (val + 0.05).toFixed(1) + 'K';
@@ -973,22 +997,39 @@
     let pendingOtp = null;
     function sendOtp() {
         const mobile = document.getElementById('mobileNumber').value.trim();
-        if(!mobile || mobile.length < 10) { document.getElementById('loginMsg').innerHTML = '<span style="color:#ff8888;">❌ Valid mobile</span>'; return; }
+        if(!mobile || mobile.length < 10) { 
+            document.getElementById('loginMsg').innerHTML = '<span style="color:#ff8888;">❌ Valid mobile number required</span>'; 
+            return; 
+        }
         const fakeOtp = Math.floor(100000 + Math.random() * 900000).toString();
         document.getElementById('demoOtpSpan').innerText = fakeOtp;
         document.getElementById('otpSection').style.display = 'block';
-        pendingOtp = fakeOtp; window.pendingMobile = mobile;
+        pendingOtp = fakeOtp; 
+        window.pendingMobile = mobile;
+        document.getElementById('loginMsg').innerHTML = '<span style="color:#88ff88;">✅ OTP sent! Check above 👆</span>';
     }
+    
     function verifyOtp() {
-        if(document.getElementById('otpInput').value !== pendingOtp) { document.getElementById('loginMsg').innerHTML = '<span style="color:#ff8888;">❌ Wrong OTP</span>'; return; }
+        if(document.getElementById('otpInput').value !== pendingOtp) { 
+            document.getElementById('loginMsg').innerHTML = '<span style="color:#ff8888;">❌ Wrong OTP</span>'; 
+            return; 
+        }
         const mobile = window.pendingMobile;
         let user = users.find(u => u.mobile === mobile);
         if(!user) {
-            user = { id: Date.now(), mobile, name: "Player_" + mobile.slice(-4), balance: 500, totalDeposited: 0, totalWithdrawn: 0 };
+            user = { 
+                id: Date.now(), 
+                mobile: mobile, 
+                name: "Player_" + mobile.slice(-4), 
+                balance: 500, 
+                totalDeposited: 0, 
+                totalWithdrawn: 0 
+            };
             users.push(user);
             saveUsers();
         }
-        currentUser = user; balance = currentUser.balance;
+        currentUser = user; 
+        balance = currentUser.balance;
         saveUser();
         document.getElementById('loginModal').style.display = 'none';
         document.getElementById('userNameDisplay').innerText = currentUser.name;
@@ -1002,6 +1043,7 @@
         if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
         document.getElementById('depositModal').style.display = 'flex';
     }
+    
     function submitDeposit() {
         const amount = parseInt(document.getElementById('depositAmount').value);
         const transactionId = document.getElementById('transactionId').value;
@@ -1009,27 +1051,36 @@
         if(!transactionId) { showToast("Transaction ID required", true); return; }
         showToast(`✅ Deposit request submitted! Admin will verify.`, false);
         document.getElementById('depositModal').style.display = 'none';
+        document.getElementById('depositAmount').value = '100';
+        document.getElementById('transactionId').value = '';
+        document.getElementById('screenshotInput').value = '';
     }
+    
     function closeDepositModal() {
         document.getElementById('depositModal').style.display = 'none';
     }
     
     function openWithdraw() {
         if(!currentUser) { showToast("Login first", true); return; }
-        if(balance < 500) { showToast("Minimum 500 PKR", true); return; }
+        if(balance < 500) { showToast("Minimum 500 PKR required for withdrawal", true); return; }
         document.getElementById('withdrawModal').style.display = 'flex';
     }
+    
     function submitWithdraw() {
         let amount = parseInt(document.getElementById('withdrawAmount').value);
         const acc = document.getElementById('withdrawAccount').value;
         if(!amount || amount < 500) { showToast("Min 500 PKR", true); return; }
-        if(amount > balance) { showToast("Insufficient", true); return; }
+        if(amount > balance) { showToast("Insufficient balance", true); return; }
+        if(!acc || acc.length < 10) { showToast("Valid account number required", true); return; }
         balance -= amount;
         if(currentUser) currentUser.balance = balance;
         if(currentUser) currentUser.totalWithdrawn = (currentUser.totalWithdrawn || 0) + amount;
-        saveUser(); updateBalanceUI();
-        showToast(`✅ Withdraw ${amount} PKR to ${acc}`, false);
+        saveUser(); 
+        updateBalanceUI();
+        showToast(`✅ Withdraw request of ${amount} PKR submitted to ${acc}`, false);
         document.getElementById('withdrawModal').style.display = 'none';
+        document.getElementById('withdrawAmount').value = '';
+        document.getElementById('withdrawAccount').value = '';
     }
 
     // Admin Panel
@@ -1066,11 +1117,11 @@
                 <div id="adminUsersContent"><div id="adminUsersList"></div></div>
                 <div id="adminBalanceContent" style="display:none;">
                     <input type="text" id="adminUserId" placeholder="User ID">
-                    <input type="number" id="adminAmount" placeholder="Amount">
+                    <input type="number" id="adminAmount" placeholder="Amount (PKR)">
                     <button id="adminAddBalanceBtn">➕ Add Balance</button>
                 </div>
                 <div id="adminStatsContent" style="display:none;"><div id="adminStatsList"></div></div>
-                <button id="closeAdminPanelBtn" style="background:#333;">Close</button>
+                <button id="closeAdminPanelBtn" style="background:#333; margin-top:15px;">Close</button>
             </div>
         `;
         document.body.appendChild(modal);
@@ -1100,26 +1151,29 @@
 
     function loadAdminUsers() {
         const container = document.getElementById('adminUsersList');
-        if (users.length === 0) { container.innerHTML = '<div>No users</div>'; return; }
+        if (users.length === 0) { container.innerHTML = '<div>No users found</div>'; return; }
         container.innerHTML = users.map(u => `
             <div style="background:#2a2f4a; padding:10px; margin:8px 0; border-radius:15px;">
                 <strong>${u.name}</strong> (ID: ${u.id})<br>
+                Mobile: ${u.mobile}<br>
                 Balance: ${u.balance} PKR<br>
-                <button onclick="selectUser(${u.id})" style="background:#ffaa33; padding:3px 12px; border-radius:20px;">Select</button>
+                <button onclick="selectUser(${u.id})" style="background:#ffaa33; padding:3px 12px; border-radius:20px; margin-top:5px;">Select</button>
             </div>
         `).join('');
     }
+    
     function selectUser(id) {
         document.getElementById('adminUserId').value = id;
         showToast(`User ID ${id} selected`, false);
     }
+    
     function addManualBalance() {
         const userId = parseInt(document.getElementById('adminUserId').value);
         const amount = parseInt(document.getElementById('adminAmount').value);
-        if (!userId || !amount) { showToast("Enter User ID and Amount", true); return; }
+        if (!userId || !amount || amount <= 0) { showToast("Enter valid User ID and Amount", true); return; }
         let user = users.find(u => u.id === userId);
         if (!user) { showToast("User not found", true); return; }
-        user.balance += amount;
+        user.balance = (user.balance || 0) + amount;
         user.totalDeposited = (user.totalDeposited || 0) + amount;
         saveUsers();
         if (currentUser && currentUser.id === userId) {
@@ -1131,6 +1185,7 @@
         document.getElementById('adminAmount').value = '';
         loadAdminUsers();
     }
+    
     function loadAdminStats() {
         const container = document.getElementById('adminStatsList');
         let totalUsers = users.length;
@@ -1138,11 +1193,13 @@
         let totalDeposits = users.reduce((s, u) => s + (u.totalDeposited || 0), 0);
         let totalWithdrawals = users.reduce((s, u) => s + (u.totalWithdrawn || 0), 0);
         container.innerHTML = `
-            👥 Users: ${totalUsers}<br>
-            💰 Deposits: ${totalDeposits} PKR<br>
-            💸 Withdrawals: ${totalWithdrawals} PKR<br>
-            📈 Profit: ${totalDeposits - totalWithdrawals} PKR<br>
-            💎 Balance: ${totalBalance} PKR
+            <div style="padding: 10px;">
+                👥 Total Users: ${totalUsers}<br><br>
+                💰 Total Deposits: ${totalDeposits} PKR<br>
+                💸 Total Withdrawals: ${totalWithdrawals} PKR<br>
+                📈 Profit: ${totalDeposits - totalWithdrawals} PKR<br>
+                💎 Platform Balance: ${totalBalance} PKR
+            </div>
         `;
     }
 
@@ -1157,12 +1214,16 @@
             document.getElementById('cardGame').style.display = g === 'card' ? 'block' : 'none';
         });
     });
+    
     document.getElementById('spinWheelBtn').addEventListener('click', spinWheel);
     document.getElementById('coinPlayBtn').addEventListener('click', playCoinFlip);
     document.getElementById('cardPlayBtn').addEventListener('click', playCardGame);
     document.getElementById('depositBtn').addEventListener('click', openDeposit);
     document.getElementById('submitDepositBtn').addEventListener('click', submitDeposit);
     document.getElementById('closeDepositModal').addEventListener('click', closeDepositModal);
+    document.getElementById('withdrawBtnAction').addEventListener('click', openWithdraw);
+    document.getElementById('confirmWithdrawBtn').addEventListener('click', submitWithdraw);
+    document.getElementById('closeWithdrawBtn').addEventListener('click', () => document.getElementById('withdrawModal').style.display = 'none');
     
     document.querySelectorAll('[data-wheel-bet]').forEach(el => {
         el.addEventListener('click', () => {
@@ -1172,6 +1233,7 @@
             updateBalanceUI();
         });
     });
+    
     document.querySelectorAll('[data-coin-bet]').forEach(el => {
         el.addEventListener('click', () => {
             document.querySelectorAll('[data-coin-bet]').forEach(c=>c.classList.remove('active'));
@@ -1180,6 +1242,7 @@
             updateBalanceUI();
         });
     });
+    
     document.querySelectorAll('[data-card-bet]').forEach(el => {
         el.addEventListener('click', () => {
             document.querySelectorAll('[data-card-bet]').forEach(c=>c.classList.remove('active'));
@@ -1188,16 +1251,19 @@
             updateBalanceUI();
         });
     });
+    
     document.getElementById('headsBtn').addEventListener('click', () => {
         coinChoice = "HEADS";
         document.getElementById('headsBtn').classList.add('active');
         document.getElementById('tailsBtn').classList.remove('active');
     });
+    
     document.getElementById('tailsBtn').addEventListener('click', () => {
         coinChoice = "TAILS";
         document.getElementById('tailsBtn').classList.add('active');
         document.getElementById('headsBtn').classList.remove('active');
     });
+    
     document.querySelectorAll('.card-item').forEach(c => {
         c.addEventListener('click', () => {
             document.querySelectorAll('.card-item').forEach(c2=>c2.classList.remove('selected'));
@@ -1205,30 +1271,39 @@
             selectedCard = parseInt(c.dataset.card);
         });
     });
+    
     document.getElementById('sendOtpBtn').addEventListener('click', sendOtp);
     document.getElementById('verifyOtpBtn').addEventListener('click', verifyOtp);
-    document.getElementById('withdrawBtnAction').addEventListener('click', openWithdraw);
-    document.getElementById('confirmWithdrawBtn').addEventListener('click', submitWithdraw);
-    document.getElementById('closeWithdrawBtn').addEventListener('click', () => document.getElementById('withdrawModal').style.display = 'none');
 
     function init() {
         loadUsers();
-        canvas.width = 500; canvas.height = 500; ctx = canvas.getContext('2d');
-        drawWheel(); updateLegend();
+        canvas.width = 500; 
+        canvas.height = 500; 
+        ctx = canvas.getContext('2d');
+        drawWheel(); 
+        updateLegend();
         const saved = localStorage.getItem('winpaisa_user');
         if(saved) { 
-            currentUser = JSON.parse(saved); 
-            balance = currentUser.balance; 
-            document.getElementById('loginModal').style.display = 'none'; 
-            document.getElementById('userNameDisplay').innerText = currentUser.name; 
-            document.getElementById('userPhoneDisplay').innerText = currentUser.mobile; 
-            document.getElementById('avatarIcon').innerHTML = currentUser.name.charAt(0).toUpperCase(); 
-            updateBalanceUI(); 
+            try {
+                currentUser = JSON.parse(saved); 
+                balance = currentUser.balance || 0; 
+                document.getElementById('loginModal').style.display = 'none'; 
+                document.getElementById('userNameDisplay').innerText = currentUser.name; 
+                document.getElementById('userPhoneDisplay').innerText = currentUser.mobile; 
+                document.getElementById('avatarIcon').innerHTML = currentUser.name.charAt(0).toUpperCase(); 
+                updateBalanceUI(); 
+            } catch(e) {}
         }
-        setInterval(() => { document.getElementById('onlineCount').innerText = Math.floor(Math.random() * 80) + 150; }, 8000);
+        setInterval(() => { 
+            document.getElementById('onlineCount').innerText = Math.floor(Math.random() * 80) + 150; 
+        }, 8000);
         document.getElementById('liveTicker').innerHTML = liveWins.map(w => `<span class="ticker-item">${w}</span>`).join('');
-        setInterval(() => addLiveWin([33,34,35,36,37,38,39,40][Math.floor(Math.random()*8)]), 13000);
+        setInterval(() => {
+            const randomWins = [50, 100, 100, 150, 200, 300];
+            addLiveWin(randomWins[Math.floor(Math.random() * randomWins.length)]);
+        }, 13000);
     }
+    
     init();
 </script>
 </body>

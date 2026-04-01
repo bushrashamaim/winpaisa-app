@@ -110,11 +110,9 @@ function generateOTP() {
 
 // Smart Win Logic (35% base, new user boost, loss streak protection)
 async function calculateWin(userId, betAmount, choice, result) {
-    // Get user data
     const user = await db.get('SELECT * FROM users WHERE id = ?', [userId]);
     const isChoiceMatch = (choice === result);
     
-    // Get recent loss streak
     const recentGames = await db.all(
         `SELECT win_amount FROM game_history 
          WHERE user_id = ? 
@@ -125,14 +123,11 @@ async function calculateWin(userId, betAmount, choice, result) {
     const lossStreak = recentGames.filter(g => g.win_amount === 0).length;
     const isNewUser = (user.games_played || 0) < 3;
     
-    // Smart win chance calculation
     let winChance = 0.35; // Base 35%
     
-    // New user bonus
     if (isNewUser) {
         winChance = 0.65; // 65% for new users
     }
-    // Loss streak protection
     else if (lossStreak >= 3) {
         winChance = 0.55; // 55% after 3 losses
     }
@@ -145,7 +140,6 @@ async function calculateWin(userId, betAmount, choice, result) {
     
     let winAmount = 0;
     if (isWin) {
-        // Random multiplier between 1.7x and 2.5x
         const multiplier = 1.7 + (Math.random() * 0.8);
         winAmount = Math.floor(betAmount * multiplier);
     }
@@ -289,13 +283,10 @@ app.post('/api/game/coinflip', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Insufficient balance' });
         }
         
-        // Deduct bet
         await db.run('UPDATE users SET balance = balance - ? WHERE id = ?', [betAmount, userId]);
         
-        // Coin flip result
         const result = Math.random() < 0.5 ? 'HEADS' : 'TAILS';
         
-        // Smart win calculation
         const { isWin, winAmount } = await calculateWin(userId, betAmount, choice, result);
         
         if (isWin) {
@@ -305,7 +296,6 @@ app.post('/api/game/coinflip', async (req, res) => {
         
         await db.run('UPDATE users SET games_played = games_played + 1 WHERE id = ?', [userId]);
         
-        // Save game history
         await db.run(
             `INSERT INTO game_history (user_id, game, bet_amount, win_amount, result, user_choice) VALUES (?, ?, ?, ?, ?, ?)`,
             [userId, 'coinflip', betAmount, winAmount, result, choice]
@@ -326,7 +316,65 @@ app.post('/api/game/coinflip', async (req, res) => {
     }
 });
 
-// 6. CARD GAME
+// 6. SPIN WHEEL GAME
+app.post('/api/game/spinwheel', async (req, res) => {
+    try {
+        const { userId, betAmount } = req.body;
+        
+        const user = await db.get('SELECT balance, games_played, games_won FROM users WHERE id = ?', [userId]);
+        
+        if (user.balance < betAmount) {
+            return res.status(400).json({ success: false, message: 'Insufficient balance' });
+        }
+        
+        await db.run('UPDATE users SET balance = balance - ? WHERE id = ?', [betAmount, userId]);
+        
+        // Wheel segments: 8 segments, 4 win (1.2x, 1.5x, 1.8x, 2x), 4 lose (0x)
+        const wheelSegments = [
+            { multiplier: 0, name: 'LOSE' },
+            { multiplier: 1.2, name: 'WIN 1.2x' },
+            { multiplier: 0, name: 'LOSE' },
+            { multiplier: 1.5, name: 'WIN 1.5x' },
+            { multiplier: 0, name: 'LOSE' },
+            { multiplier: 2, name: 'WIN 2x' },
+            { multiplier: 0, name: 'LOSE' },
+            { multiplier: 1.8, name: 'WIN 1.8x' }
+        ];
+        
+        const randomIndex = Math.floor(Math.random() * wheelSegments.length);
+        const selected = wheelSegments[randomIndex];
+        const isWin = selected.multiplier > 0;
+        const winAmount = isWin ? Math.floor(betAmount * selected.multiplier) : 0;
+        
+        if (isWin) {
+            await db.run('UPDATE users SET balance = balance + ? WHERE id = ?', [winAmount, userId]);
+            await db.run('UPDATE users SET games_won = games_won + 1 WHERE id = ?', [userId]);
+        }
+        
+        await db.run('UPDATE users SET games_played = games_played + 1 WHERE id = ?', [userId]);
+        
+        await db.run(
+            `INSERT INTO game_history (user_id, game, bet_amount, win_amount, result, user_choice) VALUES (?, ?, ?, ?, ?, ?)`,
+            [userId, 'spinwheel', betAmount, winAmount, selected.name, 'spin']
+        );
+        
+        const updatedUser = await db.get('SELECT balance FROM users WHERE id = ?', [userId]);
+        
+        res.json({
+            success: true,
+            segment: selected.name,
+            multiplier: selected.multiplier,
+            isWin,
+            winAmount,
+            newBalance: updatedUser.balance
+        });
+    } catch (error) {
+        console.error('Spin Wheel error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// 7. CARD GAME
 app.post('/api/game/cardgame', async (req, res) => {
     try {
         const { userId, betAmount, choice } = req.body;
@@ -337,39 +385,43 @@ app.post('/api/game/cardgame', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Insufficient balance' });
         }
         
-        // Deduct bet
         await db.run('UPDATE users SET balance = balance - ? WHERE id = ?', [betAmount, userId]);
         
-        // Coin flip result (for win calculation)
-        const result = Math.random() < 0.5 ? 'HEADS' : 'TAILS';
+        const cards = [
+            { name: 'WINNER! 🎉', winAmount: Math.floor(betAmount * 1.7), message: 'YOU WIN!' },
+            { name: 'LOSER', winAmount: 0, message: 'YOU LOSE' },
+            { name: 'LOSER', winAmount: 0, message: 'YOU LOSE' }
+        ];
         
-        // Smart win calculation
-        const { isWin, winAmount } = await calculateWin(userId, betAmount, choice, result);
+        const shuffled = [...cards];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
         
-        let cardName = 'LOSER';
-        let resultMsg = '😞 YOU LOSE';
+        const selected = shuffled[choice - 1];
+        const isWin = selected.winAmount > 0;
+        const winAmount = selected.winAmount;
         
         if (isWin) {
-            cardName = 'WINNER! 🎉';
-            resultMsg = '🎉 YOU WIN! 🎉';
             await db.run('UPDATE users SET balance = balance + ? WHERE id = ?', [winAmount, userId]);
             await db.run('UPDATE users SET games_won = games_won + 1 WHERE id = ?', [userId]);
         }
         
         await db.run('UPDATE users SET games_played = games_played + 1 WHERE id = ?', [userId]);
         
-        // Save game history
         await db.run(
             `INSERT INTO game_history (user_id, game, bet_amount, win_amount, result, user_choice) VALUES (?, ?, ?, ?, ?, ?)`,
-            [userId, 'cardgame', betAmount, winAmount, `${cardName} - ${resultMsg}`, choice.toString()]
+            [userId, 'cardgame', betAmount, winAmount, `${selected.name} - ${selected.message}`, choice.toString()]
         );
         
         const updatedUser = await db.get('SELECT balance FROM users WHERE id = ?', [userId]);
         
         res.json({
             success: true,
-            card: cardName,
-            resultMsg: resultMsg,
+            card: selected.name,
+            resultMsg: selected.message,
+            isWin,
             winAmount,
             newBalance: updatedUser.balance
         });
@@ -379,7 +431,7 @@ app.post('/api/game/cardgame', async (req, res) => {
     }
 });
 
-// 7. GET USER
+// 8. GET USER
 app.get('/api/user/:userId', async (req, res) => {
     try {
         const user = await db.get(
@@ -392,7 +444,7 @@ app.get('/api/user/:userId', async (req, res) => {
     }
 });
 
-// 8. ADMIN APIs
+// 9. ADMIN APIs
 app.get('/api/admin/users', async (req, res) => {
     try {
         const users = await db.all('SELECT * FROM users ORDER BY id DESC');
@@ -502,13 +554,12 @@ async function startServer() {
 ║  Server: http://localhost:${PORT}                              ║
 ║  API: http://localhost:${PORT}/api                             ║
 ║                                                              ║
-║  🎮 GAME LOGIC:                                              ║
-║    • Base Win Chance: 35%                                    ║
-║    • Payout: 1.7x to 2.5x (Random)                          ║
-║    • New User Bonus: 65% win chance for first 3 games        ║
-║    • Loss Streak Protection: Higher chance after losses      ║
+║  🎮 3 GAMES AVAILABLE:                                        ║
+║    • Coin Flip - 35% win chance, 1.7x payout                 ║
+║    • Spin Wheel - 50% win chance (1.2x, 1.5x, 1.8x, 2x)     ║
+║    • Card Game - 33% win chance, 1.7x payout                 ║
 ║                                                              ║
-║  📱 EasyPaisa Number: 03075030001                         ║
+║  📱 EasyPaisa Number: 0307 5030001                           ║
 ║                                                              ║
 ║  👑 Admin Panel: Triple click "WINPAISA" logo               ║
 ║  💰 Withdrawal: Minimum 500 PKR | Instant                    ║

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>WINPAISA - Hand Coin Flip & Card Game</title>
+    <title>WINPAISA • 3 Games • Azmer Khan</title>
     <style>
         * {
             margin: 0;
@@ -13,422 +13,147 @@
         }
 
         body {
-            background: radial-gradient(circle at top, #1a1a2e, #000);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
+            background: linear-gradient(135deg, #0a0f1f 0%, #03060f 100%);
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
+            align-items: center;
+            padding: 16px;
         }
 
-        .container {
-            max-width: 450px;
+        .game-app {
+            max-width: 560px;
             width: 100%;
-            padding: 20px;
+            background: linear-gradient(145deg, #0f1325, #080b18);
+            border-radius: 56px;
+            padding: 20px 18px 28px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 180, 70, 0.4);
         }
 
         .logo {
             text-align: center;
-            font-size: 32px;
+            font-size: 44px;
             font-weight: 800;
-            background: linear-gradient(135deg, #FFD700, #FF8C00);
+            background: linear-gradient(135deg, #FFE5A3, #FFA41E);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             cursor: pointer;
-            margin-bottom: 10px;
         }
-
+        .owner {
+            text-align: center;
+            font-size: 12px;
+            color: #ffbc5a;
+            margin-top: -5px;
+        }
         .tagline {
             text-align: center;
+            background: linear-gradient(90deg, #ffaa3355, #ff773355);
+            margin: 12px auto;
+            padding: 6px 18px;
+            border-radius: 60px;
+            width: fit-content;
             font-size: 11px;
-            color: #ffaa33;
-            margin-bottom: 15px;
-        }
-
-        /* Online Users */
-        .online-users {
-            background: rgba(0,0,0,0.5);
-            padding: 6px;
-            text-align: center;
-            font-size: 11px;
-            color: #44ff44;
-            border-radius: 20px;
-            margin-bottom: 10px;
-        }
-
-        /* Offer Banner */
-        .offer-banner {
-            background: linear-gradient(135deg, #ffaa33, #ff7700);
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 20px;
-            text-align: center;
-            color: #000;
             font-weight: bold;
-            font-size: 11px;
-            animation: pulse 2s infinite;
+            color: #ffdd99;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        /* Trust Stats */
-        .trust-stats {
+        /* Stats Panel */
+        .stats-panel {
             display: flex;
-            justify-content: space-around;
-            padding: 8px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
-            margin-bottom: 15px;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #1a1f35, #11152a);
+            padding: 10px 20px;
+            border-radius: 60px;
+            margin-bottom: 18px;
+            border: 1px solid #ffaa4455;
         }
-
-        .stat-item {
+        .stat {
             text-align: center;
+            font-size: 11px;
+            color: #ccddff;
         }
-
-        .stat-value {
-            font-size: 14px;
+        .stat-number {
             font-weight: bold;
-            color: #ffaa33;
+            color: #ffcc55;
+            font-size: 16px;
+            display: block;
+        }
+        .live-players {
+            color: #44ff44;
         }
 
-        .stat-label {
-            font-size: 9px;
-            color: #888;
-        }
-
-        /* User Bar */
-        .user-bar {
+        /* User Card */
+        .user-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 15px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 30px;
-            margin-bottom: 15px;
+            background: linear-gradient(135deg, #1e2442, #131836);
+            border-radius: 60px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            border: 1px solid #ffbb44;
         }
-
         .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 14px;
         }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #ffaa33, #ff7700);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 16px;
-            color: #000;
-        }
-
-        .balance {
-            text-align: right;
-        }
-
-        .balance-label {
-            font-size: 10px;
-            color: #888;
-        }
-
-        .balance-amount {
-            font-size: 24px;
-            font-weight: 800;
-            color: #ffaa33;
-            transition: all 0.3s ease;
-        }
-
-        .balance-animation {
-            animation: coinAdd 0.5s ease-out;
-        }
-
-        @keyframes coinAdd {
-            0% { transform: scale(1); color: #ffaa33; }
-            50% { transform: scale(1.2); color: #44ff44; text-shadow: 0 0 10px #44ff44; }
-            100% { transform: scale(1); color: #ffaa33; }
-        }
-
-        .withdraw-btn {
-            background: rgba(0,0,0,0.6);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            cursor: pointer;
-            margin-top: 3px;
-            border: 1px solid #ffaa33;
-        }
-
-        .withdraw-info {
-            font-size: 8px;
-            color: #888;
-            margin-top: 2px;
-        }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .hero h1 {
-            font-size: 18px;
-        }
-
-        .hero h1 span {
-            color: #ffaa33;
-        }
-
-        .fair-play-badge {
-            background: rgba(68,255,68,0.1);
-            border: 1px solid #44ff44;
-            border-radius: 30px;
-            padding: 3px 8px;
-            font-size: 8px;
-            display: inline-block;
-        }
-
-        /* ==================== HAND COIN FLIP GAME ==================== */
-        .game-box {
-            background: linear-gradient(145deg, #141425, #0a0a15);
-            border-radius: 30px;
-            padding: 20px;
-            border: 2px solid #ffb400;
-            margin-bottom: 15px;
-        }
-
-        .game-title {
-            text-align: center;
-            color: #ffb400;
-            font-size: 14px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .hand-area {
-            position: relative;
-            height: 110px;
-            margin-bottom: 10px;
-        }
-
-        .hand {
-            font-size: 100px;
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-            transition: transform 0.1s ease;
-        }
-
-        /* Hand Animation */
-        .hand-throw {
-            animation: handThrowAnim 0.2s ease-out forwards;
-        }
-
-        @keyframes handThrowAnim {
-            0% { transform: translateX(-50%) translateY(0) rotate(0deg); }
-            50% { transform: translateX(-50%) translateY(-20px) rotate(15deg); }
-            100% { transform: translateX(-50%) translateY(-15px) rotate(10deg); }
-        }
-
-        .hand-catch {
-            animation: handCatchAnim 0.2s ease-in forwards;
-        }
-
-        @keyframes handCatchAnim {
-            0% { transform: translateX(-50%) translateY(-15px) rotate(10deg); }
-            100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
-        }
-
-        .coin {
+        .avatar {
             width: 55px;
             height: 55px;
+            background: linear-gradient(145deg, #FFB347, #FF8C1A);
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ffe27a, #ffb400);
-            position: absolute;
-            bottom: 65px;
-            left: 50%;
-            transform: translateX(-50%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 900;
-            font-size: 24px;
-            color: #000;
-            backface-visibility: hidden;
-            box-shadow: 0 0 15px rgba(255,170,51,0.5);
+            font-size: 26px;
+            font-weight: bold;
+            border: 2px solid #ffdd88;
         }
-
-        /* Coin Flip Animation - Upar jata hai, spin karta hai, neeche aata hai */
-        .coin-flip {
-            animation: coinFlipAnim 1.2s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
-        }
-
-        @keyframes coinFlipAnim {
-            0% {
-                transform: translateX(-50%) translateY(0) rotateY(0deg);
-                opacity: 1;
-            }
-            20% {
-                transform: translateX(-50%) translateY(-60px) rotateY(360deg);
-            }
-            40% {
-                transform: translateX(-50%) translateY(-100px) rotateY(720deg);
-            }
-            60% {
-                transform: translateX(-50%) translateY(-120px) rotateY(1080deg);
-            }
-            80% {
-                transform: translateX(-50%) translateY(-80px) rotateY(1440deg);
-            }
-            100% {
-                transform: translateX(-50%) translateY(0) rotateY(1800deg);
-            }
-        }
-
-        /* Bets */
-        .bets {
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            margin: 15px 0;
-            flex-wrap: wrap;
-        }
-
-        .bet {
-            flex: 1;
-            padding: 8px 12px;
+        .user-text {
+            background: rgba(0,0,0,0.5);
+            padding: 5px 12px;
             border-radius: 30px;
-            border: 1px solid #ffb400;
-            color: #ffb400;
-            cursor: pointer;
-            text-align: center;
-            font-size: 13px;
-            font-weight: bold;
-            transition: all 0.3s;
         }
-
-        .bet.active {
-            background: #ffb400;
-            color: #000;
+        #userNameDisplay {
+            font-weight: 700;
+            font-size: 15px;
+            color: #ffdd99;
         }
-
-        /* Choice Buttons */
-        .choice {
-            display: flex;
-            gap: 12px;
-            margin: 15px 0;
+        #userPhoneDisplay {
+            font-size: 10px;
+            color: #aaccff;
         }
-
-        .choice div {
-            flex: 1;
-            padding: 10px;
-            border-radius: 40px;
-            border: 2px solid #ffb400;
-            cursor: pointer;
-            font-weight: bold;
-            text-align: center;
-            transition: all 0.3s;
+        .balance-area {
+            text-align: right;
+            background: #0a0e1c;
+            padding: 6px 16px;
+            border-radius: 50px;
+            border: 1px solid #ffaa44;
         }
-
-        .choice .active {
-            background: #ffb400;
-            color: #000;
+        .balance-label {
+            font-size: 10px;
+            color: #aaccff;
         }
-
-        /* Play Button */
-        .play {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 40px;
-            background: #ffb400;
-            color: #000;
-            font-weight: 900;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
+        .balance-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: #FFD966;
+            line-height: 1;
         }
-
-        .play.disabled {
-            background: #555;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        /* ==================== CARD GAME ==================== */
-        .card-game-box {
-            background: linear-gradient(145deg, #141425, #0a0a15);
+        .withdraw-btn {
+            font-size: 10px;
+            background: #ffaa33;
+            color: #1a1a2a;
+            padding: 5px 15px;
             border-radius: 30px;
-            padding: 20px;
-            border: 2px solid #ffb400;
-            margin-bottom: 15px;
-        }
-
-        .card-bets {
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            margin: 15px 0;
-            flex-wrap: wrap;
-        }
-
-        .card-bet {
-            flex: 1;
-            padding: 8px 12px;
-            border-radius: 30px;
-            border: 1px solid #ffb400;
-            color: #ffb400;
+            margin-top: 5px;
             cursor: pointer;
             text-align: center;
-            font-size: 13px;
             font-weight: bold;
-        }
-
-        .card-bet.active {
-            background: #ffb400;
-            color: #000;
-        }
-
-        .cards {
-            display: flex;
-            gap: 12px;
-            margin: 15px 0;
-        }
-
-        .card {
-            flex: 1;
-            padding: 15px;
-            border-radius: 15px;
-            border: 2px solid #ffb400;
-            cursor: pointer;
-            font-size: 28px;
-            font-weight: bold;
-            text-align: center;
-            transition: all 0.3s;
-            background: linear-gradient(135deg, #2a2a3a, #1a1a2a);
-        }
-
-        .card.selected {
-            background: #ffb400;
-            color: #000;
-            box-shadow: 0 0 15px #ffb400;
-        }
-
-        .card-flip {
-            animation: cardFlipAnim 0.5s ease-out;
-        }
-
-        @keyframes cardFlipAnim {
-            0% { transform: rotateY(0deg); }
-            50% { transform: rotateY(180deg); }
-            100% { transform: rotateY(360deg); }
         }
 
         /* Deposit Button */
@@ -436,941 +161,1075 @@
             background: linear-gradient(135deg, #ffaa33, #ff7700);
             color: #000;
             text-align: center;
-            padding: 12px;
+            padding: 14px;
             border-radius: 50px;
             font-weight: 800;
             cursor: pointer;
             margin-bottom: 15px;
             font-size: 14px;
+            border: 1px solid #ffcc88;
         }
-
-        /* Live Wins Ticker */
-        .live-wins-ticker {
-            background: rgba(0,0,0,0.5);
-            border-radius: 20px;
-            padding: 8px;
-            overflow: hidden;
-        }
-
-        .ticker-header {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 3px 8px;
-            color: #ffaa33;
-            font-size: 10px;
-        }
-
-        .live-dot {
-            width: 6px;
-            height: 6px;
-            background: #44ff44;
-            border-radius: 50%;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .ticker-content {
-            display: flex;
-            gap: 15px;
-            animation: scrollTicker 20s linear infinite;
-            white-space: nowrap;
-        }
-
-        @keyframes scrollTicker {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-
-        .ticker-item {
-            display: inline-flex;
-            gap: 12px;
-            background: rgba(255,170,51,0.2);
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin: 0 4px;
-            font-size: 11px;
-        }
-
-        /* Result Modal */
-        .result {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .result-card {
-            background: linear-gradient(135deg, #1a1a2a, #12121f);
-            padding: 30px;
-            border-radius: 35px;
-            text-align: center;
-            border: 2px solid #ffb400;
-            min-width: 260px;
-        }
-
-        .win {
-            color: #44ff44;
-        }
-
-        .lose {
-            color: #ff4444;
-        }
-
-        .result-btn {
-            margin-top: 15px;
-            padding: 10px 25px;
-            border-radius: 30px;
-            background: #ffb400;
-            color: #000;
+        .easypaisa-number {
+            color: #d8e9d8;
+            font-size: 18px;
             font-weight: bold;
-            cursor: pointer;
+            text-shadow: 0 0 3px #44ff44;
         }
 
-        .toast {
-            position: fixed;
-            bottom: 20px;
+        /* Game Tabs */
+        .game-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+            background: #0a0e1c;
+            padding: 6px;
+            border-radius: 60px;
+        }
+        .game-tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            color: #ffcc88;
+            background: #1a1f35;
+        }
+        .game-tab.active {
+            background: #ffaa33;
+            color: #1a1a2a;
+            box-shadow: 0 0 12px #ffaa55;
+        }
+
+        /* Game Boxes */
+        .game-box {
+            background: linear-gradient(145deg, #131b30, #0c1022);
+            border-radius: 48px;
+            padding: 20px 15px 25px;
+            border: 2px solid #ffbc4a;
+            margin-bottom: 18px;
+        }
+        .game-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFE5A3, #FFB347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+        }
+
+        /* Bet Chips */
+        .bet-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .bet-chip {
+            background: #252c4a;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: #ffdd99;
+            cursor: pointer;
+            border: 1px solid #ffb347;
+            font-size: 14px;
+        }
+        .bet-chip.active {
+            background: #ffaa33;
+            color: #1a1a2a;
+            box-shadow: 0 0 10px #ffaa55;
+        }
+
+        /* Wheel Styles */
+        .wheel-wrapper {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 15px auto;
+        }
+        .wheel-canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 0 8px #2a2f4a, 0 15px 30px rgba(0,0,0,0.5);
+            transition: transform 4s cubic-bezier(0.2, 0.96, 0.15, 1.02);
+        }
+        .pointer {
+            position: absolute;
+            top: -28px;
             left: 50%;
             transform: translateX(-50%);
-            background: #ffaa33;
-            color: #000;
-            padding: 6px 14px;
-            border-radius: 25px;
-            font-weight: bold;
-            z-index: 3000;
-            animation: toastFade 2.5s forwards;
-            font-size: 12px;
+            width: 0;
+            height: 0;
+            border-left: 24px solid transparent;
+            border-right: 24px solid transparent;
+            border-top: 52px solid #ff5555;
+            z-index: 15;
+        }
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 65px;
+            height: 65px;
+            background: radial-gradient(circle, #ffcc55, #e67e22);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            color: #2c1a02;
+            z-index: 12;
         }
 
-        @keyframes toastFade {
-            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            85% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); visibility: hidden; }
+        /* Coin Flip */
+        .hand-area {
+            position: relative;
+            height: 220px;
+            margin-bottom: 10px;
+        }
+        .hand {
+            font-size: 100px;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+        .coin {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #FFD966, #FFA41E);
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            font-weight: bold;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255,170,51,0.8);
+            z-index: 3;
+        }
+        .coin-full-up {
+            animation: coinFullUp 0.5s ease-out forwards;
+        }
+        .coin-full-spin {
+            animation: coinFullSpin 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+        }
+        @keyframes coinFullUp {
+            0% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+            100% { transform: translateX(-50%) translateY(-110px) rotate(720deg); }
+        }
+        @keyframes coinFullSpin {
+            0% { transform: translateX(-50%) translateY(-110px) rotate(0deg); }
+            25% { transform: translateX(-50%) translateY(-80px) rotate(540deg); }
+            50% { transform: translateX(-50%) translateY(-40px) rotate(1080deg); }
+            75% { transform: translateX(-50%) translateY(-15px) rotate(1620deg); }
+            100% { transform: translateX(-50%) translateY(0) rotate(2160deg); }
+        }
+        .hand-throw {
+            animation: handThrowAnim 0.2s ease-out forwards;
+        }
+        @keyframes handThrowAnim {
+            0% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+            100% { transform: translateX(-50%) translateY(-25px) rotate(30deg); }
+        }
+        .hand-catch {
+            animation: handCatchAnim 0.2s ease-in forwards;
+        }
+        @keyframes handCatchAnim {
+            0% { transform: translateX(-50%) translateY(-25px) rotate(30deg); }
+            100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+        }
+
+        .choice-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .choice-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 50px;
+            border: 2px solid #ffb400;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            background: #252c4a;
+            color: #ffdd99;
+        }
+        .choice-btn.active {
+            background: #ffaa33;
+            color: #1a1a2a;
+        }
+
+        /* Card Game */
+        .cards-container {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .card-item {
+            flex: 1;
+            padding: 25px 10px;
+            border-radius: 20px;
+            border: 2px solid #ffb400;
+            text-align: center;
+            font-size: 42px;
+            cursor: pointer;
+            background: #252c4a;
+        }
+        .card-item.selected {
+            background: #ffaa33;
+            box-shadow: 0 0 15px #ffaa55;
+        }
+
+        .spin-button, .play-button {
+            background: linear-gradient(95deg, #ffb347, #ff7700);
+            padding: 14px 10px;
+            text-align: center;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 15px;
+            color: #221c0a;
+        }
+        .spin-button.disabled, .play-button.disabled {
+            background: #5a5a7a;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .prize-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 15px;
+            background: #0a0e1c;
+            border-radius: 50px;
+            padding: 8px 12px;
+        }
+        .legend-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #1a1f35;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 10px;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Live Ticker - Clear Text */
+        .live-ticker {
+            background: #0a0e1c;
+            border-radius: 50px;
+            padding: 12px;
+            margin-top: 15px;
+            border: 1px solid #ffaa44;
+        }
+        .live-header {
+            font-size: 11px;
+            color: #ffaa55;
+            margin-bottom: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .ticker-scroll {
+            display: flex;
+            gap: 20px;
+            animation: scrollMarquee 20s linear infinite;
+            white-space: nowrap;
+        }
+        @keyframes scrollMarquee {
+            0% { transform: translateX(5%); }
+            100% { transform: translateX(-100%); }
+        }
+        .ticker-item {
+            background: linear-gradient(135deg, #ffaa3355, #ff773355);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #ffdd99;
+            display: inline-block;
         }
 
         .modal {
-            display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
+            inset: 0;
+            background: rgba(0,0,0,0.96);
+            display: none;
             align-items: center;
             justify-content: center;
+            z-index: 2000;
         }
-
-        .modal-content {
-            background: linear-gradient(135deg, #1a1a2a, #12121f);
-            max-width: 320px;
-            width: 90%;
-            border-radius: 30px;
-            padding: 20px;
-            border: 2px solid #ffaa33;
+        .modal-card {
+            background: #1a1f35;
+            border-radius: 48px;
+            padding: 28px 22px;
+            width: 88%;
+            max-width: 360px;
             text-align: center;
+            border: 2px solid #ffaa44;
         }
-
-        .modal-content input {
+        .modal-card input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin: 8px 0;
-            background: #2a2a3a;
-            border: 1px solid #ffaa33;
-            border-radius: 25px;
-            color: white;
-        }
-
-        .modal-content button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            background: linear-gradient(135deg, #ffaa33, #ff7700);
+            background: #2a2f4a;
             border: none;
-            border-radius: 25px;
+            border-radius: 50px;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+        }
+        .modal-card button {
+            background: #ffaa33;
+            border: none;
+            padding: 10px;
+            border-radius: 50px;
             font-weight: bold;
+            width: 100%;
+            margin-top: 8px;
             cursor: pointer;
-            color: #000;
+        }
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffaa33;
+            color: #1a1a2a;
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-weight: bold;
+            z-index: 2100;
+            animation: toastFade 2.2s forwards;
+            font-size: 14px;
+        }
+        @keyframes toastFade {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px);}
+            15% { opacity: 1; transform: translateX(-50%) translateY(0);}
+            85% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        .win-pulse {
+            animation: wheelGlow 0.5s ease 2;
+        }
+        @keyframes wheelGlow {
+            0% { filter: drop-shadow(0 0 0 gold); }
+            50% { filter: drop-shadow(0 0 25px #ffcc44); }
+        }
+        .footer-note {
+            text-align: center;
+            font-size: 9px;
+            margin-top: 12px;
+            color: #aaccff;
         }
     </style>
 </head>
 <body>
-
-<div class="container">
+<div class="game-app">
     <div class="logo" id="logo">WINPAISA</div>
-    <div class="tagline">50 PKR se jeeto 5000 PKR tak!</div>
+    <div class="owner">Azmer Khan • Official</div>
+    <div style="display: flex; justify-content: center;"><div class="tagline">🎯 50 PKR se jeeto 5000 PKR tak! 🎯</div></div>
 
-    <!-- Online Users -->
-    <div class="online-users">
-        🔥 <span id="onlineUsers">124</span> users playing now
+    <div class="stats-panel">
+        <div class="stat"><span class="stat-number live-players" id="onlineCount">187</span>Live Players</div>
+        <div class="stat"><span class="stat-number" id="totalWinCount">6.8K</span>Total Wins</div>
+        <div class="stat"><span class="stat-number">⭐ 4.92</span>Trust</div>
     </div>
 
-    <!-- Offer Banner -->
-    <div class="offer-banner">
-        🎁 FIRST DEPOSIT BONUS: Deposit 100 → Get 120 | Deposit 500 → Get 600 🎁
-    </div>
-
-    <!-- Trust Stats -->
-    <div class="trust-stats">
-        <div class="stat-item">
-            <div class="stat-value" id="totalUsers">1,234</div>
-            <div class="stat-label">Total Users</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value" id="totalWithdrawals">45.2K</div>
-            <div class="stat-label">Total Withdrawals</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value" id="totalGames">12.5K</div>
-            <div class="stat-label">Games Played</div>
-        </div>
-    </div>
-
-    <!-- User Bar -->
-    <div class="user-bar" id="userBar">
+    <div class="user-card">
         <div class="user-info">
-            <div class="user-avatar" id="userAvatar">👤</div>
-            <div>
-                <div id="userName" style="font-size: 12px; font-weight: 600;"></div>
-                <div id="userPhone" style="font-size: 8px; color: #888;"></div>
+            <div class="avatar" id="avatarIcon">👤</div>
+            <div class="user-text">
+                <div id="userNameDisplay">Guest User</div>
+                <div id="userPhoneDisplay">Login to play</div>
             </div>
         </div>
-        <div class="balance">
-            <div class="balance-label">Your Balance</div>
-            <div class="balance-amount" id="balance">0</div>
-            <div class="withdraw-btn" id="withdrawBtn">
-                💸 Withdraw
-                <div class="withdraw-info">Min 500 PKR | Instant</div>
-            </div>
+        <div class="balance-area">
+            <div class="balance-label">Wallet Balance</div>
+            <div class="balance-amount" id="balanceAmount">0</div>
+            <div class="withdraw-btn" id="withdrawBtnAction">💸 Withdraw</div>
         </div>
     </div>
 
-    <div class="hero">
-        <h1><span>⚡ 50 PKR</span> se jeeto <span>🎯 5000 PKR</span> tak!</h1>
-        <div class="fair-play-badge">🎲 Fair Play System • Realistic Coin Toss • Random Results</div>
+    <!-- DEPOSIT BUTTON -->
+    <div class="deposit-btn" id="depositBtn">📱 DEPOSIT NOW (EasyPaisa: <span class="easypaisa-number">0307 503 0001</span>)</div>
+
+    <!-- Game Tabs -->
+    <div class="game-tabs">
+        <div class="game-tab active" data-game="wheel">🎡 WHEEL</div>
+        <div class="game-tab" data-game="coin">🪙 COIN FLIP</div>
+        <div class="game-tab" data-game="card">🃏 CARD GAME</div>
     </div>
 
-    <!-- ==================== HAND COIN FLIP GAME ==================== -->
-    <div class="game-box">
-        <div class="game-title">✋ REALISTIC COIN TOSS ✋</div>
+    <!-- WHEEL GAME -->
+    <div id="wheelGame" class="game-box">
+        <div class="game-title">🎡 PRIZE WHEEL (40% WIN)</div>
+        <div class="bet-row" id="wheelBetRow">
+            <div class="bet-chip" data-wheel-bet="50">50 PKR</div>
+            <div class="bet-chip active" data-wheel-bet="100">100 PKR</div>
+            <div class="bet-chip" data-wheel-bet="200">200 PKR</div>
+            <div class="bet-chip" data-wheel-bet="500">500 PKR</div>
+        </div>
+        <div class="wheel-wrapper">
+            <div class="pointer"></div>
+            <canvas id="wheelCanvas" class="wheel-canvas" width="500" height="500"></canvas>
+            <div class="wheel-center">SPIN</div>
+        </div>
+        <div class="spin-button" id="spinWheelBtn">🎡 SPIN WHEEL (100 PKR)</div>
+        <div class="prize-legend" id="prizeLegend"></div>
+    </div>
+
+    <!-- COIN FLIP GAME -->
+    <div id="coinGame" class="game-box" style="display:none;">
+        <div class="game-title">🪙 COIN FLIP</div>
+        <div class="bet-row" id="coinBetRow">
+            <div class="bet-chip" data-coin-bet="50">50 PKR</div>
+            <div class="bet-chip active" data-coin-bet="100">100 PKR</div>
+            <div class="bet-chip" data-coin-bet="200">200 PKR</div>
+            <div class="bet-chip" data-coin-bet="500">500 PKR</div>
+        </div>
         <div class="hand-area">
             <div class="hand" id="hand">🖐️</div>
-            <div class="coin" id="coin">H</div>
+            <div class="coin" id="coin">🪙</div>
         </div>
-
-        <div class="bets">
-            <div class="bet" data-bet="50">50 PKR</div>
-            <div class="bet active" data-bet="100">100 PKR</div>
-            <div class="bet" data-bet="200">200 PKR</div>
-            <div class="bet" data-bet="500">500 PKR</div>
+        <div class="choice-buttons">
+            <div class="choice-btn" id="headsBtn">🪙 HEADS</div>
+            <div class="choice-btn active" id="tailsBtn">🪙 TAILS</div>
         </div>
-
-        <div class="choice">
-            <div id="heads" class="active">🪙 HEADS</div>
-            <div id="tails">🪙 TAILS</div>
-        </div>
-
-        <div class="play" id="playBtn">💰 TOSS COIN (100 PKR)</div>
+        <div class="play-button" id="coinPlayBtn">💰 FLIP COIN (100 PKR)</div>
     </div>
 
-    <!-- ==================== CARD GAME ==================== -->
-    <div class="card-game-box">
-        <div class="game-title">🃏 PICK A CARD 🃏</div>
-
-        <div class="card-bets">
-            <div class="card-bet" data-card-bet="50">50 PKR</div>
-            <div class="card-bet active" data-card-bet="100">100 PKR</div>
-            <div class="card-bet" data-card-bet="200">200 PKR</div>
-            <div class="card-bet" data-card-bet="500">500 PKR</div>
+    <!-- CARD GAME -->
+    <div id="cardGame" class="game-box" style="display:none;">
+        <div class="game-title">🃏 PICK A CARD</div>
+        <div class="bet-row" id="cardBetRow">
+            <div class="bet-chip" data-card-bet="50">50 PKR</div>
+            <div class="bet-chip active" data-card-bet="100">100 PKR</div>
+            <div class="bet-chip" data-card-bet="200">200 PKR</div>
+            <div class="bet-chip" data-card-bet="500">500 PKR</div>
         </div>
-
-        <div class="cards">
-            <div class="card" id="card1">🃏</div>
-            <div class="card" id="card2">🎴</div>
-            <div class="card" id="card3">🃑</div>
+        <div class="cards-container">
+            <div class="card-item" data-card="1">🃏</div>
+            <div class="card-item" data-card="2">🎴</div>
+            <div class="card-item" data-card="3">🃑</div>
         </div>
-
-        <div class="play" id="cardPlayBtn">💰 PLAY (100 PKR)</div>
+        <div class="play-button" id="cardPlayBtn">💰 PLAY (100 PKR)</div>
     </div>
 
-    <!-- Deposit Button -->
-    <div class="deposit-btn" id="depositBtn">📱 DEPOSIT NOW</div>
-
-    <!-- Live Wins Ticker -->
-    <div class="live-wins-ticker">
-        <div class="ticker-header">
-            <div class="live-dot"></div>
-            <span>🔥 LIVE WINS</span>
+    <!-- LIVE TICKER - CLEAR TEXT -->
+    <div class="live-ticker">
+        <div class="live-header">🔥 LIVE WIN FEED 🔥</div>
+        <div class="ticker-scroll" id="liveTicker">
+            <span class="ticker-item">✨ Ali won 35 PKR ✨</span>
+            <span class="ticker-item">✨ Sana won 40 PKR ✨</span>
+            <span class="ticker-item">✨ Rayan won 33 PKR ✨</span>
         </div>
-        <div id="liveTicker" class="ticker-content"></div>
     </div>
-</div>
-
-<!-- Result Modal -->
-<div class="result" id="result">
-    <div class="result-card">
-        <h2 id="resultText"></h2>
-        <p id="resultAmount"></p>
-        <div class="result-btn" onclick="closeResult()">PLAY AGAIN</div>
-    </div>
+    <div class="footer-note">📱 Min Withdraw 500 PKR | Instant Payout</div>
 </div>
 
 <!-- Login Modal -->
-<div id="loginModal" class="modal" style="display: flex;">
-    <div class="modal-content">
+<div id="loginModal" class="modal" style="display:flex;">
+    <div class="modal-card">
         <h3>🔐 Login / Signup</h3>
-        <input type="tel" id="mobileNumber" placeholder="Enter Mobile Number" maxlength="11">
+        <input type="tel" id="mobileNumber" placeholder="03xxxxxxxxx" maxlength="11">
         <button id="sendOtpBtn">Send OTP</button>
-        <div id="otpSection" style="display: none;">
-            <input type="text" id="otpCode" placeholder="Enter 6-digit OTP">
-            <button id="verifyOtpBtn">Verify & Login</button>
+        <div id="otpSection" style="display:none; margin-top:14px;">
+            <div style="background:#ffaa3322; border-radius:30px; padding:12px;">
+                <div>📲 OTP: <strong id="demoOtpSpan">------</strong></div>
+                <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6">
+                <button id="verifyOtpBtn">Verify & Login</button>
+            </div>
         </div>
-        <div id="loginMessage" style="margin-top: 8px; text-align: center; font-size: 11px;"></div>
+        <div id="loginMsg" style="font-size:11px; margin-top:10px;"></div>
     </div>
 </div>
 
 <!-- Deposit Modal -->
 <div id="depositModal" class="modal">
-    <div class="modal-content">
+    <div class="modal-card">
         <h3>💵 Deposit</h3>
-        <div class="instruction-box" style="background: #0a0a0a; padding: 10px; border-radius: 15px; margin-bottom: 12px; border-left: 3px solid #ffaa33; font-size: 11px;">
+        <div style="background:#0a0e1c; padding:12px; border-radius:20px; margin-bottom:12px;">
             <strong>📱 EasyPaisa Account:</strong><br>
-            Number: <span style="color: #ffaa33;">0307 5030001</span><br>
-            Title: WINPAISA GAMES
+            Number: <span class="easypaisa-number">0307 503 0001</span><br>
+            Title: WINPAISA GAMES<br>
+            <small>Send exact amount and upload screenshot</small>
         </div>
         <input type="number" id="depositAmount" placeholder="Amount (Min 50 PKR)" value="100">
         <input type="text" id="transactionId" placeholder="Transaction ID">
-        <input type="file" id="screenshotInput" accept="image/*" style="margin: 8px 0;">
+        <input type="file" id="screenshotInput" accept="image/*">
         <button id="submitDepositBtn">Submit Payment</button>
-        <button id="closeDepositModal" style="background: #333;">Cancel</button>
+        <button id="closeDepositModal" style="background:#333;">Cancel</button>
     </div>
 </div>
 
 <!-- Withdraw Modal -->
 <div id="withdrawModal" class="modal">
-    <div class="modal-content">
-        <h3>💸 Withdraw Request</h3>
-        <p style="font-size: 12px;">Minimum: <strong>500 PKR</strong> | Processing: <strong>Instant</strong></p>
-        <input type="number" id="withdrawAmount" placeholder="Amount">
+    <div class="modal-card">
+        <h3>💸 Withdraw</h3>
+        <input type="number" id="withdrawAmount" placeholder="Amount (Min 500)">
         <input type="text" id="withdrawAccount" placeholder="EasyPaisa Number">
-        <button id="submitWithdrawBtn">Submit Request</button>
-        <button id="closeWithdrawModal" style="background: #333;">Cancel</button>
-    </div>
-</div>
-
-<!-- Admin Panel -->
-<div id="adminPanel" class="modal">
-    <div class="modal-content" style="max-width: 480px;">
-        <h3>👑 ADMIN PANEL</h3>
-        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-            <button onclick="showAdminTab('users')" id="tabUsersBtn" style="flex:1; padding: 6px; background: #ffaa33;">👥 Users</button>
-            <button onclick="showAdminTab('deposits')" id="tabDepositsBtn" style="flex:1; padding: 6px; background: #333;">💰 Deposits</button>
-            <button onclick="showAdminTab('balance')" id="tabBalanceBtn" style="flex:1; padding: 6px; background: #333;">➕ Add Balance</button>
-        </div>
-        <div id="adminUsersTab"><div id="adminUsersList">Loading...</div></div>
-        <div id="adminDepositsTab" style="display: none;"><div id="adminDepositsList">Loading...</div></div>
-        <div id="adminBalanceTab" style="display: none;">
-            <input type="text" id="adminUserId" placeholder="User ID">
-            <input type="number" id="adminAmount" placeholder="Amount (PKR)">
-            <button id="adminAddBalanceBtn">➕ Add Balance</button>
-        </div>
-        <button id="closeAdminPanel" style="background: #333; margin-top: 12px;">Close</button>
+        <button id="confirmWithdrawBtn">Request</button>
+        <button id="closeWithdrawBtn" style="background:#333;">Cancel</button>
     </div>
 </div>
 
 <script>
-const API_URL = 'https://winpaisa-app.onrender.com/api';
-    let currentUser = null;
-    let authToken = null;
-    let coinChoice = "HEADS";
-    let cardChoice = null;
-    let currentBet = 100;
-    let cardCurrentBet = 100;
-    let isPlaying = false;
-    let balance = 0;
-    let audioCtx = null;
-    let liveWins = ['Ali won 320 PKR 🎉', 'Usman won 150 PKR 🎉', 'Sara won 500 PKR 🎉', 'Ahmed won 85 PKR 🎉'];
+    // Beautiful Wheel Colors
+    const WHEEL_PRIZES = [
+        { value: 33, color: "#3b82f6", label: "33 PKR" },
+        { value: 34, color: "#0ea5e9", label: "34 PKR" },
+        { value: 35, color: "#22c55e", label: "35 PKR" },
+        { value: 36, color: "#84cc16", label: "36 PKR" },
+        { value: 37, color: "#eab308", label: "37 PKR" },
+        { value: 38, color: "#f97316", label: "38 PKR" },
+        { value: 39, color: "#ef4444", label: "39 PKR" },
+        { value: 40, color: "#a855f7", label: "40 PKR 🎉" },
+        { value: 35, color: "#2dd4bf", label: "35 PKR" },
+        { value: 38, color: "#f59e0b", label: "38 PKR" }
+    ];
+    const SEG_COUNT = WHEEL_PRIZES.length;
+    const WHEEL_WIN_CHANCE = 0.40;
 
+    let currentUser = null, balance = 0;
+    let wheelBet = 100, coinBet = 100, cardBet = 100;
+    let coinChoice = "TAILS", selectedCard = null;
+    let spinning = false;
+    let wheelFirstPlay = true, coinFirstPlay = true, cardFirstPlay = true;
+    let liveWins = ["✨ Ali won 35 PKR ✨", "✨ Sana won 40 PKR ✨", "✨ Rayan won 33 PKR ✨"];
+    let users = [];
+
+    function loadUsers() {
+        const saved = localStorage.getItem('winpaisa_users');
+        if (saved) users = JSON.parse(saved);
+    }
+    function saveUsers() {
+        localStorage.setItem('winpaisa_users', JSON.stringify(users));
+    }
+
+    let audioCtx = null;
     function playSound(type) {
         try {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            const oscillator = audioCtx.createOscillator();
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            oscillator.connect(gain);
+            osc.connect(gain);
             gain.connect(audioCtx.destination);
-            
             if (type === 'flip') {
-                oscillator.frequency.value = 880;
-                gain.gain.value = 0.1;
-                oscillator.start();
-                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
-                oscillator.stop(audioCtx.currentTime + 0.3);
-            } else if (type === 'win') {
-                oscillator.frequency.value = 1318.51;
+                osc.frequency.value = 880;
                 gain.gain.value = 0.15;
-                oscillator.start();
+                osc.start();
                 gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.4);
-                oscillator.stop(audioCtx.currentTime + 0.4);
+                osc.stop(audioCtx.currentTime + 0.4);
+            } else if (type === 'spin') {
+                osc.frequency.value = 660;
+                gain.gain.value = 0.2;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5);
+                osc.stop(audioCtx.currentTime + 0.5);
+            } else if (type === 'win') {
+                osc.frequency.value = 1318.51;
+                gain.gain.value = 0.2;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.4);
+                osc.stop(audioCtx.currentTime + 0.4);
             } else if (type === 'lose') {
-                oscillator.frequency.value = 220;
-                gain.gain.value = 0.1;
-                oscillator.start();
+                osc.frequency.value = 220;
+                gain.gain.value = 0.15;
+                osc.start();
                 gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.4);
-                oscillator.stop(audioCtx.currentTime + 0.4);
+                osc.stop(audioCtx.currentTime + 0.4);
             }
-        } catch(e) { console.log('Audio not supported'); }
+        } catch(e) {}
     }
 
-    function vibrate() {
-        if (navigator.vibrate) navigator.vibrate(60);
+    const canvas = document.getElementById('wheelCanvas');
+    let ctx = null;
+    function drawWheel() {
+        if(!ctx) return;
+        const w = canvas.width, h = canvas.height, cx = w/2, cy = h/2, rad = w/2 - 6;
+        const angleStep = (Math.PI * 2) / SEG_COUNT;
+        ctx.clearRect(0, 0, w, h);
+        for(let i=0; i<SEG_COUNT; i++) {
+            const start = i * angleStep, end = (i+1)*angleStep;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, rad, start, end);
+            ctx.fillStyle = WHEEL_PRIZES[i].color;
+            ctx.fill();
+            ctx.strokeStyle = "#FFF";
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(start + angleStep/2);
+            ctx.font = "bold 12px 'Segoe UI'";
+            ctx.fillStyle = "#FFF";
+            ctx.shadowBlur = 2;
+            ctx.fillText(WHEEL_PRIZES[i].label, rad * 0.68, 5);
+            ctx.restore();
+        }
+        ctx.beginPath(); ctx.arc(cx, cy, 28, 0, 2*Math.PI);
+        ctx.fillStyle = "#FFCC55"; ctx.fill();
+    }
+    function updateLegend() {
+        document.getElementById('prizeLegend').innerHTML = WHEEL_PRIZES.map(p => `<div class="legend-badge"><div class="legend-color" style="background:${p.color}"></div><span>${p.label}</span></div>`).join('');
     }
 
-    function showToast(msg, isError = false) {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = msg;
-        if (isError) toast.style.background = '#ff4444';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
+    function getWinResult(isFirst) {
+        if(isFirst) return true;
+        return Math.random() < WHEEL_WIN_CHANCE;
     }
 
-    function animateBalance(newBalance) {
-        const balanceEl = document.getElementById('balance');
-        balanceEl.classList.add('balance-animation');
-        balanceEl.innerText = newBalance;
-        setTimeout(() => balanceEl.classList.remove('balance-animation'), 500);
-    }
-
-    function updateBalanceDisplay() {
-        document.getElementById('balance').innerText = balance;
-        const playBtn = document.getElementById('playBtn');
-        if (balance < currentBet) {
-            playBtn.classList.add('disabled');
-            playBtn.textContent = `❌ NEED BALANCE (${currentBet} PKR)`;
+    async function spinWheel() {
+        if(spinning) { showToast("Wait...", true); return; }
+        if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
+        if(balance < wheelBet) { showToast(`Need ${wheelBet} PKR`, true); return; }
+        spinning = true;
+        balance -= wheelBet;
+        updateBalanceUI(); saveUser();
+        playSound('spin');
+        
+        const isWin = getWinResult(wheelFirstPlay);
+        let winAmount = 0, selectedPrize = null;
+        if(isWin) {
+            selectedPrize = WHEEL_PRIZES[Math.floor(Math.random() * WHEEL_PRIZES.length)];
+            winAmount = selectedPrize.value;
+            balance += winAmount;
         } else {
-            playBtn.classList.remove('disabled');
-            playBtn.textContent = `💰 TOSS COIN (${currentBet} PKR)`;
+            selectedPrize = WHEEL_PRIZES[Math.floor(Math.random() * WHEEL_PRIZES.length)];
         }
         
-        const cardPlayBtn = document.getElementById('cardPlayBtn');
-        if (balance < cardCurrentBet) {
-            cardPlayBtn.classList.add('disabled');
-            cardPlayBtn.textContent = `❌ NEED BALANCE (${cardCurrentBet} PKR)`;
-        } else {
-            cardPlayBtn.classList.remove('disabled');
-            cardPlayBtn.textContent = `💰 PLAY (${cardCurrentBet} PKR)`;
-        }
-    }
-
-    function showResult(game, result, isWin, winAmount) {
-        const modal = document.getElementById('result');
-        const resultText = document.getElementById('resultText');
-        const resultAmount = document.getElementById('resultAmount');
+        const angleStepDeg = 360 / SEG_COUNT;
+        let targetIdx = WHEEL_PRIZES.findIndex(p => p === selectedPrize);
+        const targetMid = (targetIdx * angleStepDeg) + (angleStepDeg/2);
+        const finalRotate = 360 * (6 + Math.floor(Math.random() * 3)) + targetMid;
+        const wheelCanvas = document.getElementById('wheelCanvas');
+        wheelCanvas.style.transition = "transform 4s cubic-bezier(0.2, 0.96, 0.15, 1.02)";
+        wheelCanvas.style.transform = `rotate(${finalRotate}deg)`;
         
-        if (isWin) {
-            resultText.innerHTML = '🎉 YOU WIN! 🎉';
-            resultText.className = 'win';
-            resultAmount.innerHTML = `+${winAmount} PKR (${result})`;
-            resultAmount.className = 'win';
-            playSound('win');
-            vibrate();
-            addToLiveTicker(winAmount);
-        } else {
-            resultText.innerHTML = '😞 YOU LOSE';
-            resultText.className = 'lose';
-            resultAmount.innerHTML = `-${game === 'coin' ? currentBet : cardCurrentBet} PKR (${result})`;
-            resultAmount.className = 'lose';
-            playSound('lose');
-            vibrate();
-        }
-        
-        modal.style.display = 'flex';
         setTimeout(() => {
-            if (modal.style.display === 'flex') modal.style.display = 'none';
-        }, 2200);
-    }
-
-    function addToLiveTicker(amount) {
-        const names = ['Ali', 'Usman', 'Sara', 'Ahmed', 'Zara', 'Hamza', 'Fatima', 'Omar'];
-        const randomName = names[Math.floor(Math.random() * names.length)];
-        const winText = `${randomName} won ${amount} PKR 🎉`;
-        liveWins.unshift(winText);
-        if (liveWins.length > 8) liveWins.pop();
-        updateLiveTicker();
-    }
-
-    function updateLiveTicker() {
-        const container = document.getElementById('liveTicker');
-        container.innerHTML = liveWins.map(win => `<span class="ticker-item">🔥 ${win}</span>`).join('');
-    }
-
-    function closeResult() {
-        document.getElementById('result').style.display = 'none';
-    }
-
-    // ==================== HAND COIN FLIP ANIMATION ====================
-    async function performHandCoinFlip(userChoice) {
-        return new Promise((resolve) => {
-            const hand = document.getElementById('hand');
-            const coin = document.getElementById('coin');
-            
-            // Step 1: Hand toss
-            hand.classList.add('hand-throw');
-            playSound('flip');
-            vibrate();
-            
-            setTimeout(() => {
-                // Step 2: Coin flip animation
-                coin.classList.add('coin-flip');
-                
-                // Continuous spin effect during animation
-                let spinCount = 0;
-                const spinInterval = setInterval(() => {
-                    const sides = ['H', 'T'];
-                    const randomSide = sides[Math.floor(Math.random() * 2)];
-                    coin.textContent = randomSide;
-                    spinCount++;
-                    if (spinCount > 15) clearInterval(spinInterval);
-                }, 70);
-                
-                setTimeout(() => {
-                    clearInterval(spinInterval);
-                    
-                    // Step 3: Determine result
-                    const result = Math.random() < 0.5 ? 'HEADS' : 'TAILS';
-                    const isWin = (userChoice === result) && (Math.random() < 0.35);
-                    const winAmount = isWin ? Math.floor(currentBet * 1.7) : 0;
-                    
-                    // Step 4: Show final side
-                    coin.textContent = result === 'HEADS' ? 'H' : 'T';
-                    coin.classList.remove('coin-flip');
-                    
-                    // Step 5: Hand catch
-                    hand.classList.remove('hand-throw');
-                    hand.classList.add('hand-catch');
-                    
-                    setTimeout(() => {
-                        hand.classList.remove('hand-catch');
-                        
-                        // Step 6: Update balance
-                        let newBalance = balance;
-                        if (isWin) {
-                            newBalance = balance + winAmount;
-                            balance = newBalance;
-                            updateBalanceDisplay();
-                            showToast(`🎉 YOU WON ${winAmount} PKR!`);
-                        } else {
-                            newBalance = balance - currentBet;
-                            balance = newBalance;
-                            updateBalanceDisplay();
-                            showToast(`😞 You lost ${currentBet} PKR`, true);
-                        }
-                        
-                        // Step 7: Show result
-                        showResult('coin', result, isWin, winAmount);
-                        resolve({ result, isWin, winAmount, newBalance });
-                    }, 150);
-                }, 1100);
-            }, 120);
-        });
-    }
-
-    // ==================== CARD GAME ====================
-    async function performCardGame(cardChoiceNum) {
-        return new Promise((resolve) => {
-            const cardBtn = document.getElementById(`card${cardChoiceNum}`);
-            cardBtn.classList.add('card-flip');
-            
-            const cards = [
-                { name: 'WINNER! 🎉', winAmount: Math.floor(cardCurrentBet * 1.7), message: 'YOU WIN!' },
-                { name: 'LOSER', winAmount: 0, message: 'YOU LOSE' },
-                { name: 'LOSER', winAmount: 0, message: 'YOU LOSE' }
-            ];
-            const shuffled = [...cards];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            if(isWin) { 
+                showToast(`🎉 WON ${winAmount} PKR!`, false); 
+                addLiveWin(winAmount); 
+                playSound('win');
+                wheelCanvas.classList.add('win-pulse'); 
+                setTimeout(() => wheelCanvas.classList.remove('win-pulse'), 600); 
+            } else { 
+                showToast(`😞 Lost ${wheelBet} PKR`, true);
+                playSound('lose');
             }
-            const selected = shuffled[cardChoiceNum - 1];
-            const isWin = selected.winAmount > 0;
-            const winAmount = selected.winAmount;
-            
-            setTimeout(() => {
-                cardBtn.classList.remove('card-flip');
-                let newBalance = balance;
-                if (isWin) {
-                    newBalance = balance + winAmount;
-                    balance = newBalance;
-                    updateBalanceDisplay();
-                    showToast(`🎉 YOU WON ${winAmount} PKR!`);
-                } else {
-                    newBalance = balance - cardCurrentBet;
-                    balance = newBalance;
-                    updateBalanceDisplay();
-                    showToast(`😞 You lost ${cardCurrentBet} PKR`, true);
-                }
-                showResult('card', selected.name, isWin, winAmount);
-                resolve({ isWin, winAmount, newBalance });
-            }, 450);
-        });
+            updateBalanceUI(); saveUser();
+            spinning = false;
+            wheelFirstPlay = false;
+            setTimeout(() => { wheelCanvas.style.transition = "none"; wheelCanvas.style.transform = `rotate(${finalRotate % 360}deg)`; setTimeout(() => wheelCanvas.style.transition = "", 50); }, 100);
+        }, 3900);
     }
 
-    async function playHandCoinFlip() {
-        if (isPlaying) { showToast('⏳ Wait...', true); return; }
-        if (balance < currentBet) { showToast(`❌ Need ${currentBet} PKR`, true); return; }
+    async function playCoinFlip() {
+        if(!currentUser) { showToast("Login first", true); return; }
+        if(balance < coinBet) { showToast(`Need ${coinBet} PKR`, true); return; }
+        balance -= coinBet;
+        updateBalanceUI(); saveUser();
         
-        isPlaying = true;
-        balance -= currentBet;
-        updateBalanceDisplay();
+        const isWin = getWinResult(coinFirstPlay);
+        let winAmount = 0;
+        if(isWin) { winAmount = Math.floor(coinBet * 1.8); balance += winAmount; }
         
-        await performHandCoinFlip(coinChoice);
+        const hand = document.getElementById('hand');
+        const coinEl = document.getElementById('coin');
+        const outcomes = ['HEADS', 'TAILS'];
+        const finalResult = outcomes[Math.floor(Math.random() * 2)];
+        const userWon = (coinChoice === finalResult) && isWin;
         
-        isPlaying = false;
+        playSound('flip');
+        hand.classList.add('hand-throw');
+        coinEl.classList.add('coin-full-up');
+        
+        setTimeout(() => {
+            coinEl.classList.remove('coin-full-up');
+            coinEl.classList.add('coin-full-spin');
+            let flipCount = 0;
+            const flipInterval = setInterval(() => {
+                const randomSide = outcomes[Math.floor(Math.random() * 2)];
+                coinEl.textContent = randomSide === 'HEADS' ? 'H' : 'T';
+                flipCount++;
+                if(flipCount > 15) clearInterval(flipInterval);
+            }, 50);
+            
+            setTimeout(() => {
+                clearInterval(flipInterval);
+                coinEl.textContent = finalResult === 'HEADS' ? 'H' : 'T';
+                coinEl.classList.remove('coin-full-spin');
+                hand.classList.remove('hand-throw');
+                hand.classList.add('hand-catch');
+                setTimeout(() => hand.classList.remove('hand-catch'), 200);
+                
+                if(userWon && isWin) { 
+                    showToast(`🎉 WON ${winAmount} PKR!`, false); 
+                    addLiveWin(winAmount);
+                    playSound('win');
+                } else if(isWin && !userWon) { 
+                    showToast(`🎉 WON ${winAmount} PKR! (First play)`, false); 
+                    addLiveWin(winAmount);
+                    playSound('win');
+                } else { 
+                    showToast(`😞 Lost ${coinBet} PKR | Result: ${finalResult}`, true);
+                    playSound('lose');
+                }
+                updateBalanceUI(); saveUser();
+                coinFirstPlay = false;
+            }, 700);
+        }, 450);
     }
 
     async function playCardGame() {
-        if (isPlaying) { showToast('⏳ Wait...', true); return; }
-        if (!cardChoice) { showToast('❌ Pick a CARD first!', true); return; }
-        if (balance < cardCurrentBet) { showToast(`❌ Need ${cardCurrentBet} PKR`, true); return; }
+        if(!selectedCard) { showToast("Pick a card!", true); return; }
+        if(!currentUser) { showToast("Login first", true); return; }
+        if(balance < cardBet) { showToast(`Need ${cardBet} PKR`, true); return; }
+        balance -= cardBet;
+        updateBalanceUI(); saveUser();
         
-        isPlaying = true;
-        balance -= cardCurrentBet;
-        updateBalanceDisplay();
+        const isWin = getWinResult(cardFirstPlay);
+        let winAmount = 0;
+        if(isWin) { winAmount = Math.floor(cardBet * 1.8); balance += winAmount; }
         
-        await performCardGame(cardChoice);
-        
-        isPlaying = false;
+        const cardEl = document.querySelector(`.card-item[data-card="${selectedCard}"]`);
+        cardEl.style.transform = "rotateY(180deg)";
+        setTimeout(() => {
+            if(isWin) { 
+                showToast(`🎉 WON ${winAmount} PKR!`, false); 
+                addLiveWin(winAmount);
+                playSound('win');
+            } else { 
+                showToast(`😞 Lost ${cardBet} PKR`, true);
+                playSound('lose');
+            }
+            cardEl.style.transform = "";
+            updateBalanceUI(); saveUser();
+            cardFirstPlay = false;
+        }, 400);
     }
 
-    // OTP Functions
-    async function sendOTP() {
-        const mobile = document.getElementById('mobileNumber').value;
-        const msgDiv = document.getElementById('loginMessage');
-        if (!mobile || mobile.length < 10) {
-            msgDiv.innerHTML = '<span style="color:#ff4444;">❌ Enter valid mobile number</span>';
-            return;
+    function showToast(msg, isErr) {
+        const toast = document.createElement('div'); toast.className = 'toast-msg'; toast.textContent = msg;
+        if(isErr) toast.style.background = "#ff7777";
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2200);
+    }
+    function updateBalanceUI() {
+        document.getElementById('balanceAmount').innerText = balance;
+        const spinBtn = document.getElementById('spinWheelBtn');
+        if(balance < wheelBet) spinBtn.classList.add('disabled'); else spinBtn.classList.remove('disabled');
+        const coinBtn = document.getElementById('coinPlayBtn');
+        if(balance < coinBet) coinBtn.classList.add('disabled'); else coinBtn.classList.remove('disabled');
+        const cardBtn = document.getElementById('cardPlayBtn');
+        if(balance < cardBet) cardBtn.classList.add('disabled'); else cardBtn.classList.remove('disabled');
+    }
+    function saveUser() { 
+        if(currentUser) { 
+            currentUser.balance = balance; 
+            const index = users.findIndex(u => u.id === currentUser.id);
+            if(index !== -1) users[index] = currentUser;
+            else users.push(currentUser);
+            saveUsers();
+            localStorage.setItem('winpaisa_user', JSON.stringify(currentUser)); 
+        } 
+    }
+    function addLiveWin(amount) {
+        const names = ["Rayan", "Mehak", "Bilal", "Ayesha", "Hamza", "Zara", "Usman", "Fatima"];
+        liveWins.unshift(`✨ ${names[Math.floor(Math.random()*names.length)]} won ${amount} PKR ✨`);
+        if(liveWins.length > 5) liveWins.pop();
+        document.getElementById('liveTicker').innerHTML = liveWins.map(w => `<span class="ticker-item">${w}</span>`).join('');
+        let totalSpan = document.getElementById('totalWinCount');
+        let val = parseFloat(totalSpan.innerText) || 6.8;
+        totalSpan.innerText = (val + 0.05).toFixed(1) + 'K';
+    }
+
+    // Auth
+    let pendingOtp = null;
+    function sendOtp() {
+        const mobile = document.getElementById('mobileNumber').value.trim();
+        if(!mobile || mobile.length < 10) { document.getElementById('loginMsg').innerHTML = '<span style="color:#ff8888;">❌ Valid mobile</span>'; return; }
+        const fakeOtp = Math.floor(100000 + Math.random() * 900000).toString();
+        document.getElementById('demoOtpSpan').innerText = fakeOtp;
+        document.getElementById('otpSection').style.display = 'block';
+        pendingOtp = fakeOtp; window.pendingMobile = mobile;
+    }
+    function verifyOtp() {
+        if(document.getElementById('otpInput').value !== pendingOtp) { document.getElementById('loginMsg').innerHTML = '<span style="color:#ff8888;">❌ Wrong OTP</span>'; return; }
+        const mobile = window.pendingMobile;
+        let user = users.find(u => u.mobile === mobile);
+        if(!user) {
+            user = { id: Date.now(), mobile, name: "Player_" + mobile.slice(-4), balance: 500, totalDeposited: 0, totalWithdrawn: 0 };
+            users.push(user);
+            saveUsers();
         }
-        msgDiv.innerHTML = '<span style="color:#ffaa33;">⏳ Generating OTP...</span>';
-        document.getElementById('sendOtpBtn').disabled = true;
-        
-        try {
-            const response = await fetch(`${API_URL}/send-otp`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mobile })
-            });
-            const data = await response.json();
-            if (data.success) {
-                document.getElementById('otpSection').style.display = 'block';
-                msgDiv.innerHTML = `<span style="color:#44ff44;">✅ OTP generated! Use: ${data.otp}</span>`;
-                document.getElementById('sendOtpBtn').disabled = false;
-            } else {
-                msgDiv.innerHTML = `<span style="color:#ff4444;">❌ ${data.message}</span>`;
-                document.getElementById('sendOtpBtn').disabled = false;
-            }
-        } catch (error) {
-            msgDiv.innerHTML = '<span style="color:#ff4444;">❌ Server error</span>';
-            document.getElementById('sendOtpBtn').disabled = false;
-        }
+        currentUser = user; balance = currentUser.balance;
+        saveUser();
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('userNameDisplay').innerText = currentUser.name;
+        document.getElementById('userPhoneDisplay').innerText = currentUser.mobile;
+        document.getElementById('avatarIcon').innerHTML = currentUser.name.charAt(0).toUpperCase();
+        updateBalanceUI();
+        showToast(`Welcome ${currentUser.name}! Balance: ${balance} PKR`, false);
     }
     
-    async function verifyOTP() {
-        const mobile = document.getElementById('mobileNumber').value;
-        const otp = document.getElementById('otpCode').value;
-        const msgDiv = document.getElementById('loginMessage');
-        
-        const response = await fetch(`${API_URL}/verify-otp`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ mobile, otp })
-        });
-        const data = await response.json();
-        
-        if (data.success) {
-            currentUser = data.user;
-            authToken = data.token;
-            balance = currentUser.balance;
-            localStorage.setItem('user', JSON.stringify(currentUser));
-            localStorage.setItem('token', authToken);
-            document.getElementById('loginModal').style.display = 'none';
-            updateBalanceDisplay();
-            showToast('🎉 Login successful!');
-            document.getElementById('userName').innerText = currentUser.name;
-            document.getElementById('userPhone').innerText = currentUser.mobile;
-            document.getElementById('userAvatar').innerHTML = currentUser.name ? currentUser.name[0].toUpperCase() : '👤';
-        } else {
-            msgDiv.innerHTML = `<span style="color:#ff4444;">❌ ${data.message}</span>`;
-        }
+    function openDeposit() {
+        if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
+        document.getElementById('depositModal').style.display = 'flex';
     }
-
-    // Deposit Functions
-    async function submitDeposit() {
+    function submitDeposit() {
         const amount = parseInt(document.getElementById('depositAmount').value);
         const transactionId = document.getElementById('transactionId').value;
-        const screenshotFile = document.getElementById('screenshotInput').files[0];
-        
-        if (!amount || amount < 50) { showToast('Minimum 50 PKR', true); return; }
-        if (!transactionId) { showToast('Transaction ID required', true); return; }
-        if (!screenshotFile) { showToast('Please upload screenshot', true); return; }
-        
-        const formData = new FormData();
-        formData.append('userId', currentUser.id);
-        formData.append('amount', amount);
-        formData.append('method', 'easypaisa');
-        formData.append('transactionId', transactionId);
-        formData.append('screenshot', screenshotFile);
-        
-        try {
-            const response = await fetch(`${API_URL}/deposit`, { method: 'POST', headers: { 'Authorization': `Bearer ${authToken}` }, body: formData });
-            const result = await response.json();
-            if (result.success) {
-                showToast('✅ ' + result.message);
-                document.getElementById('depositModal').style.display = 'none';
-            } else { showToast('❌ ' + result.message, true); }
-        } catch (error) { showToast('❌ Failed to submit', true); }
+        if(!amount || amount < 50) { showToast("Min 50 PKR", true); return; }
+        if(!transactionId) { showToast("Transaction ID required", true); return; }
+        showToast(`✅ Deposit request submitted! Admin will verify.`, false);
+        document.getElementById('depositModal').style.display = 'none';
     }
-
-    async function submitWithdraw() {
-        const amount = parseInt(document.getElementById('withdrawAmount').value);
-        const account = document.getElementById('withdrawAccount').value;
-        if (!amount || amount < 500) { showToast('Minimum 500 PKR', true); return; }
-        if (amount > balance) { showToast('Insufficient balance', true); return; }
-        
-        const result = await apiCall('/withdraw', { method: 'POST', body: JSON.stringify({ userId: currentUser.id, amount, method: 'easypaisa', account }) });
-        if (result.success) {
-            showToast('✅ ' + result.message);
-            document.getElementById('withdrawModal').style.display = 'none';
-            balance -= amount;
-            updateBalanceDisplay();
-            localStorage.setItem('user', JSON.stringify(currentUser));
-        } else { showToast('❌ ' + result.message, true); }
-    }
-
-    async function apiCall(endpoint, options = {}) {
-        const headers = { 'Content-Type': 'application/json' };
-        if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
-        try {
-            const response = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
-            return await response.json();
-        } catch (error) {
-            showToast('❌ Server connection failed', true);
-            return { success: false };
-        }
-    }
-
-    // Admin Functions
-    function showAdminTab(tab) {
-        document.getElementById('adminUsersTab').style.display = tab === 'users' ? 'block' : 'none';
-        document.getElementById('adminDepositsTab').style.display = tab === 'deposits' ? 'block' : 'none';
-        document.getElementById('adminBalanceTab').style.display = tab === 'balance' ? 'block' : 'none';
-        if (tab === 'users') loadAdminUsers();
-        if (tab === 'deposits') loadAdminDeposits();
+    function closeDepositModal() {
+        document.getElementById('depositModal').style.display = 'none';
     }
     
-    async function loadAdminUsers() {
-        const result = await apiCall('/admin/users');
-        if (result.success) {
-            document.getElementById('adminUsersList').innerHTML = result.users.map(u => `
-                <div style="background:#2a2a3a; padding:8px; margin:5px; border-radius:12px; cursor:pointer; font-size:12px;" onclick="document.getElementById('adminUserId').value='${u.id}'">
-                    <strong>${u.name || u.mobile}</strong> (ID: ${u.id})<br>Balance: ${u.balance} PKR
+    function openWithdraw() {
+        if(!currentUser) { showToast("Login first", true); return; }
+        if(balance < 500) { showToast("Minimum 500 PKR", true); return; }
+        document.getElementById('withdrawModal').style.display = 'flex';
+    }
+    function submitWithdraw() {
+        let amount = parseInt(document.getElementById('withdrawAmount').value);
+        const acc = document.getElementById('withdrawAccount').value;
+        if(!amount || amount < 500) { showToast("Min 500 PKR", true); return; }
+        if(amount > balance) { showToast("Insufficient", true); return; }
+        balance -= amount;
+        if(currentUser) currentUser.balance = balance;
+        if(currentUser) currentUser.totalWithdrawn = (currentUser.totalWithdrawn || 0) + amount;
+        saveUser(); updateBalanceUI();
+        showToast(`✅ Withdraw ${amount} PKR to ${acc}`, false);
+        document.getElementById('withdrawModal').style.display = 'none';
+    }
+
+    // Admin Panel
+    let clickCount = 0, clickTimer = null;
+    document.getElementById('logo').addEventListener('click', () => {
+        clickCount++;
+        if (clickTimer) clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => {
+            if (clickCount === 3) openAdminPanel();
+            clickCount = 0;
+        }, 500);
+    });
+
+    function openAdminPanel() {
+        if (!currentUser) { showToast("Please login first", true); return; }
+        let adminPanel = document.getElementById('adminPanelModal');
+        if (!adminPanel) createAdminPanel();
+        document.getElementById('adminPanelModal').style.display = 'flex';
+        loadAdminUsers();
+    }
+
+    function createAdminPanel() {
+        const modal = document.createElement('div');
+        modal.id = 'adminPanelModal';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-card" style="max-width: 480px; max-height: 80vh; overflow-y: auto;">
+                <h3 style="color:#ffaa33;">👑 ADMIN PANEL</h3>
+                <div style="display: flex; gap: 10px; margin: 15px 0;">
+                    <button id="adminUsersTab" style="flex:1; padding:8px; background:#ffaa33; border-radius:20px;">👥 Users</button>
+                    <button id="adminBalanceTab" style="flex:1; padding:8px; background:#333; border-radius:20px;">➕ Add Balance</button>
+                    <button id="adminStatsTab" style="flex:1; padding:8px; background:#333; border-radius:20px;">📊 Stats</button>
                 </div>
-            `).join('');
-        }
-    }
-    
-    async function loadAdminDeposits() {
-        const result = await apiCall('/admin/deposits/pending');
-        if (result.success && result.deposits) {
-            if (result.deposits.length === 0) {
-                document.getElementById('adminDepositsList').innerHTML = '<div style="background:#2a2a3a; padding:8px; margin:5px; border-radius:12px;">No pending deposits</div>';
-            } else {
-                document.getElementById('adminDepositsList').innerHTML = result.deposits.map(d => `
-                    <div style="background:#2a2a3a; padding:8px; margin:5px; border-radius:12px; font-size:12px;">
-                        <strong>${d.name || d.mobile}</strong><br>
-                        Amount: ${d.amount} PKR<br>
-                        TX: ${d.transaction_id}<br>
-                        <button onclick="approveDeposit(${d.id})" style="background:#44ff44; color:#000; padding:4px 12px; margin-top:5px; border:none; border-radius:20px;">✅ Approve</button>
-                    </div>
-                `).join('');
-            }
-        }
-    }
-    
-    window.approveDeposit = async (depositId) => {
-        const result = await apiCall('/admin/deposit/approve', { method: 'POST', body: JSON.stringify({ depositId }) });
-        if (result.success) {
-            showToast('✅ Deposit approved!');
-            loadAdminDeposits();
-            if (currentUser) {
-                const userRes = await apiCall(`/user/${currentUser.id}`);
-                if (userRes.success) {
-                    currentUser = userRes.user;
-                    balance = currentUser.balance;
-                    updateBalanceDisplay();
-                    localStorage.setItem('user', JSON.stringify(currentUser));
-                }
-            }
-        } else {
-            showToast('❌ Failed to approve', true);
-        }
-    };
-    
-    async function addManualBalance() {
-        const userId = document.getElementById('adminUserId').value;
-        const amount = parseInt(document.getElementById('adminAmount').value);
-        if (!userId || !amount || amount <= 0) {
-            showToast('Enter valid User ID and Amount', true);
-            return;
-        }
-        const result = await apiCall('/admin/add-balance', { method: 'POST', body: JSON.stringify({ userId, amount, reason: 'Manual' }) });
-        if (result.success) {
-            showToast(`✅ ${amount} PKR added`);
-            document.getElementById('adminAmount').value = '';
+                <div id="adminUsersContent"><div id="adminUsersList"></div></div>
+                <div id="adminBalanceContent" style="display:none;">
+                    <input type="text" id="adminUserId" placeholder="User ID">
+                    <input type="number" id="adminAmount" placeholder="Amount">
+                    <button id="adminAddBalanceBtn">➕ Add Balance</button>
+                </div>
+                <div id="adminStatsContent" style="display:none;"><div id="adminStatsList"></div></div>
+                <button id="closeAdminPanelBtn" style="background:#333;">Close</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        document.getElementById('adminUsersTab').onclick = () => {
+            document.getElementById('adminUsersContent').style.display = 'block';
+            document.getElementById('adminBalanceContent').style.display = 'none';
+            document.getElementById('adminStatsContent').style.display = 'none';
             loadAdminUsers();
-            if (currentUser && currentUser.id === parseInt(userId)) {
-                balance = result.newBalance;
-                updateBalanceDisplay();
-                localStorage.setItem('user', JSON.stringify(currentUser));
-            }
-        } else {
-            showToast('❌ Failed to add balance', true);
+        };
+        document.getElementById('adminBalanceTab').onclick = () => {
+            document.getElementById('adminUsersContent').style.display = 'none';
+            document.getElementById('adminBalanceContent').style.display = 'block';
+            document.getElementById('adminStatsContent').style.display = 'none';
+        };
+        document.getElementById('adminStatsTab').onclick = () => {
+            document.getElementById('adminUsersContent').style.display = 'none';
+            document.getElementById('adminBalanceContent').style.display = 'none';
+            document.getElementById('adminStatsContent').style.display = 'block';
+            loadAdminStats();
+        };
+        document.getElementById('closeAdminPanelBtn').onclick = () => {
+            document.getElementById('adminPanelModal').style.display = 'none';
+        };
+        document.getElementById('adminAddBalanceBtn').onclick = addManualBalance;
+    }
+
+    function loadAdminUsers() {
+        const container = document.getElementById('adminUsersList');
+        if (users.length === 0) { container.innerHTML = '<div>No users</div>'; return; }
+        container.innerHTML = users.map(u => `
+            <div style="background:#2a2f4a; padding:10px; margin:8px 0; border-radius:15px;">
+                <strong>${u.name}</strong> (ID: ${u.id})<br>
+                Balance: ${u.balance} PKR<br>
+                <button onclick="selectUser(${u.id})" style="background:#ffaa33; padding:3px 12px; border-radius:20px;">Select</button>
+            </div>
+        `).join('');
+    }
+    function selectUser(id) {
+        document.getElementById('adminUserId').value = id;
+        showToast(`User ID ${id} selected`, false);
+    }
+    function addManualBalance() {
+        const userId = parseInt(document.getElementById('adminUserId').value);
+        const amount = parseInt(document.getElementById('adminAmount').value);
+        if (!userId || !amount) { showToast("Enter User ID and Amount", true); return; }
+        let user = users.find(u => u.id === userId);
+        if (!user) { showToast("User not found", true); return; }
+        user.balance += amount;
+        user.totalDeposited = (user.totalDeposited || 0) + amount;
+        saveUsers();
+        if (currentUser && currentUser.id === userId) {
+            currentUser = user;
+            balance = currentUser.balance;
+            updateBalanceUI();
         }
+        showToast(`✅ ${amount} PKR added to user ${userId}`, false);
+        document.getElementById('adminAmount').value = '';
+        loadAdminUsers();
+    }
+    function loadAdminStats() {
+        const container = document.getElementById('adminStatsList');
+        let totalUsers = users.length;
+        let totalBalance = users.reduce((s, u) => s + (u.balance || 0), 0);
+        let totalDeposits = users.reduce((s, u) => s + (u.totalDeposited || 0), 0);
+        let totalWithdrawals = users.reduce((s, u) => s + (u.totalWithdrawn || 0), 0);
+        container.innerHTML = `
+            👥 Users: ${totalUsers}<br>
+            💰 Deposits: ${totalDeposits} PKR<br>
+            💸 Withdrawals: ${totalWithdrawals} PKR<br>
+            📈 Profit: ${totalDeposits - totalWithdrawals} PKR<br>
+            💎 Balance: ${totalBalance} PKR
+        `;
     }
 
     // Event Listeners
-    document.getElementById('sendOtpBtn')?.addEventListener('click', sendOTP);
-    document.getElementById('verifyOtpBtn')?.addEventListener('click', verifyOTP);
-    document.getElementById('depositBtn')?.addEventListener('click', () => { if (!currentUser) { document.getElementById('loginModal').style.display = 'flex'; return; } document.getElementById('depositModal').style.display = 'flex'; });
-    document.getElementById('submitDepositBtn')?.addEventListener('click', submitDeposit);
-    document.getElementById('withdrawBtn')?.addEventListener('click', () => { if (currentUser) document.getElementById('withdrawModal').style.display = 'flex'; });
-    document.getElementById('submitWithdrawBtn')?.addEventListener('click', submitWithdraw);
-    
-    // Hand Coin Flip Events
-    document.getElementById('heads')?.addEventListener('click', () => {
-        document.getElementById('heads').classList.add('active');
-        document.getElementById('tails').classList.remove('active');
-        coinChoice = 'HEADS';
-    });
-    document.getElementById('tails')?.addEventListener('click', () => {
-        document.getElementById('tails').classList.add('active');
-        document.getElementById('heads').classList.remove('active');
-        coinChoice = 'TAILS';
-    });
-    document.getElementById('playBtn')?.addEventListener('click', playHandCoinFlip);
-    
-    // Card Game Events
-    document.getElementById('card1')?.addEventListener('click', () => {
-        document.getElementById('card1').classList.add('selected');
-        document.getElementById('card2').classList.remove('selected');
-        document.getElementById('card3').classList.remove('selected');
-        cardChoice = 1;
-    });
-    document.getElementById('card2')?.addEventListener('click', () => {
-        document.getElementById('card2').classList.add('selected');
-        document.getElementById('card1').classList.remove('selected');
-        document.getElementById('card3').classList.remove('selected');
-        cardChoice = 2;
-    });
-    document.getElementById('card3')?.addEventListener('click', () => {
-        document.getElementById('card3').classList.add('selected');
-        document.getElementById('card1').classList.remove('selected');
-        document.getElementById('card2').classList.remove('selected');
-        cardChoice = 3;
-    });
-    document.getElementById('cardPlayBtn')?.addEventListener('click', playCardGame);
-    
-    // Bet Options
-    document.querySelectorAll('.bet').forEach(chip => {
-        chip.addEventListener('click', () => {
-            document.querySelectorAll('.bet').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            currentBet = parseInt(chip.dataset.bet);
-            updateBalanceDisplay();
+    document.querySelectorAll('.game-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.game-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const g = tab.dataset.game;
+            document.getElementById('wheelGame').style.display = g === 'wheel' ? 'block' : 'none';
+            document.getElementById('coinGame').style.display = g === 'coin' ? 'block' : 'none';
+            document.getElementById('cardGame').style.display = g === 'card' ? 'block' : 'none';
         });
     });
+    document.getElementById('spinWheelBtn').addEventListener('click', spinWheel);
+    document.getElementById('coinPlayBtn').addEventListener('click', playCoinFlip);
+    document.getElementById('cardPlayBtn').addEventListener('click', playCardGame);
+    document.getElementById('depositBtn').addEventListener('click', openDeposit);
+    document.getElementById('submitDepositBtn').addEventListener('click', submitDeposit);
+    document.getElementById('closeDepositModal').addEventListener('click', closeDepositModal);
     
-    // Card Game Bet Options
-    document.querySelectorAll('.card-bet').forEach(chip => {
-        chip.addEventListener('click', () => {
-            document.querySelectorAll('.card-bet').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            cardCurrentBet = parseInt(chip.dataset.cardBet);
-            updateBalanceDisplay();
+    document.querySelectorAll('[data-wheel-bet]').forEach(el => {
+        el.addEventListener('click', () => {
+            document.querySelectorAll('[data-wheel-bet]').forEach(c=>c.classList.remove('active'));
+            el.classList.add('active');
+            wheelBet = parseInt(el.dataset.wheelBet);
+            updateBalanceUI();
         });
     });
-    
-    document.getElementById('adminAddBalanceBtn')?.addEventListener('click', addManualBalance);
-    document.getElementById('closeDepositModal')?.addEventListener('click', () => document.getElementById('depositModal').style.display = 'none');
-    document.getElementById('closeWithdrawModal')?.addEventListener('click', () => document.getElementById('withdrawModal').style.display = 'none');
-    document.getElementById('closeAdminPanel')?.addEventListener('click', () => document.getElementById('adminPanel').style.display = 'none');
-    
-    let clickCount = 0;
-    document.getElementById('logo').addEventListener('click', () => {
-        clickCount++;
-        setTimeout(() => clickCount = 0, 1000);
-        if (clickCount === 3) {
-            if (currentUser) {
-                document.getElementById('adminPanel').style.display = 'flex';
-                showAdminTab('users');
-            } else { showToast('Please login first', true); }
-            clickCount = 0;
+    document.querySelectorAll('[data-coin-bet]').forEach(el => {
+        el.addEventListener('click', () => {
+            document.querySelectorAll('[data-coin-bet]').forEach(c=>c.classList.remove('active'));
+            el.classList.add('active');
+            coinBet = parseInt(el.dataset.coinBet);
+            updateBalanceUI();
+        });
+    });
+    document.querySelectorAll('[data-card-bet]').forEach(el => {
+        el.addEventListener('click', () => {
+            document.querySelectorAll('[data-card-bet]').forEach(c=>c.classList.remove('active'));
+            el.classList.add('active');
+            cardBet = parseInt(el.dataset.cardBet);
+            updateBalanceUI();
+        });
+    });
+    document.getElementById('headsBtn').addEventListener('click', () => {
+        coinChoice = "HEADS";
+        document.getElementById('headsBtn').classList.add('active');
+        document.getElementById('tailsBtn').classList.remove('active');
+    });
+    document.getElementById('tailsBtn').addEventListener('click', () => {
+        coinChoice = "TAILS";
+        document.getElementById('tailsBtn').classList.add('active');
+        document.getElementById('headsBtn').classList.remove('active');
+    });
+    document.querySelectorAll('.card-item').forEach(c => {
+        c.addEventListener('click', () => {
+            document.querySelectorAll('.card-item').forEach(c2=>c2.classList.remove('selected'));
+            c.classList.add('selected');
+            selectedCard = parseInt(c.dataset.card);
+        });
+    });
+    document.getElementById('sendOtpBtn').addEventListener('click', sendOtp);
+    document.getElementById('verifyOtpBtn').addEventListener('click', verifyOtp);
+    document.getElementById('withdrawBtnAction').addEventListener('click', openWithdraw);
+    document.getElementById('confirmWithdrawBtn').addEventListener('click', submitWithdraw);
+    document.getElementById('closeWithdrawBtn').addEventListener('click', () => document.getElementById('withdrawModal').style.display = 'none');
+
+    function init() {
+        loadUsers();
+        canvas.width = 500; canvas.height = 500; ctx = canvas.getContext('2d');
+        drawWheel(); updateLegend();
+        const saved = localStorage.getItem('winpaisa_user');
+        if(saved) { 
+            currentUser = JSON.parse(saved); 
+            balance = currentUser.balance; 
+            document.getElementById('loginModal').style.display = 'none'; 
+            document.getElementById('userNameDisplay').innerText = currentUser.name; 
+            document.getElementById('userPhoneDisplay').innerText = currentUser.mobile; 
+            document.getElementById('avatarIcon').innerHTML = currentUser.name.charAt(0).toUpperCase(); 
+            updateBalanceUI(); 
         }
-    });
-    
-    const savedUser = localStorage.getItem('user');
-    const savedToken = localStorage.getItem('token');
-    if (savedUser && savedToken) {
-        currentUser = JSON.parse(savedUser);
-        authToken = savedToken;
-        balance = currentUser.balance;
-        updateBalanceDisplay();
-        document.getElementById('loginModal').style.display = 'none';
-        document.getElementById('userName').innerText = currentUser.name;
-        document.getElementById('userPhone').innerText = currentUser.mobile;
-        document.getElementById('userAvatar').innerHTML = currentUser.name ? currentUser.name[0].toUpperCase() : '👤';
-        
-        coinChoice = 'HEADS';
-        cardChoice = null;
-    } else {
-        document.getElementById('loginModal').style.display = 'flex';
-        coinChoice = 'HEADS';
-        cardChoice = null;
+        setInterval(() => { document.getElementById('onlineCount').innerText = Math.floor(Math.random() * 80) + 150; }, 8000);
+        document.getElementById('liveTicker').innerHTML = liveWins.map(w => `<span class="ticker-item">${w}</span>`).join('');
+        setInterval(() => addLiveWin([33,34,35,36,37,38,39,40][Math.floor(Math.random()*8)]), 13000);
     }
-    
-    let onlineCount = 124;
-    setInterval(() => {
-        onlineCount = Math.floor(Math.random() * 80) + 100;
-        document.getElementById('onlineUsers').innerText = onlineCount;
-    }, 10000);
-    
-    updateLiveTicker();
-    setInterval(() => {
-        const randomAmounts = [85, 170, 255, 425, 850];
-        const randomAmount = randomAmounts[Math.floor(Math.random() * randomAmounts.length)];
-        addToLiveTicker(randomAmount);
-    }, 7000);
-    
-    setInterval(async () => {
-        if (currentUser) {
-            const result = await apiCall(`/user/${currentUser.id}`);
-            if (result.success) {
-                currentUser = result.user;
-                balance = currentUser.balance;
-                updateBalanceDisplay();
-                localStorage.setItem('user', JSON.stringify(currentUser));
-            }
-        }
-    }, 30000);
+    init();
 </script>
 </body>
 </html>

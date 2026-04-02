@@ -59,7 +59,93 @@
             font-weight: bold;
             color: #ffdd99;
         }
+    /* Support Button */
+    .support-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
 
+    .support-icon {
+        width: 55px;
+        height: 55px;
+        background: linear-gradient(135deg, #ffaa33, #ff7700);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+        animation: bounce 2s infinite;
+        border: 2px solid rgba(255,255,200,0.3);
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .support-icon:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(255,170,51,0.8);
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    .support-dropdown {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        background: linear-gradient(135deg, #1a1a2a, #12121f);
+        border-radius: 20px;
+        padding: 12px;
+        border: 1px solid #ffaa33;
+        display: none;
+        z-index: 1001;
+        min-width: 180px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+
+    .support-dropdown.show {
+        display: block;
+        animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .support-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        color: white;
+    }
+
+    .support-option:hover {
+        background: rgba(255,170,51,0.2);
+        transform: translateX(5px);
+    }
+
+    .support-option i {
+        font-size: 22px;
+    }
+
+    .support-option .wa { color: #25D366; }
+    .support-option .tg { color: #0088cc; }
+
+    .support-option span {
+        font-size: 13px;
+        font-weight: 500;
+    }
         .stats-panel {
             display: flex;
             justify-content: space-between;
@@ -566,6 +652,18 @@
     </div>
 
     <div class="deposit-btn" id="depositBtn">📱 DEPOSIT NOW </div>
+<!-- Support Button with Dropdown - Right Side -->
+<div class="support-btn" id="supportBtn">
+    <div class="support-icon" id="supportIcon">
+        💬
+    </div>
+</div>
+<div class="support-dropdown" id="supportDropdown">
+    <a href="https://wa.me/923208146556?text=Hello! I need help with WINPAISA" target="_blank" class="support-option">
+        <i class="wa">📱</i>
+        <span>WhatsApp Support</span>
+    </a>
+</div>
 
     <div class="game-tabs">
         <div class="game-tab active" data-game="wheel">🎡 WHEEL</div>
@@ -711,6 +809,22 @@
     let users = [];
     let deposits = [];
     let withdrawals = [];
+    // Support Button Dropdown
+    const supportBtn = document.getElementById('supportBtn');
+    const supportDropdown = document.getElementById('supportDropdown');
+    
+    if(supportBtn) {
+        supportBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            supportDropdown.classList.toggle('show');
+        });
+    }
+    
+    document.addEventListener('click', (e) => {
+        if(supportBtn && supportDropdown && !supportBtn.contains(e.target) && !supportDropdown.contains(e.target)) {
+            supportDropdown.classList.remove('show');
+        }
+    });
 
     function loadData() {
         const savedUsers = localStorage.getItem('winpaisa_users');

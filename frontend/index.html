@@ -937,63 +937,52 @@
     }
 
     // ==================== SPIN WHEEL ====================
-    function spinWheel() {
-        if(spinning) { showToast("Wait...", true); return; }
-        if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
-        if(balance < wheelBet) { showToast("Need " + wheelBet + " PKR", true); return; }
-        
-        spinning = true;
+function spinWheel() {
+    if(spinning) { showToast("Wait...", true); return; }
+    if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
+    if(balance < wheelBet) { showToast("Need " + wheelBet + " PKR", true); return; }
+    
+    spinning = true;
+    
+    // 40% chance to win
+    const isWin = Math.random() < 0.4;
+    let winAmount = 0;
+    
+    if (isWin) {
+        // WIN: 1.5x profit
+        winAmount = Math.floor(wheelBet * 1.5);
+        balance = balance + winAmount;
+        showToast("🎉 YOU WON " + winAmount + " PKR! 🎉", false);
+        addLiveWin(winAmount);
+        playSound('win');
+    } else {
+        // LOSE: Bet deduct
         balance = balance - wheelBet;
-        updateBalanceUI(); 
-        saveUser();
-        playSound('spin');
-        
-        const winningPrizes = WHEEL_PRIZES.filter(p => p.value > 0);
-        const losingPrizes = WHEEL_PRIZES.filter(p => p.value === 0);
-        
-        const isWin = getWinResult(wheelFirstPlay);
-        let winAmount = 0;
-        let selectedPrize = null;
-        
-        if(isWin) {
-            selectedPrize = winningPrizes[Math.floor(Math.random() * winningPrizes.length)];
-            winAmount = selectedPrize.value;
-            balance = balance + winAmount;
-        } else {
-            selectedPrize = losingPrizes[Math.floor(Math.random() * losingPrizes.length)];
-        }
-        
-        const angleStepDeg = 360 / SEG_COUNT;
-        let targetIdx = WHEEL_PRIZES.findIndex(p => p === selectedPrize);
-        const targetMid = (targetIdx * angleStepDeg) + (angleStepDeg/2);
-        const finalRotate = 360 * (6 + Math.floor(Math.random() * 3)) + targetMid;
-        const wheelCanvas = document.getElementById('wheelCanvas');
-        wheelCanvas.style.transition = "transform 4s cubic-bezier(0.2, 0.96, 0.15, 1.02)";
-        wheelCanvas.style.transform = "rotate(" + finalRotate + "deg)";
-        
-        setTimeout(function() {
-            if(isWin && winAmount > 0) { 
-                showToast("🎉 WON " + winAmount + " PKR! 🎉", false); 
-                addLiveWin(winAmount); 
-                playSound('win');
-                wheelCanvas.classList.add('win-pulse'); 
-                setTimeout(function() { wheelCanvas.classList.remove('win-pulse'); }, 600); 
-            } else { 
-                showToast("😞 Lost " + wheelBet + " PKR", true);
-                playSound('lose');
-            }
-            updateBalanceUI(); 
-            saveUser();
-            spinning = false;
-            wheelFirstPlay = false;
-            setTimeout(function() { 
-                wheelCanvas.style.transition = "none"; 
-                wheelCanvas.style.transform = "rotate(" + (finalRotate % 360) + "deg)"; 
-                setTimeout(function() { wheelCanvas.style.transition = ""; }, 50); 
-            }, 100);
-        }, 3900);
+        showToast("😞 YOU LOST " + wheelBet + " PKR", true);
+        playSound('lose');
     }
-
+    
+    updateBalanceUI();
+    saveUser();
+    playSound('spin');
+    
+    const wheelCanvas = document.getElementById('wheelCanvas');
+    const randomSpin = Math.floor(Math.random() * 3600) + 720;
+    wheelCanvas.style.transition = "transform 3s ease-out";
+    wheelCanvas.style.transform = "rotate(" + randomSpin + "deg)";
+    
+    setTimeout(function() {
+        if(isWin) {
+            wheelCanvas.classList.add('win-pulse');
+            setTimeout(function() { wheelCanvas.classList.remove('win-pulse'); }, 600);
+        }
+        spinning = false;
+        setTimeout(function() {
+            wheelCanvas.style.transition = "none";
+            wheelCanvas.style.transform = "rotate(" + (randomSpin % 360) + "deg)";
+        }, 100);
+    }, 3000);
+}
     // ==================== COIN FLIP ====================
     function playCoinFlip() {
         if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }

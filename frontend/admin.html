@@ -5,118 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WINPAISA - Admin Dashboard</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: linear-gradient(135deg, #0a0f1f 0%, #03060f 100%);
-            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #606c92 0%, #5a6586 100%);
             min-height: 100vh;
         }
-
-        /* Login Overlay */
         .admin-login {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(190, 171, 171, 0.95);
+            background: rgba(148, 127, 127, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
-
         .login-box {
-            background: linear-gradient(145deg, #a5b0e2, #97a0ca);
-            padding: 35px;
-            border-radius: 56px;
+            background: linear-gradient(145deg, #98a0c7, #808cc4);
+            padding: 30px;
+            border-radius: 30px;
             width: 90%;
-            max-width: 380px;
+            max-width: 350px;
             border: 2px solid #ffaa44;
             text-align: center;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
         }
-
-        .login-box h2 {
-            color: #ffaa33;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-
+        .login-box h2 { color: #ffaa33; margin-bottom: 20px; }
         .login-box input {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             margin: 10px 0;
-            background: #1a1f35;
-            border: 1px solid #ffaa44;
+            background: #2a2f4a;
+            border: none;
             border-radius: 50px;
             color: white;
-            font-size: 16px;
             text-align: center;
         }
-
         .login-box button {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #ffaa33, #ff7700);
+            padding: 12px;
+            background: #ffaa33;
             border: none;
             border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
-            font-size: 16px;
-            color: #000;
         }
-
-        .login-box p {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #888;
-        }
-
-        /* Dashboard */
         .dashboard {
             display: none;
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
-
-        /* Header */
         .admin-header {
-            background: linear-gradient(145deg, #abb5e0, #8e95b3);
-            padding: 18px 25px;
+            background: linear-gradient(135deg, #1a1f35, #11152a);
+            padding: 15px 25px;
             border-radius: 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
             border: 1px solid #ffaa44;
-            flex-wrap: wrap;
-            gap: 15px;
         }
-
-        .admin-header h1 {
-            font-size: 28px;
-            background: linear-gradient(135deg, #FFE5A3, #FFA41E);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .admin-header .admin-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
+        .admin-header h1 { color: #ffaa33; font-size: 24px; }
         .logout-btn {
-            background: linear-gradient(135deg, #ff5555, #cc4444);
+            background: #ff5555;
             padding: 8px 20px;
             border-radius: 30px;
             cursor: pointer;
@@ -124,122 +78,45 @@
             color: white;
             font-weight: bold;
         }
-
-        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-
         .stat-card {
-            background: linear-gradient(145deg, #989db1, #6b76aa);
+            background: linear-gradient(135deg, #515569, #858fc0);
             padding: 20px;
-            border-radius: 30px;
+            border-radius: 20px;
             text-align: center;
             border: 1px solid #ffaa44;
         }
-
-        .stat-card h3 {
-            font-size: 32px;
-            color: #ffaa33;
-            margin: 10px 0;
-        }
-
-        .stat-card p {
-            color: #ffdd99;
-            font-size: 14px;
-        }
-
-        /* Tabs */
+        .stat-card h3 { font-size: 32px; color: #ffaa33; margin: 10px 0; }
         .tabs {
             display: flex;
             gap: 10px;
             margin-bottom: 25px;
             flex-wrap: wrap;
         }
-
         .tab-btn {
             padding: 12px 25px;
-            background: #0e101d;
-            border: 1px solid #ffaa44;
+            background: #414a70;
+            border: none;
             border-radius: 50px;
             color: #ffdd99;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s;
         }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, #ffaa33, #ff7700);
-            color: #1a1a2a;
-        }
-
-        .tab-btn:hover {
-            background: #ffaa33;
-            color: #1a1a2a;
-        }
-
-        /* Tables */
+        .tab-btn.active { background: #ffaa33; color: #1a1a2a; }
         .table-container {
-            background: linear-gradient(145deg, #7e87b1, #465596);
-            border-radius: 30px;
+            background: #2f3969;
+            border-radius: 20px;
             padding: 20px;
             overflow-x: auto;
-            border: 1px solid #ffaa44;
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #3f435c;
-        }
-
-        th {
-            color: #ffaa33;
-            font-weight: bold;
-        }
-
-        td {
-            color: #ffdd99;
-        }
-
-        .status-pending {
-            background: #ffaa33;
-            color: #1a1a2a;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-        }
-
-        .status-approved {
-            background: #44ff44;
-            color: #1a1a2a;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-        }
-
-        .status-rejected {
-            background: #ff5555;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-        }
-
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #2a2f4a; }
+        th { color: #ffaa33; }
         .approve-btn {
             background: #44ff44;
             color: #1a1a2a;
@@ -248,9 +125,7 @@
             border-radius: 20px;
             cursor: pointer;
             margin-right: 5px;
-            font-weight: bold;
         }
-
         .reject-btn {
             background: #ff5555;
             color: white;
@@ -258,97 +133,33 @@
             padding: 6px 12px;
             border-radius: 20px;
             cursor: pointer;
-            font-weight: bold;
         }
-
-        .view-screenshot {
-            background: #ffaa33;
-            color: #1a1a2a;
-            padding: 4px 10px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 12px;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        /* Add Balance Form */
+        .section { display: none; }
+        .section.active { display: block; }
         .add-balance-form {
-            background: linear-gradient(145deg, #0f1325, #080b18);
+            background: #1a1f35;
             padding: 25px;
-            border-radius: 30px;
+            border-radius: 20px;
             max-width: 500px;
-            border: 1px solid #ffaa44;
         }
-
-        .add-balance-form h3 {
-            margin-bottom: 20px;
-            color: #ffaa33;
-        }
-
         .add-balance-form input {
             width: 100%;
             padding: 12px;
             margin: 10px 0;
-            background: #1a1f35;
-            border: 1px solid #ffaa44;
+            background: #2a2f4a;
+            border: none;
             border-radius: 30px;
             color: white;
-            font-size: 14px;
         }
-
         .add-balance-form button {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #ffaa33, #ff7700);
+            background: #ffaa33;
             border: none;
             border-radius: 30px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
-            font-size: 16px;
-            color: #000;
         }
-
-        .search-input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            background: #1a1f35;
-            border: 1px solid #ffaa44;
-            border-radius: 30px;
-            color: white;
-            font-size: 14px;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #ffaa33;
-            color: #1a1a2a;
-            padding: 12px 24px;
-            border-radius: 50px;
-            z-index: 2000;
-            animation: fadeInOut 3s forwards;
-            font-weight: bold;
-        }
-
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateX(100px); }
-            15% { opacity: 1; transform: translateX(0); }
-            85% { opacity: 1; transform: translateX(0); }
-            100% { opacity: 0; transform: translateX(100px); }
-        }
-
         .badge {
             background: #ff5555;
             color: white;
@@ -357,524 +168,398 @@
             font-size: 12px;
             margin-left: 8px;
         }
-
-        .user-card-mini {
-            background: #c2c6d8;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ffaa33;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 2000;
+            animation: fadeInOut 3s forwards;
         }
-
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            th, td {
-                font-size: 12px;
-                padding: 8px;
-            }
-            .admin-header h1 {
-                font-size: 18px;
-            }
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #ffaa33;
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateX(100px); }
+            15% { opacity: 1; transform: translateX(0); }
+            85% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
         }
     </style>
 </head>
 <body>
-    <!-- Admin Login -->
     <div id="adminLogin" class="admin-login">
         <div class="login-box">
             <h2>👑 ADMIN LOGIN</h2>
             <input type="password" id="adminPassword" placeholder="Enter Admin Password">
             <button onclick="adminLogin()">Login</button>
-            <p>Default Password: <strong>admin123</strong></p>
+            <p style="margin-top: 15px;">Password: <strong>admin123</strong></p>
         </div>
     </div>
 
-    <!-- Dashboard -->
     <div id="dashboard" class="dashboard">
         <div class="admin-header">
             <h1>👑 WINPAISA ADMIN DASHBOARD</h1>
-            <div class="admin-info">
-                <span id="adminName" style="color: #ffaa33;">Admin</span>
-                <button class="logout-btn" onclick="adminLogout()">Logout</button>
-            </div>
+            <button class="logout-btn" onclick="adminLogout()">Logout</button>
         </div>
 
-        <!-- Stats Cards -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <p>Total Users</p>
-                <h3 id="totalUsers">0</h3>
-            </div>
-            <div class="stat-card">
-                <p>Total Deposits</p>
-                <h3 id="totalDeposits">0</h3>
-                <small>PKR</small>
-            </div>
-            <div class="stat-card">
-                <p>Total Withdrawals</p>
-                <h3 id="totalWithdrawals">0</h3>
-                <small>PKR</small>
-            </div>
-            <div class="stat-card">
-                <p>Platform Balance</p>
-                <h3 id="platformBalance">0</h3>
-                <small>PKR</small>
-            </div>
+            <div class="stat-card"><p>Total Users</p><h3 id="totalUsers">0</h3></div>
+            <div class="stat-card"><p>Total Deposits</p><h3 id="totalDeposits">0</h3><small>PKR</small></div>
+            <div class="stat-card"><p>Total Withdrawals</p><h3 id="totalWithdrawals">0</h3><small>PKR</small></div>
+            <div class="stat-card"><p>Platform Balance</p><h3 id="platformBalance">0</h3><small>PKR</small></div>
         </div>
 
-        <!-- Tabs -->
         <div class="tabs">
             <button class="tab-btn active" onclick="showSection('pending')">💰 Pending Deposits <span id="pendingBadge" class="badge">0</span></button>
             <button class="tab-btn" onclick="showSection('allDeposits')">📋 All Deposits</button>
             <button class="tab-btn" onclick="showSection('withdrawals')">💸 Withdrawals</button>
             <button class="tab-btn" onclick="showSection('users')">👥 Users</button>
             <button class="tab-btn" onclick="showSection('addBalance')">➕ Add Balance</button>
-            <button class="tab-btn" onclick="showSection('stats')">📊 Statistics</button>
         </div>
 
-        <!-- Pending Deposits Section -->
         <div id="pendingSection" class="section active">
             <div class="table-container">
-                <h3 style="margin-bottom: 15px; color: #ffaa33;">⏳ Pending Deposits (Approve/Reject)</h3>
-                <div id="pendingDepositsList" class="loading">Loading...</div>
+                <h3>⏳ Pending Deposits</h3>
+                <div id="pendingDepositsList"></div>
             </div>
         </div>
 
-        <!-- All Deposits Section -->
         <div id="allDepositsSection" class="section">
-            <div class="table-container">
-                <h3 style="margin-bottom: 15px; color: #ffaa33;">📋 All Deposit History</h3>
-                <div id="allDepositsList" class="loading">Loading...</div>
-            </div>
+            <div class="table-container"><h3>📋 All Deposits</h3><div id="allDepositsList"></div></div>
         </div>
 
-        <!-- Withdrawals Section -->
         <div id="withdrawalsSection" class="section">
-            <div class="table-container">
-                <h3 style="margin-bottom: 15px; color: #ffaa33;">💸 Withdrawal Requests</h3>
-                <div id="withdrawalsList" class="loading">Loading...</div>
-            </div>
+            <div class="table-container"><h3>💸 Withdrawal Requests</h3><div id="withdrawalsList"></div></div>
         </div>
 
-        <!-- Users Section -->
         <div id="usersSection" class="section">
-            <div class="table-container">
-                <h3 style="margin-bottom: 15px; color: #ffaa33;">👥 All Users</h3>
-                <input type="text" id="searchUser" class="search-input" placeholder="🔍 Search by mobile or name...">
-                <div id="usersList" class="loading">Loading...</div>
-            </div>
+            <div class="table-container"><h3>👥 All Users</h3><div id="usersList"></div></div>
         </div>
 
-        <!-- Add Balance Section -->
         <div id="addBalanceSection" class="section">
             <div class="add-balance-form">
-                <h3>➕ Manual Add Balance</h3>
+                <h3>➕ Add Balance Manually</h3>
                 <input type="text" id="addUserId" placeholder="User ID">
                 <input type="text" id="userMobile" placeholder="OR Mobile Number">
                 <input type="number" id="addAmount" placeholder="Amount (PKR)">
-                <input type="text" id="addReason" placeholder="Reason (Optional)">
-                <button onclick="addManualBalance()">➕ Add Balance</button>
-            </div>
-        </div>
-
-        <!-- Statistics Section -->
-        <div id="statsSection" class="section">
-            <div class="table-container">
-                <h3 style="margin-bottom: 15px; color: #ffaa33;">📊 Detailed Statistics</h3>
-                <div id="statsDetails" class="loading">Loading...</div>
+                <button onclick="addManualBalance()">Add Balance</button>
             </div>
         </div>
     </div>
 
     <script>
-        const API_URL = 'https://winpaisa-app.onrender.com/api';
         const ADMIN_PASSWORD = "admin123";
-        
-        let users = [];
-        let deposits = [];
-        let withdrawals = [];
 
-        // Helper Functions
-        async function apiCall(endpoint, options = {}) {
-            try {
-                const response = await fetch(`${API_URL}${endpoint}`, {
-                    headers: { 'Content-Type': 'application/json' },
-                    ...options
-                });
-                return await response.json();
-            } catch (error) {
-                console.error('API Error:', error);
-                showToast('Server connection failed', 'error');
-                return { success: false };
-            }
-        }
-
-        function showToast(message, type = 'info') {
+        function showToast(msg, isErr) {
             const toast = document.createElement('div');
             toast.className = 'toast';
-            toast.textContent = message;
-            if (type === 'error') toast.style.background = '#ff5555';
-            if (type === 'success') toast.style.background = '#44ff44';
-            if (type === 'info') toast.style.background = '#ffaa33';
-            toast.style.color = '#1a1a2a';
+            toast.textContent = msg;
+            if(isErr) toast.style.background = '#ff5555';
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // Admin Login
         function adminLogin() {
-            const password = document.getElementById('adminPassword').value;
-            if (password === ADMIN_PASSWORD) {
+            if(document.getElementById('adminPassword').value === ADMIN_PASSWORD) {
                 localStorage.setItem('adminLoggedIn', 'true');
                 document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                loadAllData();
-                showToast('Login successful!', 'success');
+                refreshAll();
+                showToast('Login successful!', false);
             } else {
-                showToast('Wrong password!', 'error');
+                showToast('Wrong password!', true);
             }
         }
 
         function adminLogout() {
             localStorage.removeItem('adminLoggedIn');
-            document.getElementById('adminLogin').style.display = 'flex';
-            document.getElementById('dashboard').style.display = 'none';
-            showToast('Logged out', 'success');
+            location.reload();
         }
 
-        // Load Data from Backend
-        async function loadAllData() {
-            await loadUsers();
-            await loadDeposits();
-            await loadWithdrawals();
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section + 'Section').classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function refreshAll() {
             updateStats();
+            loadPendingDeposits();
+            loadAllDeposits();
+            loadWithdrawals();
+            loadUsers();
         }
 
-        async function loadUsers() {
+        function updateStats() {
+            let users = localStorage.getItem('winpaisa_users');
+            let deposits = localStorage.getItem('winpaisa_deposits');
+            
             try {
-                const result = await apiCall('/admin/users');
-                if (result.success) {
-                    users = result.users;
-                    refreshUsersList();
-                }
-            } catch (error) {
-                console.error('Load users error:', error);
-                document.getElementById('usersList').innerHTML = '<div style="text-align:center; padding:40px;">❌ Failed to load users</div>';
-            }
-        }
-
-        async function loadDeposits() {
-            try {
-                const result = await apiCall('/admin/deposits/pending');
-                if (result.success) {
-                    deposits = result.deposits;
-                    refreshPendingDeposits();
-                }
-                
-                // Also load all deposits (for all deposits tab)
-                const allResult = await apiCall('/admin/deposits/all');
-                if (allResult.success) {
-                    refreshAllDeposits(allResult.deposits);
-                }
-            } catch (error) {
-                console.error('Load deposits error:', error);
-            }
-        }
-
-        async function loadWithdrawals() {
-            try {
-                const result = await apiCall('/admin/withdrawals/pending');
-                if (result.success) {
-                    withdrawals = result.withdrawals;
-                    refreshWithdrawals();
-                }
-            } catch (error) {
-                console.error('Load withdrawals error:', error);
-            }
-        }
-
-        // Refresh Functions
-        function refreshUsersList() {
-            const container = document.getElementById('usersList');
-            if (users.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px;">👥 No users found</div>';
-                return;
+                users = users ? JSON.parse(users) : [];
+                deposits = deposits ? JSON.parse(deposits) : [];
+            } catch(e) {
+                users = [];
+                deposits = [];
             }
             
-            let html = '<table><thead>得到<th>ID</th><th>Name</th><th>Mobile</th><th>Balance</th><th>Deposited</th><th>Withdrawn</th><th>Games</th><th>Joined</th></tr></thead><tbody id="usersTableBody">';
-            users.forEach(u => {
-                html += `<tr>
-                    <td>${u.id}</td>
-                    <td>${u.name || 'N/A'}</td>
-                    <td>${u.mobile}</td>
-                    <td><strong style="color:#44ff44">${u.balance || 0} PKR</strong></td>
-                    <td>${u.total_deposited || 0} PKR</td>
-                    <td>${u.total_withdrawn || 0} PKR</td>
-                    <td>${u.games_played || 0}</td>
-                    <td>${new Date(u.created_at).toLocaleDateString() || '-'}</td>
-                </tr>`;
-            });
-            html += '</tbody></table>';
-            container.innerHTML = html;
+            if (!Array.isArray(users)) users = [];
+            if (!Array.isArray(deposits)) deposits = [];
             
-            // Search functionality
-            document.getElementById('searchUser').oninput = function() {
-                const search = this.value.toLowerCase();
-                const rows = document.querySelectorAll('#usersTableBody tr');
-                rows.forEach(row => {
-                    const text = row.innerText.toLowerCase();
-                    row.style.display = text.includes(search) ? '' : 'none';
-                });
-            };
+            const totalUsers = users.length;
+            const totalDeposits = deposits.filter(d => d && d.status === 'approved').reduce((sum, d) => sum + (d.amount || 0), 0);
+            const totalBalance = users.reduce((sum, u) => sum + (u.balance || 0), 0);
+            
+            document.getElementById('totalUsers').innerText = totalUsers;
+            document.getElementById('totalDeposits').innerText = totalDeposits;
+            document.getElementById('platformBalance').innerText = totalBalance;
         }
 
-        function refreshPendingDeposits() {
-            const pending = deposits.filter(d => d.status === 'pending');
+        function loadPendingDeposits() {
             const container = document.getElementById('pendingDepositsList');
             
-            if (pending.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px;">✅ No pending deposits</div>';
+            let deposits = localStorage.getItem('winpaisa_deposits');
+            try {
+                deposits = deposits ? JSON.parse(deposits) : [];
+            } catch(e) {
+                deposits = [];
+            }
+            
+            if (!Array.isArray(deposits)) deposits = [];
+            
+            const pending = deposits.filter(d => d && d.status === 'pending');
+            
+            document.getElementById('pendingBadge').innerText = pending.length;
+            
+            if(pending.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:40px;">✅ No pending deposits</div>';
                 return;
             }
             
-            let html = '<table><thead><tr><th>ID</th><th>User</th><th>Mobile</th><th>Amount</th><th>Method</th><th>Screenshot</th><th>Date</th><th>Actions</th></tr></thead><tbody>';
+            let html = `<table><thead><tr><th>ID</th><th>User</th><th>Mobile</th><th>Amount</th><th>Transaction ID</th><th>Date</th><th>Action</th></tr></thead><tbody>`;
+            
             pending.forEach(d => {
                 html += `<tr>
-                    <td>${d.id}</td>
-                    <td>${d.user_name || 'N/A'}</td>
-                    <td>${d.user_mobile}</td>
-                    <td><strong style="color:#ffaa33">${d.amount} PKR</strong></td>
-                    <td>${d.method || 'EasyPaisa'}</td>
-                    <td>${d.screenshot ? `<a href="#" onclick="viewScreenshot('${d.screenshot}')" class="view-screenshot">📸 View</a>` : '-'}</td>
-                    <td>${new Date(d.created_at).toLocaleString()}</td>
+                    <td>${d.id || 'N/A'}</td>
+                    <td>${d.userName || 'N/A'}</td>
+                    <td>${d.userMobile || 'N/A'}</td>
+                    <td><strong>${d.amount || 0} PKR</strong></td>
+                    <td>${d.transactionId || 'N/A'}</td>
+                    <td>${d.timestamp || new Date(d.createdAt).toLocaleString()}</td>
                     <td>
                         <button class="approve-btn" onclick="approveDeposit(${d.id})">✅ Approve</button>
                         <button class="reject-btn" onclick="rejectDeposit(${d.id})">❌ Reject</button>
                     </td>
                 </tr>`;
             });
-            html += '</tbody></table>';
+            
+            html += `</tbody></table>`;
             container.innerHTML = html;
-            document.getElementById('pendingBadge').innerText = pending.length;
         }
 
-        function refreshAllDeposits(allDeposits) {
+        // MAIN APPROVE FUNCTION - UPDATES USER BALANCE
+        function approveDeposit(id) {
+            if(!confirm('Approve this deposit? User will get balance added.')) return;
+            
+            let usersStr = localStorage.getItem('winpaisa_users');
+            let depositsStr = localStorage.getItem('winpaisa_deposits');
+            
+            let users = [];
+            let deposits = [];
+            
+            try {
+                users = usersStr ? JSON.parse(usersStr) : [];
+                deposits = depositsStr ? JSON.parse(depositsStr) : [];
+            } catch(e) {
+                users = [];
+                deposits = [];
+            }
+            
+            if (!Array.isArray(users)) users = [];
+            if (!Array.isArray(deposits)) deposits = [];
+            
+            const deposit = deposits.find(d => d && d.id === id);
+            if(!deposit || deposit.status !== 'pending') {
+                showToast('Invalid deposit', true);
+                return;
+            }
+            
+            // FIND AND UPDATE USER BALANCE
+            const user = users.find(u => u && u.id === deposit.userId);
+            if(user) {
+                user.balance = (user.balance || 0) + deposit.amount;
+                user.totalDeposited = (user.totalDeposited || 0) + deposit.amount;
+                console.log(`✅ User ${user.name} balance updated to ${user.balance}`);
+            }
+            
+            deposit.status = 'approved';
+            
+            localStorage.setItem('winpaisa_users', JSON.stringify(users));
+            localStorage.setItem('winpaisa_deposits', JSON.stringify(deposits));
+            
+            // UPDATE CURRENT USER SESSION IF SAME USER
+            const currUser = localStorage.getItem('winpaisa_user');
+            if(currUser && user) {
+                let cu = JSON.parse(currUser);
+                if(cu.id === user.id) {
+                    cu.balance = user.balance;
+                    localStorage.setItem('winpaisa_user', JSON.stringify(cu));
+                    console.log("✅ Session balance updated:", cu.balance);
+                }
+            }
+            
+            showToast(`✅ ${deposit.amount} PKR approved and added to user balance!`, false);
+            refreshAll();
+        }
+
+        function rejectDeposit(id) {
+            if(!confirm('Reject this deposit?')) return;
+            
+            let depositsStr = localStorage.getItem('winpaisa_deposits');
+            let deposits = [];
+            try {
+                deposits = depositsStr ? JSON.parse(depositsStr) : [];
+            } catch(e) {
+                deposits = [];
+            }
+            
+            if (!Array.isArray(deposits)) deposits = [];
+            
+            const deposit = deposits.find(d => d && d.id === id);
+            if(deposit && deposit.status === 'pending') {
+                deposit.status = 'rejected';
+                localStorage.setItem('winpaisa_deposits', JSON.stringify(deposits));
+                showToast(`❌ Deposit rejected`, false);
+                refreshAll();
+            }
+        }
+
+        function loadAllDeposits() {
             const container = document.getElementById('allDepositsList');
-            if (!allDeposits || allDeposits.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px;">📭 No deposits found</div>';
+            let deposits = localStorage.getItem('winpaisa_deposits');
+            try {
+                deposits = deposits ? JSON.parse(deposits) : [];
+            } catch(e) { deposits = []; }
+            
+            if(deposits.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:40px;">No deposits</div>';
                 return;
             }
-            
-            let html = '<table><thead><tr><th>ID</th><th>User</th><th>Mobile</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th></tr></thead><tbody>';
-            allDeposits.forEach(d => {
-                html += `<tr>
-                    <td>${d.id}</td>
-                    <td>${d.user_name || 'N/A'}</td>
-                    <td>${d.user_mobile}</td>
-                    <td>${d.amount} PKR</td>
-                    <td>${d.method || 'EasyPaisa'}</td>
-                    <td><span class="status-${d.status}">${d.status}</span></td>
-                    <td>${new Date(d.created_at).toLocaleString()}</td>
-                </tr>`;
+            let html = `<table><thead><tr><th>ID</th><th>User</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>`;
+            deposits.forEach(d => {
+                html += `<tr><td>${d.id}</td><td>${d.userName}</td><td>${d.amount} PKR</td><td>${d.status}</td><td>${d.timestamp}</td></tr>`;
             });
-            html += '</tbody></table>';
+            html += `</tbody></table>`;
             container.innerHTML = html;
         }
 
-        function refreshWithdrawals() {
+        function loadWithdrawals() {
             const container = document.getElementById('withdrawalsList');
-            if (withdrawals.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px;">💸 No withdrawal requests</div>';
+            let withdrawals = localStorage.getItem('winpaisa_withdrawals');
+            try {
+                withdrawals = withdrawals ? JSON.parse(withdrawals) : [];
+            } catch(e) { withdrawals = []; }
+            
+            if(withdrawals.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:40px;">No withdrawals</div>';
                 return;
             }
-            
-            let html = '<table><thead><tr><th>ID</th><th>User</th><th>Mobile</th><th>Amount</th><th>Method</th><th>Account</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody>';
+            let html = `<tr><thead><tr><th>ID</th><th>User</th><th>Amount</th><th>Account</th><th>Status</th><th>Date</th></tr></thead><tbody>`;
             withdrawals.forEach(w => {
-                html += `<tr>
-                    <td>${w.id}</td>
-                    <td>${w.user_name || 'N/A'}</td>
-                    <td>${w.user_mobile}</td>
-                    <td><strong style="color:#ffaa33">${w.amount} PKR</strong></td>
-                    <td>${w.method || 'EasyPaisa'}</td>
-                    <td>${w.account}</td>
-                    <td><span class="status-${w.status}">${w.status}</span></td>
-                    <td>${new Date(w.created_at).toLocaleString()}</td>
-                    <td>${w.status === 'pending' ? `<button class="approve-btn" onclick="approveWithdrawal(${w.id})">✅ Approve</button>` : '-'}</td>
-                </tr>`;
+                html += `<tr><td>${w.id}</td><td>${w.userName}</td><td>${w.amount} PKR</td><td>${w.account}</td><td>${w.status}</td><td>${w.timestamp}</td></tr>`;
             });
-            html += '</tbody></table>';
+            html += `</tbody></table>`;
             container.innerHTML = html;
         }
 
-        function updateStats() {
-            const totalUsers = users.length;
-            const totalDeposits = users.reduce((sum, u) => sum + (u.total_deposited || 0), 0);
-            const totalWithdrawals = users.reduce((sum, u) => sum + (u.total_withdrawn || 0), 0);
-            const platformBalance = users.reduce((sum, u) => sum + (u.balance || 0), 0);
+        function loadUsers() {
+            const container = document.getElementById('usersList');
+            let users = localStorage.getItem('winpaisa_users');
+            try {
+                users = users ? JSON.parse(users) : [];
+            } catch(e) { users = []; }
             
-            document.getElementById('totalUsers').innerText = totalUsers;
-            document.getElementById('totalDeposits').innerText = totalDeposits;
-            document.getElementById('totalWithdrawals').innerText = totalWithdrawals;
-            document.getElementById('platformBalance').innerText = platformBalance;
-            
-            // Stats details
-            const gamesPlayed = users.reduce((sum, u) => sum + (u.games_played || 0), 0);
-            const gamesWon = users.reduce((sum, u) => sum + (u.games_won || 0), 0);
-            const pendingDeposits = deposits.filter(d => d.status === 'pending').length;
-            const pendingDepositsAmount = deposits.filter(d => d.status === 'pending').reduce((sum, d) => sum + d.amount, 0);
-            
-            document.getElementById('statsDetails').innerHTML = `
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                    <div style="background:#1a1f35; padding:15px; border-radius:20px; border:1px solid #ffaa44;">
-                        <h4 style="color:#ffaa33">👥 Users</h4>
-                        <p style="color:#ffdd99">Total: <strong style="color:#ffaa33">${totalUsers}</strong></p>
-                    </div>
-                    <div style="background:#1a1f35; padding:15px; border-radius:20px; border:1px solid #ffaa44;">
-                        <h4 style="color:#ffaa33">💰 Deposits</h4>
-                        <p style="color:#ffdd99">Total: <strong style="color:#ffaa33">${totalDeposits} PKR</strong></p>
-                        <p style="color:#ffdd99">Pending: ${pendingDeposits} (${pendingDepositsAmount} PKR)</p>
-                    </div>
-                    <div style="background:#1a1f35; padding:15px; border-radius:20px; border:1px solid #ffaa44;">
-                        <h4 style="color:#ffaa33">💸 Withdrawals</h4>
-                        <p style="color:#ffdd99">Total: <strong style="color:#ffaa33">${totalWithdrawals} PKR</strong></p>
-                    </div>
-                    <div style="background:#1a1f35; padding:15px; border-radius:20px; border:1px solid #ffaa44;">
-                        <h4 style="color:#ffaa33">🎮 Games</h4>
-                        <p style="color:#ffdd99">Played: ${gamesPlayed}</p>
-                        <p style="color:#ffdd99">Won: ${gamesWon}</p>
-                    </div>
-                    <div style="background:#1a1f35; padding:15px; border-radius:20px; border:1px solid #ffaa44;">
-                        <h4 style="color:#ffaa33">📈 Platform</h4>
-                        <p style="color:#ffdd99">Profit: ${totalDeposits - totalWithdrawals} PKR</p>
-                        <p style="color:#ffdd99">Balance: ${platformBalance} PKR</p>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Action Functions
-        async function approveDeposit(depositId) {
-            const result = await apiCall('/admin/deposit/approve', {
-                method: 'POST',
-                body: JSON.stringify({ depositId })
-            });
-            if (result.success) {
-                showToast('✅ Deposit approved!', 'success');
-                loadAllData();
-            } else {
-                showToast('❌ Failed to approve', 'error');
+            if(users.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:40px;">No users</div>';
+                return;
             }
-        }
-
-        async function rejectDeposit(depositId) {
-            const result = await apiCall('/admin/deposit/reject', {
-                method: 'POST',
-                body: JSON.stringify({ depositId })
+            let html = `<tr><thead><tr><th>ID</th><th>Name</th><th>Mobile</th><th>Balance</th><th>Deposited</th><th>Joined</th></tr></thead><tbody>`;
+            users.forEach(u => {
+                html += `<tr>
+                    <td>${u.id}</td>
+                    <td>${u.name}</td>
+                    <td>${u.mobile}</td>
+                    <td><strong style="color:#44ff44;">${u.balance || 0} PKR</strong></td>
+                    <td>${u.totalDeposited || 0} PKR}</td>
+                    <td>${new Date(u.createdAt).toLocaleDateString() || '-'}</td>
+                </tr>`;
             });
-            if (result.success) {
-                showToast('❌ Deposit rejected', 'info');
-                loadAllData();
-            } else {
-                showToast('❌ Failed to reject', 'error');
-            }
+            html += `</tbody></table>`;
+            container.innerHTML = html;
         }
 
-        async function approveWithdrawal(withdrawalId) {
-            const result = await apiCall('/admin/withdrawal/approve', {
-                method: 'POST',
-                body: JSON.stringify({ withdrawalId })
-            });
-            if (result.success) {
-                showToast('✅ Withdrawal approved!', 'success');
-                loadAllData();
-            } else {
-                showToast('❌ Failed to approve', 'error');
-            }
-        }
-
-        async function addManualBalance() {
+        function addManualBalance() {
             const userId = document.getElementById('addUserId').value;
             const mobile = document.getElementById('userMobile').value;
             const amount = parseInt(document.getElementById('addAmount').value);
-            const reason = document.getElementById('addReason').value;
             
-            if (!amount || amount <= 0) {
-                showToast('Enter valid amount', 'error');
-                return;
+            if(!amount || amount <= 0) { showToast('Enter amount', true); return; }
+            
+            let users = localStorage.getItem('winpaisa_users');
+            let deposits = localStorage.getItem('winpaisa_deposits');
+            
+            try {
+                users = users ? JSON.parse(users) : [];
+                deposits = deposits ? JSON.parse(deposits) : [];
+            } catch(e) {
+                users = [];
+                deposits = [];
             }
             
-            let targetUserId = userId;
-            if (!targetUserId && mobile) {
-                const user = users.find(u => u.mobile === mobile);
-                if (user) targetUserId = user.id;
-            }
+            if (!Array.isArray(users)) users = [];
+            if (!Array.isArray(deposits)) deposits = [];
             
-            if (!targetUserId) {
-                showToast('User not found! Enter User ID or Mobile', 'error');
-                return;
-            }
+            let user = userId ? users.find(u => u.id == userId) : users.find(u => u.mobile === mobile);
+            if(!user) { showToast('User not found', true); return; }
             
-            const result = await apiCall('/admin/add-balance', {
-                method: 'POST',
-                body: JSON.stringify({ userId: targetUserId, amount, reason })
+            user.balance = (user.balance || 0) + amount;
+            user.totalDeposited = (user.totalDeposited || 0) + amount;
+            
+            deposits.push({
+                id: Date.now(),
+                userId: user.id,
+                userName: user.name,
+                userMobile: user.mobile,
+                amount: amount,
+                transactionId: `MANUAL_${Date.now()}`,
+                timestamp: new Date().toLocaleString(),
+                status: 'approved'
             });
             
-            if (result.success) {
-                showToast(`✅ ${amount} PKR added!`, 'success');
-                document.getElementById('addUserId').value = '';
-                document.getElementById('userMobile').value = '';
-                document.getElementById('addAmount').value = '';
-                document.getElementById('addReason').value = '';
-                loadAllData();
-            } else {
-                showToast('❌ Failed to add balance', 'error');
-            }
-        }
-
-        function viewScreenshot(screenshot) {
-            alert(`📸 Screenshot: ${screenshot}\n\nNote: Screenshots are stored on server.`);
-        }
-
-        function showSection(section) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(section + 'Section').classList.add('active');
+            localStorage.setItem('winpaisa_users', JSON.stringify(users));
+            localStorage.setItem('winpaisa_deposits', JSON.stringify(deposits));
             
-            const btns = document.querySelectorAll('.tab-btn');
-            btns.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (section === 'allDeposits') loadAllDeposits();
-            if (section === 'stats') updateStats();
-        }
-
-        async function loadAllDeposits() {
-            const result = await apiCall('/admin/deposits/all');
-            if (result.success) {
-                refreshAllDeposits(result.deposits);
+            const curr = localStorage.getItem('winpaisa_user');
+            if(curr) {
+                let cu = JSON.parse(curr);
+                if(cu.id === user.id) {
+                    cu.balance = user.balance;
+                    localStorage.setItem('winpaisa_user', JSON.stringify(cu));
+                }
             }
+            
+            showToast(`✅ ${amount} PKR added to ${user.name}`, false);
+            document.getElementById('addUserId').value = '';
+            document.getElementById('userMobile').value = '';
+            document.getElementById('addAmount').value = '';
+            refreshAll();
         }
 
-        // Check if already logged in
-        if (localStorage.getItem('adminLoggedIn') === 'true') {
+        if(localStorage.getItem('adminLoggedIn') === 'true') {
             document.getElementById('adminLogin').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
-            loadAllData();
+            refreshAll();
         }
-        
-        // Add all deposits endpoint to backend
-        // Note: You need to add this endpoint in server.js if not exists
     </script>
 </body>
 </html>

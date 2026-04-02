@@ -20,7 +20,6 @@
             justify-content: center;
             align-items: center;
             padding: 16px;
-            position: relative;
         }
 
         .game-app {
@@ -31,97 +30,6 @@
             padding: 20px 18px 28px;
             box-shadow: 0 25px 45px rgba(0,0,0,0.5);
             border: 1px solid rgba(255, 180, 70, 0.4);
-        }
-
-        /* ==================== SUPPORT BUTTON ==================== */
-        .support-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .support-icon {
-            width: 55px;
-            height: 55px;
-            background: linear-gradient(135deg, #ffaa33, #ff7700);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-            animation: bounce 2s infinite;
-            border: 2px solid rgba(255,255,200,0.3);
-        }
-
-        .support-icon:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(255,170,51,0.8);
-        }
-
-        .support-icon i {
-            font-size: 28px;
-            color: #000;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .support-dropdown {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            background: linear-gradient(135deg, #1a1a2a, #12121f);
-            border-radius: 20px;
-            padding: 12px;
-            border: 1px solid #ffaa33;
-            display: none;
-            z-index: 1001;
-            min-width: 180px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-
-        .support-dropdown.show {
-            display: block;
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .support-option {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            color: white;
-        }
-
-        .support-option:hover {
-            background: rgba(255,170,51,0.2);
-            transform: translateX(5px);
-        }
-
-        .support-option i {
-            font-size: 22px;
-        }
-
-        .support-option .wa { color: #25D366; }
-        .support-option .tg { color: #0088cc; }
-
-        .support-option span {
-            font-size: 13px;
-            font-weight: 500;
         }
 
         .logo {
@@ -258,26 +166,11 @@
             font-size: 14px;
             border: 1px solid #ffcc88;
         }
-
-        .payment-option {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-            justify-content: center;
-        }
-        .pay-method {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            background: #2a2f4a;
-            border-radius: 30px;
-            cursor: pointer;
-            border: 1px solid #ffaa33;
+        .easypaisa-number {
+            color: #d8e9d8;
+            font-size: 18px;
             font-weight: bold;
-        }
-        .pay-method.active {
-            background: #ffaa33;
-            color: #000;
+            text-shadow: 0 0 3px #44ff44;
         }
 
         .game-tabs {
@@ -648,8 +541,8 @@
 <body>
 <div class="game-app">
     <div class="logo" id="logo">WINPAISA</div>
-    <div class="owner">Azmer Khan • Official</div>
-    <div style="display: flex; justify-content: center;"><div class="tagline">🎯 50 PKR se jeeto 500 PKR tak! 🎯</div></div>
+    <div class="owner">Azmer Khan</div>
+    <div style="display: flex; justify-content: center;"><div class="tagline">🎯 50 PKR se jeeto 5000 PKR tak! 🎯</div></div>
 
     <div class="stats-panel">
         <div class="stat"><span class="stat-number live-players" id="onlineCount">187</span>Live Players</div>
@@ -672,7 +565,7 @@
         </div>
     </div>
 
-    <div class="deposit-btn" id="depositBtn">📱 DEPOSIT NOW</div>
+    <div class="deposit-btn" id="depositBtn">📱 DEPOSIT NOW (EasyPaisa: <span class="easypaisa-number">0307 503 0001</span>)</div>
 
     <div class="game-tabs">
         <div class="game-tab active" data-game="wheel">🎡 WHEEL</div>
@@ -743,60 +636,6 @@
     <div class="footer-note">📱 Min Withdraw 500 PKR | Instant Payout</div>
 </div>
 
-<!-- SUPPORT BUTTON -->
-<div class="support-btn" id="supportBtn">
-    <div class="support-icon" id="supportIcon">
-        <i>💬</i>
-    </div>
-</div>
-<div class="support-dropdown" id="supportDropdown">
-    <a href="https://wa.me/923208146556?text=Hello! I need help with WINPAISA" target="_blank" class="support-option">
-        <i class="wa">📱</i>
-        <span>WhatsApp Support</span>
-    </a>
-    <a href="https://t.me/+923208146556" target="_blank" class="support-option">
-        <i class="tg">📨</i>
-        <span>Telegram Support</span>
-    </a>
-</div>
-
-<!-- Deposit Modal with JazzCash + EasyPaisa -->
-<div id="depositModal" class="modal">
-    <div class="modal-card">
-        <h3>💵 Deposit</h3>
-        <div class="payment-option">
-            <div class="pay-method active" data-method="easypaisa">📱 EasyPaisa</div>
-        </div>
-        <div id="paymentDetails" style="background: #8893bb; padding: 12px; border-radius: 20px; margin-bottom: 12px;">
-            <strong>📱 EasyPaisa Account:</strong><br>
-            Number: <span style="color: #ffaa33; font-size: 18px;">0307 503 0001</span><br>
-            Title: Azmer Khan<br>
-            <small>Send exact amount and upload screenshot</small>
-        </div>
-        <input type="number" id="depositAmount" placeholder="Amount (Min 50 PKR)" value="100">
-        <!-- <input type="text" id="transactionId" placeholder="Transaction ID"> -->
-        <input type="file" id="screenshotInput" accept="image/*">
-        <button id="submitDepositBtn">Submit Payment</button>
-        <button id="closeDepositModal" style="background:#333;">Cancel</button>
-    </div>
-</div>
-
-<!-- Withdraw Modal with JazzCash + EasyPaisa -->
-<div id="withdrawModal" class="modal">
-    <div class="modal-card">
-        <h3>💸 Withdraw</h3>
-        <select id="withdrawMethod" style="width:100%; padding:12px; margin:8px 0; background:#2a2f4a; border-radius:50px; color:white;">
-            <option value="easypaisa">📱 EasyPaisa</option>
-            <option value="jazzcash">💳 JazzCash</option>
-        </select>
-        <input type="number" id="withdrawAmount" placeholder="Amount (Min 500)">
-        <input type="text" id="withdrawAccount" placeholder="Account Number">
-        <button id="confirmWithdrawBtn">Request</button>
-        <button id="closeWithdrawBtn" style="background:#333;">Cancel</button>
-    </div>
-</div>
-
-<!-- Login Modal - Balance 0 on new user -->
 <div id="loginModal" class="modal" style="display:flex;">
     <div class="modal-card">
         <h3>🔐 Login / Signup</h3>
@@ -804,12 +643,42 @@
         <button id="sendOtpBtn">Send OTP</button>
         <div id="otpSection" style="display:none; margin-top:14px;">
             <div style="background:#ffaa3322; border-radius:30px; padding:12px;">
-                <div>📲 OTP: <strong id="demoOtpSpan" style="font-size:24px;">------</strong></div>
-                <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" style="margin-top:10px;">
-                <button id="verifyOtpBtn" style="margin-top:8px;">Verify & Login</button>
+                <div>📲 OTP: <strong id="demoOtpSpan">------</strong></div>
+                <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6">
+                <button id="verifyOtpBtn">Verify & Login</button>
             </div>
         </div>
         <div id="loginMsg" style="font-size:11px; margin-top:10px;"></div>
+    </div>
+</div>
+
+<div id="depositModal" class="modal">
+    <div class="modal-card">
+        <h3>💵 Deposit</h3>
+        <div style="background:#94a0ca; padding:12px; border-radius:20px; margin-bottom:12px;">
+            <strong>📱 EasyPaisa Account:</strong><br>
+            Number: <span class="easypaisa-number">0307 503 0001</span><br>
+            Title: Azmer Khan<br>
+            <small>Send exact amount and upload screenshot</small>
+        </div>
+        <input type="number" id="depositAmount" placeholder="Amount (Min 50 PKR)" value="100">
+        <input type="file" id="screenshotInput" accept="image/*">
+        <button id="submitDepositBtn">Submit Payment</button>
+        <button id="closeDepositModal" style="background:#a58a8a;">Cancel</button>
+    </div>
+</div>
+
+<div id="withdrawModal" class="modal">
+    <div class="modal-card">
+        <h3>💸 Withdraw</h3>
+        <input type="number" id="withdrawAmount" placeholder="Amount (Min 500)">
+        <input type="text" id="withdrawAccount" placeholder="EasyPaisa Number">
+        <button id="confirmWithdrawBtn">Request</button>
+        <button id="closeWithdrawBtn" style="background:#333;">Cancel</button>
+                <input type="text" id="withdrawAccount" placeholder="Jazzcash Number">
+        <button id="confirmWithdrawBtn">Request</button>
+        <button id="closeWithdrawBtn" style="background:#333;">Cancel</button>
+
     </div>
 </div>
 
@@ -825,19 +694,23 @@
         { value: 150, color: "#ef4444", label: "150 PKR" },
         { value: 200, color: "#a855f7", label: "200 PKR 🎉" },
         { value: 300, color: "#2dd4bf", label: "300 PKR" },
-        { value: 500, color: "#f59e0b", label: "500 PKR" }
+        { value: 500, color: "#f59e0b", label: "500 PKR" },
+        { value: 1000, color: "#f59e0b", label: "1000 PKR" },
+        { value: 1500, color: "#f59e0b", label: "1500 PKR" },
+        { value: 5000, color: "#f59e0b", label: "5000 PKR" },
     ];
     const SEG_COUNT = WHEEL_PRIZES.length;
+    const WHEEL_WIN_CHANCE = 0.40;
 
     let currentUser = null, balance = 0;
     let wheelBet = 100, coinBet = 100, cardBet = 100;
     let coinChoice = "TAILS", selectedCard = null;
     let spinning = false;
-    let liveWins = ["✨ Ali won 35 PKR ✨", "✨ Sana won 40 PKR ✨", "✨ Rayan won 33 PKR ✨"];
+    let wheelFirstPlay = true, coinFirstPlay = true, cardFirstPlay = true;
+    let liveWins = ["✨ Ali won 1500 PKR ✨", "✨ Sana won 3500 PKR ✨", "✨ Rayan won 5000 PKR ✨"];
     let users = [];
     let deposits = [];
     let withdrawals = [];
-    let selectedPaymentMethod = "easypaisa";
 
     function loadData() {
         const savedUsers = localStorage.getItem('winpaisa_users');
@@ -853,6 +726,27 @@
         localStorage.setItem('winpaisa_deposits', JSON.stringify(deposits));
         localStorage.setItem('winpaisa_withdrawals', JSON.stringify(withdrawals));
     }
+
+    // ==================== AUTO BALANCE SYNC ====================
+    function syncUserBalance() {
+        const savedUser = localStorage.getItem('winpaisa_user');
+        if(savedUser && currentUser) {
+            try {
+                const user = JSON.parse(savedUser);
+                if(currentUser.id === user.id && balance !== user.balance) {
+                    balance = user.balance;
+                    document.getElementById('balanceAmount').innerText = balance;
+                    console.log("✅ Balance synced:", balance);
+                    updateBalanceUI();
+                }
+            } catch(e) {
+                console.log("Sync error:", e);
+            }
+        }
+    }
+    
+    // Auto sync every 3 seconds
+    setInterval(syncUserBalance, 3000);
 
     let audioCtx = null;
     function playSound(type) {
@@ -923,37 +817,34 @@
         document.getElementById('prizeLegend').innerHTML = WHEEL_PRIZES.map(p => `<div class="legend-badge"><div class="legend-color" style="background:${p.color}"></div><span>${p.label}</span></div>`).join('');
     }
 
-    function updatePaymentDetails() {
-        const detailsDiv = document.getElementById('paymentDetails');
-        if(selectedPaymentMethod === 'easypaisa') {
-            detailsDiv.innerHTML = `<strong>📱 EasyPaisa Account:</strong><br>Number: <span style="color:#ffaa33; font-size:18px;">0307 503 0001</span><br>Title: Azmer Khan<br><small>Send exact amount and upload screenshot</small>`;
-        } else {
-            detailsDiv.innerHTML = `<strong>💳 JazzCash Account:</strong><br>Number: <span style="color:#ffaa33; font-size:18px;">0301 2345678</span><br>Title: Azmer Khan<br><small>Send exact amount and upload screenshot</small>`;
-        }
+    function getWinResult(isFirst) {
+        if(isFirst) return true;
+        return Math.random() < WHEEL_WIN_CHANCE;
     }
 
     // ==================== SPIN WHEEL ====================
     function spinWheel() {
         if(spinning) { showToast("Wait...", true); return; }
         if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
-        if(balance < wheelBet) { showToast(`Need ${wheelBet} PKR`, true); return; }
+        if(balance < wheelBet) { showToast("Need " + wheelBet + " PKR", true); return; }
         
         spinning = true;
-        balance -= wheelBet;
-        updateBalanceUI(); saveUser();
+        balance = balance - wheelBet;
+        updateBalanceUI(); 
+        saveUser();
         playSound('spin');
         
         const winningPrizes = WHEEL_PRIZES.filter(p => p.value > 0);
         const losingPrizes = WHEEL_PRIZES.filter(p => p.value === 0);
         
-        const isWin = Math.random() < 0.4;
+        const isWin = getWinResult(wheelFirstPlay);
         let winAmount = 0;
         let selectedPrize = null;
         
         if(isWin) {
             selectedPrize = winningPrizes[Math.floor(Math.random() * winningPrizes.length)];
             winAmount = selectedPrize.value;
-            balance += winAmount;
+            balance = balance + winAmount;
         } else {
             selectedPrize = losingPrizes[Math.floor(Math.random() * losingPrizes.length)];
         }
@@ -964,25 +855,27 @@
         const finalRotate = 360 * (6 + Math.floor(Math.random() * 3)) + targetMid;
         const wheelCanvas = document.getElementById('wheelCanvas');
         wheelCanvas.style.transition = "transform 4s cubic-bezier(0.2, 0.96, 0.15, 1.02)";
-        wheelCanvas.style.transform = `rotate(${finalRotate}deg)`;
+        wheelCanvas.style.transform = "rotate(" + finalRotate + "deg)";
         
-        setTimeout(() => {
+        setTimeout(function() {
             if(isWin && winAmount > 0) { 
-                showToast(`🎉 WON ${winAmount} PKR! 🎉`, false); 
+                showToast("🎉 WON " + winAmount + " PKR! 🎉", false); 
                 addLiveWin(winAmount); 
                 playSound('win');
                 wheelCanvas.classList.add('win-pulse'); 
-                setTimeout(() => wheelCanvas.classList.remove('win-pulse'), 600); 
+                setTimeout(function() { wheelCanvas.classList.remove('win-pulse'); }, 600); 
             } else { 
-                showToast(`😞 Lost ${wheelBet} PKR`, true);
+                showToast("😞 Lost " + wheelBet + " PKR", true);
                 playSound('lose');
             }
-            updateBalanceUI(); saveUser();
+            updateBalanceUI(); 
+            saveUser();
             spinning = false;
-            setTimeout(() => { 
+            wheelFirstPlay = false;
+            setTimeout(function() { 
                 wheelCanvas.style.transition = "none"; 
-                wheelCanvas.style.transform = `rotate(${finalRotate % 360}deg)`; 
-                setTimeout(() => wheelCanvas.style.transition = "", 50); 
+                wheelCanvas.style.transform = "rotate(" + (finalRotate % 360) + "deg)"; 
+                setTimeout(function() { wheelCanvas.style.transition = ""; }, 50); 
             }, 100);
         }, 3900);
     }
@@ -990,10 +883,11 @@
     // ==================== COIN FLIP ====================
     function playCoinFlip() {
         if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
-        if(balance < coinBet) { showToast(`Need ${coinBet} PKR`, true); return; }
+        if(balance < coinBet) { showToast("Need " + coinBet + " PKR", true); return; }
         
-        balance -= coinBet;
-        updateBalanceUI(); saveUser();
+        balance = balance - coinBet;
+        updateBalanceUI(); 
+        saveUser();
         
         const userChoice = coinChoice;
         const outcomes = ['HEADS', 'TAILS'];
@@ -1007,36 +901,38 @@
         hand.classList.add('hand-throw');
         coinEl.classList.add('coin-full-up');
         
-        setTimeout(() => {
+        setTimeout(function() {
             coinEl.classList.remove('coin-full-up');
             coinEl.classList.add('coin-full-spin');
             let flipCount = 0;
-            const flipInterval = setInterval(() => {
+            const flipInterval = setInterval(function() {
                 const randomSide = outcomes[Math.floor(Math.random() * 2)];
                 coinEl.textContent = randomSide === 'HEADS' ? 'H' : 'T';
                 flipCount++;
                 if(flipCount > 15) clearInterval(flipInterval);
             }, 50);
             
-            setTimeout(() => {
+            setTimeout(function() {
                 clearInterval(flipInterval);
                 coinEl.textContent = result === 'HEADS' ? 'H' : 'T';
                 coinEl.classList.remove('coin-full-spin');
                 hand.classList.remove('hand-throw');
                 hand.classList.add('hand-catch');
-                setTimeout(() => hand.classList.remove('hand-catch'), 200);
+                setTimeout(function() { hand.classList.remove('hand-catch'); }, 200);
                 
                 if(isWin) {
                     let winAmount = Math.floor(coinBet * 1.8);
-                    balance += winAmount;
-                    showToast(`🎉 YOU WON! ${winAmount} PKR! (${result}) 🎉`, false);
+                    balance = balance + winAmount;
+                    showToast("🎉 YOU WON! " + winAmount + " PKR! (" + result + ") 🎉", false);
                     addLiveWin(winAmount);
                     playSound('win');
                 } else {
-                    showToast(`😞 YOU LOSE! Result: ${result}`, true);
+                    showToast("😞 YOU LOSE! Result: " + result, true);
                     playSound('lose');
                 }
-                updateBalanceUI(); saveUser();
+                updateBalanceUI(); 
+                saveUser();
+                coinFirstPlay = false;
             }, 700);
         }, 450);
     }
@@ -1045,32 +941,35 @@
     function playCardGame() {
         if(!selectedCard) { showToast("Pick a card!", true); return; }
         if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
-        if(balance < cardBet) { showToast(`Need ${cardBet} PKR`, true); return; }
+        if(balance < cardBet) { showToast("Need " + cardBet + " PKR", true); return; }
         
-        balance -= cardBet;
-        updateBalanceUI(); saveUser();
+        balance = balance - cardBet;
+        updateBalanceUI(); 
+        saveUser();
         
-        const isWin = Math.random() < 0.33;
+        const isWin = getWinResult(cardFirstPlay);
         let winAmount = 0;
-        if(isWin) {
-            winAmount = Math.floor(cardBet * 1.8);
-            balance += winAmount;
+        if(isWin) { 
+            winAmount = Math.floor(cardBet * 1.8); 
+            balance = balance + winAmount; 
         }
         
-        const cardEl = document.querySelector(`.card-item[data-card="${selectedCard}"]`);
+        const cardEl = document.querySelector(".card-item[data-card='" + selectedCard + "']");
         cardEl.style.transform = "rotateY(180deg)";
         
-        setTimeout(() => {
+        setTimeout(function() {
             if(isWin && winAmount > 0) { 
-                showToast(`🎉 WON ${winAmount} PKR! 🎉`, false); 
+                showToast("🎉 WON " + winAmount + " PKR! 🎉", false); 
                 addLiveWin(winAmount);
                 playSound('win');
             } else { 
-                showToast(`😞 Lost ${cardBet} PKR`, true);
+                showToast("😞 Lost " + cardBet + " PKR", true);
                 playSound('lose');
             }
             cardEl.style.transform = "";
-            updateBalanceUI(); saveUser();
+            updateBalanceUI(); 
+            saveUser();
+            cardFirstPlay = false;
         }, 400);
     }
 
@@ -1080,7 +979,7 @@
         toast.textContent = msg;
         if(isErr) toast.style.background = "#ff7777";
         document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2200);
+        setTimeout(function() { toast.remove(); }, 2200);
     }
     
     function updateBalanceUI() {
@@ -1099,7 +998,7 @@
     function saveUser() { 
         if(currentUser) { 
             currentUser.balance = balance; 
-            const index = users.findIndex(u => u.id === currentUser.id);
+            const index = users.findIndex(function(u) { return u.id === currentUser.id; });
             if(index !== -1) users[index] = currentUser;
             else users.push(currentUser);
             saveData();
@@ -1109,19 +1008,17 @@
     
     function addLiveWin(amount) {
         const names = ["Rayan", "Mehak", "Bilal", "Ayesha", "Hamza", "Zara", "Usman", "Fatima", "Ali", "Sana"];
-        liveWins.unshift(`✨ ${names[Math.floor(Math.random()*names.length)]} won ${amount} PKR ✨`);
+        liveWins.unshift("✨ " + names[Math.floor(Math.random()*names.length)] + " won " + amount + " PKR ✨");
         if(liveWins.length > 8) liveWins.pop();
         const tickerDiv = document.getElementById('liveTicker');
-        tickerDiv.innerHTML = liveWins.map(w => `<span class="ticker-item">${w}</span>`).join('');
+        tickerDiv.innerHTML = liveWins.map(function(w) { return '<span class="ticker-item">' + w + '</span>'; }).join('');
         let totalSpan = document.getElementById('totalWinCount');
         let val = parseFloat(totalSpan.innerText) || 6.8;
         totalSpan.innerText = (val + 0.05).toFixed(1) + 'K';
     }
 
-    // ==================== AUTH (BALANCE 0 ON NEW USER) ====================
+    // ==================== AUTH ====================
     let pendingOtp = null;
-    let pendingMobile = null;
-
     function sendOtp() {
         const mobile = document.getElementById('mobileNumber').value.trim();
         if(!mobile || mobile.length < 10) { 
@@ -1132,20 +1029,18 @@
         document.getElementById('demoOtpSpan').innerText = fakeOtp;
         document.getElementById('otpSection').style.display = 'block';
         pendingOtp = fakeOtp; 
-        pendingMobile = mobile;
-        document.getElementById('loginMsg').innerHTML = '<span style="color:#88ff88;">✅ OTP sent! Enter code above 👆</span>';
+        window.pendingMobile = mobile;
+        document.getElementById('loginMsg').innerHTML = '<span style="color:#88ff88;">✅ OTP sent! Check above 👆</span>';
     }
     
     function verifyOtp() {
-        const enteredOtp = document.getElementById('otpInput').value.trim();
-        if(enteredOtp !== pendingOtp) { 
-            document.getElementById('loginMsg').innerHTML = '<span style="color:#ff8888;">❌ Wrong OTP! Enter the code shown above</span>'; 
+        if(document.getElementById('otpInput').value !== pendingOtp) { 
+            document.getElementById('loginMsg').innerHTML = '<span style="color:#ff8888;">❌ Wrong OTP</span>'; 
             return; 
         }
-        const mobile = pendingMobile;
-        let user = users.find(u => u.mobile === mobile);
+        const mobile = window.pendingMobile;
+        let user = users.find(function(u) { return u.mobile === mobile; });
         if(!user) {
-            // NEW USER - BALANCE = 0
             user = { 
                 id: Date.now(), 
                 mobile: mobile, 
@@ -1168,9 +1063,9 @@
         document.getElementById('userPhoneDisplay').innerText = currentUser.mobile;
         document.getElementById('avatarIcon').innerHTML = currentUser.name.charAt(0).toUpperCase();
         updateBalanceUI();
-        showToast(`Welcome ${currentUser.name}! Balance: ${balance} PKR`, false);
+        showToast("Welcome " + currentUser.name + "! Balance: " + balance + " PKR", false);
     }
-
+    
     // ==================== DEPOSIT ====================
     function openDeposit() {
         if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
@@ -1179,12 +1074,16 @@
     
     function submitDeposit() {
         const amount = parseInt(document.getElementById('depositAmount').value);
-        const transactionId = document.getElementById('transactionId').value;
         const screenshot = document.getElementById('screenshotInput').files[0];
         
-        if(!amount || amount < 50) { showToast("Min 50 PKR", true); return; }
-        if(!transactionId) { showToast("Transaction ID required", true); return; }
-        if(!screenshot) { showToast("Screenshot required", true); return; }
+        if(!amount || amount < 50) { 
+            showToast("Min 50 PKR required", true); 
+            return; 
+        }
+        if(!screenshot) { 
+            showToast("Screenshot required", true); 
+            return; 
+        }
         
         const depositRequest = {
             id: Date.now(),
@@ -1192,8 +1091,7 @@
             userName: currentUser.name,
             userMobile: currentUser.mobile,
             amount: amount,
-            method: selectedPaymentMethod,
-            transactionId: transactionId,
+            transactionId: "TXN_" + Date.now(),
             screenshot: screenshot.name,
             timestamp: new Date().toLocaleString(),
             status: 'pending'
@@ -1201,17 +1099,16 @@
         deposits.push(depositRequest);
         saveData();
         
-        showToast(`✅ Deposit request submitted! Admin will verify.`, false);
+        showToast("✅ Deposit request submitted! Admin will verify.", false);
         document.getElementById('depositModal').style.display = 'none';
         document.getElementById('depositAmount').value = '100';
-        document.getElementById('transactionId').value = '';
         document.getElementById('screenshotInput').value = '';
     }
     
     function closeDepositModal() {
         document.getElementById('depositModal').style.display = 'none';
     }
-
+    
     // ==================== WITHDRAW ====================
     function openWithdraw() {
         if(!currentUser) { showToast("Login first", true); return; }
@@ -1221,7 +1118,6 @@
     
     function submitWithdraw() {
         let amount = parseInt(document.getElementById('withdrawAmount').value);
-        const method = document.getElementById('withdrawMethod').value;
         const acc = document.getElementById('withdrawAccount').value;
         if(!amount || amount < 500) { showToast("Min 500 PKR", true); return; }
         if(amount > balance) { showToast("Insufficient balance", true); return; }
@@ -1233,20 +1129,19 @@
             userName: currentUser.name,
             userMobile: currentUser.mobile,
             amount: amount,
-            method: method,
             account: acc,
             timestamp: new Date().toLocaleString(),
             status: 'pending'
         };
         withdrawals.push(withdrawRequest);
         
-        balance -= amount;
+        balance = balance - amount;
         if(currentUser) currentUser.balance = balance;
         if(currentUser) currentUser.totalWithdrawn = (currentUser.totalWithdrawn || 0) + amount;
         saveUser(); 
         saveData();
         updateBalanceUI();
-        showToast(`✅ Withdraw request of ${amount} PKR submitted!`, false);
+        showToast("✅ Withdraw request of " + amount + " PKR submitted!", false);
         document.getElementById('withdrawModal').style.display = 'none';
         document.getElementById('withdrawAmount').value = '';
         document.getElementById('withdrawAccount').value = '';
@@ -1254,10 +1149,10 @@
 
     // Admin Panel Access (Triple Click on Logo)
     let clickCount = 0, clickTimer = null;
-    document.getElementById('logo').addEventListener('click', () => {
+    document.getElementById('logo').addEventListener('click', function() {
         clickCount++;
         if (clickTimer) clearTimeout(clickTimer);
-        clickTimer = setTimeout(() => {
+        clickTimer = setTimeout(function() {
             if (clickCount === 3) {
                 window.location.href = '/admin.html';
             }
@@ -1265,23 +1160,10 @@
         }, 500);
     });
 
-    // Support Button Dropdown
-    const supportBtn = document.getElementById('supportBtn');
-    const supportDropdown = document.getElementById('supportDropdown');
-    supportBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        supportDropdown.classList.toggle('show');
-    });
-    document.addEventListener('click', (e) => {
-        if (!supportBtn.contains(e.target) && !supportDropdown.contains(e.target)) {
-            supportDropdown.classList.remove('show');
-        }
-    });
-
     // Event Listeners
-    document.querySelectorAll('.game-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.game-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.game-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.game-tab').forEach(function(t) { t.classList.remove('active'); });
             tab.classList.add('active');
             const g = tab.dataset.game;
             document.getElementById('wheelGame').style.display = g === 'wheel' ? 'block' : 'none';
@@ -1298,60 +1180,50 @@
     document.getElementById('closeDepositModal').addEventListener('click', closeDepositModal);
     document.getElementById('withdrawBtnAction').addEventListener('click', openWithdraw);
     document.getElementById('confirmWithdrawBtn').addEventListener('click', submitWithdraw);
-    document.getElementById('closeWithdrawBtn').addEventListener('click', () => document.getElementById('withdrawModal').style.display = 'none');
+    document.getElementById('closeWithdrawBtn').addEventListener('click', function() { document.getElementById('withdrawModal').style.display = 'none'; });
     
-    // Payment method selection
-    document.querySelectorAll('.pay-method').forEach(el => {
-        el.addEventListener('click', () => {
-            document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('active'));
-            el.classList.add('active');
-            selectedPaymentMethod = el.getAttribute('data-method');
-            updatePaymentDetails();
-        });
-    });
-    
-    document.querySelectorAll('[data-wheel-bet]').forEach(el => {
-        el.addEventListener('click', () => {
-            document.querySelectorAll('[data-wheel-bet]').forEach(c=>c.classList.remove('active'));
+    document.querySelectorAll('[data-wheel-bet]').forEach(function(el) {
+        el.addEventListener('click', function() {
+            document.querySelectorAll('[data-wheel-bet]').forEach(function(c) { c.classList.remove('active'); });
             el.classList.add('active');
             wheelBet = parseInt(el.dataset.wheelBet);
             updateBalanceUI();
         });
     });
     
-    document.querySelectorAll('[data-coin-bet]').forEach(el => {
-        el.addEventListener('click', () => {
-            document.querySelectorAll('[data-coin-bet]').forEach(c=>c.classList.remove('active'));
+    document.querySelectorAll('[data-coin-bet]').forEach(function(el) {
+        el.addEventListener('click', function() {
+            document.querySelectorAll('[data-coin-bet]').forEach(function(c) { c.classList.remove('active'); });
             el.classList.add('active');
             coinBet = parseInt(el.dataset.coinBet);
             updateBalanceUI();
         });
     });
     
-    document.querySelectorAll('[data-card-bet]').forEach(el => {
-        el.addEventListener('click', () => {
-            document.querySelectorAll('[data-card-bet]').forEach(c=>c.classList.remove('active'));
+    document.querySelectorAll('[data-card-bet]').forEach(function(el) {
+        el.addEventListener('click', function() {
+            document.querySelectorAll('[data-card-bet]').forEach(function(c) { c.classList.remove('active'); });
             el.classList.add('active');
             cardBet = parseInt(el.dataset.cardBet);
             updateBalanceUI();
         });
     });
     
-    document.getElementById('headsBtn').addEventListener('click', () => {
+    document.getElementById('headsBtn').addEventListener('click', function() {
         coinChoice = "HEADS";
         document.getElementById('headsBtn').classList.add('active');
         document.getElementById('tailsBtn').classList.remove('active');
     });
     
-    document.getElementById('tailsBtn').addEventListener('click', () => {
+    document.getElementById('tailsBtn').addEventListener('click', function() {
         coinChoice = "TAILS";
         document.getElementById('tailsBtn').classList.add('active');
         document.getElementById('headsBtn').classList.remove('active');
     });
     
-    document.querySelectorAll('.card-item').forEach(c => {
-        c.addEventListener('click', () => {
-            document.querySelectorAll('.card-item').forEach(c2=>c2.classList.remove('selected'));
+    document.querySelectorAll('.card-item').forEach(function(c) {
+        c.addEventListener('click', function() {
+            document.querySelectorAll('.card-item').forEach(function(c2) { c2.classList.remove('selected'); });
             c.classList.add('selected');
             selectedCard = parseInt(c.dataset.card);
         });
@@ -1367,7 +1239,6 @@
         ctx = canvas.getContext('2d');
         drawWheel(); 
         updateLegend();
-        updatePaymentDetails();
         const saved = localStorage.getItem('winpaisa_user');
         if(saved) { 
             try {
@@ -1380,11 +1251,11 @@
                 updateBalanceUI(); 
             } catch(e) {}
         }
-        setInterval(() => { 
+        setInterval(function() { 
             document.getElementById('onlineCount').innerText = Math.floor(Math.random() * 80) + 150; 
         }, 8000);
-        document.getElementById('liveTicker').innerHTML = liveWins.map(w => `<span class="ticker-item">${w}</span>`).join('');
-        setInterval(() => {
+        document.getElementById('liveTicker').innerHTML = liveWins.map(function(w) { return '<span class="ticker-item">' + w + '</span>'; }).join('');
+        setInterval(function() {
             const randomWins = [50, 100, 100, 150, 200, 300];
             addLiveWin(randomWins[Math.floor(Math.random() * randomWins.length)]);
         }, 13000);

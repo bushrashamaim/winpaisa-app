@@ -156,7 +156,7 @@ app.post('/api/send-otp', async (req, res) => {
     }
 });
 
-// 2. VERIFY OTP - NEW USER BALANCE = 0
+// 2. VERIFY OTP
 app.post('/api/verify-otp', async (req, res) => {
     try {
         const { mobile, otp } = req.body;
@@ -321,17 +321,37 @@ app.post('/api/game/spinwheel', async (req, res) => {
             { value: 0, name: "0 PKR" },
             { value: 0, name: "0 PKR" },
             { value: 50, name: "50 PKR" },
-            { value: 50, name: "50 PKR" },
             { value: 100, name: "100 PKR" },
-            { value: 100, name: "100 PKR" },
-            { value: 150, name: "150 PKR" },
-            { value: 200, name: "200 PKR 🎉" },
+            { value: 200, name: "200 PKR" },
             { value: 300, name: "300 PKR" },
-            { value: 500, name: "500 PKR" }
+            { value: 500, name: "500 PKR" },
+            { value: 700, name: "700 PKR" },
+            { value: 1000, name: "1000 PKR" },
+            { value: 1500, name: "1500 PKR 🎉" },
+            { value: 2000, name: "2000 PKR 🎉" },
+            { value: 5000, name: "5000 PKR 🔥" }
         ];
         
-        const randomIndex = Math.floor(Math.random() * prizes.length);
-        const selected = prizes[randomIndex];
+        // Probability based selection
+        const random = Math.random() * 100;
+        let selected = null;
+        
+        if (random < 1) { // 1% chance for 5000
+            selected = prizes.find(p => p.value === 5000);
+        } else if (random < 16) { // 15% chance for 700-1500
+            const mediumPrizes = prizes.filter(p => p.value >= 700 && p.value <= 1500);
+            selected = mediumPrizes[Math.floor(Math.random() * mediumPrizes.length)];
+        } else if (random < 40) { // 24% chance for 200-500
+            const smallPrizes = prizes.filter(p => p.value >= 200 && p.value <= 500);
+            selected = smallPrizes[Math.floor(Math.random() * smallPrizes.length)];
+        } else if (random < 60) { // 20% chance for 50-100
+            const tinyPrizes = prizes.filter(p => p.value >= 50 && p.value <= 100);
+            selected = tinyPrizes[Math.floor(Math.random() * tinyPrizes.length)];
+        } else { // 40% chance for 0
+            const zeroPrizes = prizes.filter(p => p.value === 0);
+            selected = zeroPrizes[Math.floor(Math.random() * zeroPrizes.length)];
+        }
+        
         const isWin = selected.value > 0;
         const winAmount = isWin ? selected.value : 0;
         
@@ -445,6 +465,22 @@ app.get('/api/admin/users', async (req, res) => {
     }
 });
 
+// Get user by mobile
+app.get('/api/admin/user-by-mobile/:mobile', async (req, res) => {
+    try {
+        const { mobile } = req.params;
+        const user = await db.get('SELECT id, name, mobile, balance FROM users WHERE mobile = ?', [mobile]);
+        
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        
+        res.json({ success: true, user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 // Get all deposits
 app.get('/api/admin/deposits/all', async (req, res) => {
     try {
@@ -551,7 +587,7 @@ app.post('/api/admin/withdrawal/approve', async (req, res) => {
     }
 });
 
-// Add balance manually
+// ADD BALANCE MANUALLY - FIXED
 app.post('/api/admin/add-balance', async (req, res) => {
     try {
         const { userId, amount, reason } = req.body;
@@ -562,7 +598,7 @@ app.post('/api/admin/add-balance', async (req, res) => {
         
         const user = await db.get('SELECT * FROM users WHERE id = ?', [userId]);
         if (!user) {
-            return res.status(400).json({ success: false, message: 'User not found' });
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
         
         await db.run('UPDATE users SET balance = balance + ? WHERE id = ?', [amount, userId]);
@@ -576,7 +612,7 @@ app.post('/api/admin/add-balance', async (req, res) => {
         
         const updated = await db.get('SELECT balance FROM users WHERE id = ?', [userId]);
         
-        console.log(`✅ Admin added ${amount} PKR to user ${userId} (${user.name})`);
+        console.log(`✅ Admin added ${amount} PKR to user ${userId} (${user.name}) - ${reason || 'Manual'}`);
         
         res.json({ success: true, message: 'Balance added!', newBalance: updated.balance });
     } catch (error) {
@@ -632,17 +668,6 @@ app.get('/admin.html', (req, res) => {
 async function startServer() {
     try {
         console.log('🚀 Starting WINPAISA Server...');
-        console.log('📁 __dirname:', __dirname);
-        console.log('📁 Frontend path:', frontendPath);
-        
-        // Delete old database if exists (to avoid column mismatch)
-        if (!process.env.RENDER) {
-            const oldDbPath = path.join(__dirname, 'database', 'winpaisa.db');
-            if (fs.existsSync(oldDbPath)) {
-                console.log('🗑️ Removing old database...');
-                fs.unlinkSync(oldDbPath);
-            }
-        }
         
         const dbInit = await initDatabase();
         if (!dbInit) {
@@ -658,14 +683,9 @@ async function startServer() {
 ║  API: http://localhost:${PORT}/api                             ║
 ║  Admin: http://localhost:${PORT}/admin.html                    ║
 ║                                                              ║
-║  🎮 3 GAMES AVAILABLE:                                        ║
-║    • Prize Wheel (Bet: 50-500 PKR)                           ║
-║    • Coin Flip (Bet: 50-500 PKR | Win: 1.8x)                 ║
-║    • Card Game (Bet: 50-500 PKR | Win: 1.8x)                 ║
-║                                                              ║
+║  🎮 3 GAMES AVAILABLE                                         ║
 ║  💰 NEW USER BALANCE: 0 PKR                                   ║
 ║  📱 EasyPaisa: 0307 503 0001                                  ║
-║  📞 Support: 0320 8146556 (WhatsApp/Telegram)                 ║
 ║                                                              ║
 ║  👑 ADMIN PANEL: http://localhost:${PORT}/admin.html           ║
 ║  🔐 Admin Password: admin123                                  ║

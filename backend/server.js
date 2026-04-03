@@ -333,69 +333,72 @@ app.post('/api/game/spinwheel', async (req, res) => {
         ];
         
 // Replace your existing probability block with this:
+// Prize selection logic based on bet amount
+// Prize selection logic based on bet amount
+// Prize selection logic based on bet amount
 const random = Math.random() * 100;
 let selected = null;
-
 const userBet = currentBet; // 50, 100, 200, ya 500
 
 if (userBet === 50) {
-    // Bet ₹50 → Max ₹200
-    if (random < 60) {
-        selected = prizes.find(p => p.value === 0);
-    } else if (random < 80) {
-        selected = prizes.find(p => p.value === 50);
-    } else if (random < 90) {
-        selected = prizes.find(p => p.value === 100);
+    // Bet ₹50 → ONLY 0, 50, 100, 200 (NO 500, NO 1000, NO 1500)
+    if (random < 70) {
+        selected = { value: 0, label: "LOSE" };
+    } else if (random < 82) {
+        selected = { value: 50, label: "₹50" };
+    } else if (random < 92) {
+        selected = { value: 100, label: "₹100" };
     } else {
-        selected = prizes.find(p => p.value === 200);
+        selected = { value: 200, label: "₹200" };
     }
 } 
 else if (userBet === 100) {
-    // Bet ₹100 → Max ₹300
-    if (random < 60) {
-        selected = prizes.find(p => p.value === 0);
-    } else if (random < 75) {
-        selected = prizes.find(p => p.value === 50);
-    } else if (random < 90) {
-        selected = prizes.find(p => p.value === 100);
+    // Bet ₹100 → ONLY 0, 50, 100, 200, 300
+    if (random < 70) {
+        selected = { value: 0, label: "LOSE" };
+    } else if (random < 80) {
+        selected = { value: 50, label: "₹50" };
+    } else if (random < 88) {
+        selected = { value: 100, label: "₹100" };
     } else if (random < 95) {
-        selected = prizes.find(p => p.value === 200);
+        selected = { value: 200, label: "₹200" };
     } else {
-        selected = prizes.find(p => p.value === 300);
+        selected = { value: 300, label: "₹300" };
     }
 }
 else if (userBet === 200) {
-    // Bet ₹200 → Max ₹500
-    if (random < 60) {
-        selected = prizes.find(p => p.value === 0);
-    } else if (random < 72) {
-        selected = prizes.find(p => p.value === 50);
-    } else if (random < 84) {
-        selected = prizes.find(p => p.value === 100);
-    } else if (random < 92) {
-        selected = prizes.find(p => p.value === 200);
+    // Bet ₹200 → ONLY 0, 50, 100, 200, 500
+    if (random < 70) {
+        selected = { value: 0, label: "LOSE" };
+    } else if (random < 78) {
+        selected = { value: 50, label: "₹50" };
+    } else if (random < 86) {
+        selected = { value: 100, label: "₹100" };
+    } else if (random < 93) {
+        selected = { value: 200, label: "₹200" };
     } else {
-        selected = prizes.find(p => p.value === 500);
+        selected = { value: 500, label: "₹500" };
     }
 }
 else if (userBet === 500) {
-    // Bet ₹500 → Max ₹1500
-    if (random < 60) {
-        selected = prizes.find(p => p.value === 0);
-    } else if (random < 70) {
-        selected = prizes.find(p => p.value === 50);
-    } else if (random < 80) {
-        selected = prizes.find(p => p.value === 100);
-    } else if (random < 88) {
-        selected = prizes.find(p => p.value === 200);
-    } else if (random < 94) {
-        selected = prizes.find(p => p.value === 500);
+    // Bet ₹500 → 0, 50, 100, 200, 500, 1000, 1500
+    if (random < 70) {
+        selected = { value: 0, label: "LOSE" };
+    } else if (random < 77) {
+        selected = { value: 50, label: "₹50" };
+    } else if (random < 84) {
+        selected = { value: 100, label: "₹100" };
+    } else if (random < 90) {
+        selected = { value: 200, label: "₹200" };
+    } else if (random < 95) {
+        selected = { value: 500, label: "₹500" };
     } else if (random < 98) {
-        selected = prizes.find(p => p.value === 1000);
+        selected = { value: 1000, label: "₹1000" };
     } else {
-        selected = prizes.find(p => p.value === 1500);
+        selected = { value: 1500, label: "₹1500" };
     }
 }
+
 const isWin = selected.value > 0;
 const winAmount = isWin ? selected.value : 0;
         if (isWin) {

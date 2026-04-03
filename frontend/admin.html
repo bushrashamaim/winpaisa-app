@@ -184,6 +184,9 @@
             85% { opacity: 1; }
             100% { opacity: 0; visibility: hidden; }
         }
+        .status-pending { color: #ffaa33; font-weight: bold; }
+        .status-approved { color: #44ff44; font-weight: bold; }
+        .status-rejected { color: #ff5555; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -212,7 +215,7 @@
         <div class="tabs">
             <button class="tab-btn active" onclick="showSection('pending')">💰 Pending Deposits <span id="pendingBadge" class="badge">0</span></button>
             <button class="tab-btn" onclick="showSection('allDeposits')">📋 All Deposits</button>
-            <button class="tab-btn" onclick="showSection('withdrawals')">💸 Withdrawals</button>
+            <button class="tab-btn" onclick="showSection('withdrawals')">💸 Withdrawals <span id="withdrawPendingBadge" class="badge">0</span></button>
             <button class="tab-btn" onclick="showSection('users')">👥 Users</button>
             <button class="tab-btn" onclick="showSection('addBalance')">➕ Add Balance</button>
         </div>
@@ -294,24 +297,30 @@
         function updateStats() {
             let users = localStorage.getItem('winpaisa_users');
             let deposits = localStorage.getItem('winpaisa_deposits');
+            let withdrawals = localStorage.getItem('winpaisa_withdrawals');
             
             try {
                 users = users ? JSON.parse(users) : [];
                 deposits = deposits ? JSON.parse(deposits) : [];
+                withdrawals = withdrawals ? JSON.parse(withdrawals) : [];
             } catch(e) {
                 users = [];
                 deposits = [];
+                withdrawals = [];
             }
             
             if (!Array.isArray(users)) users = [];
             if (!Array.isArray(deposits)) deposits = [];
+            if (!Array.isArray(withdrawals)) withdrawals = [];
             
             const totalUsers = users.length;
             const totalDeposits = deposits.filter(d => d && d.status === 'approved').reduce((sum, d) => sum + (d.amount || 0), 0);
+            const totalWithdrawals = withdrawals.filter(w => w && w.status === 'approved').reduce((sum, w) => sum + (w.amount || 0), 0);
             const totalBalance = users.reduce((sum, u) => sum + (u.balance || 0), 0);
             
             document.getElementById('totalUsers').innerText = totalUsers;
             document.getElementById('totalDeposits').innerText = totalDeposits;
+            document.getElementById('totalWithdrawals').innerText = totalWithdrawals;
             document.getElementById('platformBalance').innerText = totalBalance;
         }
 
@@ -357,7 +366,6 @@
             container.innerHTML = html;
         }
 
-        // MAIN APPROVE FUNCTION - UPDATES USER BALANCE
         function approveDeposit(id) {
             if(!confirm('Approve this deposit? User will get balance added.')) return;
             
@@ -384,12 +392,10 @@
                 return;
             }
             
-            // FIND AND UPDATE USER BALANCE
             const user = users.find(u => u && u.id === deposit.userId);
             if(user) {
                 user.balance = (user.balance || 0) + deposit.amount;
                 user.totalDeposited = (user.totalDeposited || 0) + deposit.amount;
-                console.log(`✅ User ${user.name} balance updated to ${user.balance}`);
             }
             
             deposit.status = 'approved';
@@ -397,14 +403,12 @@
             localStorage.setItem('winpaisa_users', JSON.stringify(users));
             localStorage.setItem('winpaisa_deposits', JSON.stringify(deposits));
             
-            // UPDATE CURRENT USER SESSION IF SAME USER
             const currUser = localStorage.getItem('winpaisa_user');
             if(currUser && user) {
                 let cu = JSON.parse(currUser);
                 if(cu.id === user.id) {
                     cu.balance = user.balance;
                     localStorage.setItem('winpaisa_user', JSON.stringify(cu));
-                    console.log("✅ Session balance updated:", cu.balance);
                 }
             }
             
@@ -447,12 +451,24 @@
             }
             let html = `<table><thead><tr><th>ID</th><th>User</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>`;
             deposits.forEach(d => {
-                html += `<tr><td>${d.id}</td><td>${d.userName}</td><td>${d.amount} PKR</td><td>${d.status}</td><td>${d.timestamp}</td></tr>`;
+                let statusClass = '';
+                if(d.status === 'approved') statusClass = 'status-approved';
+                else if(d.status === 'rejected') statusClass = 'status-rejected';
+                else statusClass = 'status-pending';
+                html += `<tr>
+                    <td>${d.id}${d.userId ? ` (${d.userId})` : ''}</td>
+                    <td>${d.userName}${d.userMobile ? `<br><small>${d.userMobile}</small>` : ''}</td>
+                    <td>${d.amount} PKR</td>
+                    <td class="${statusClass}">${d.status || 'pending'}</td>
+                    <td>${d.timestamp || '-'}</td>
+                </tr>`;
             });
-            html += `</tbody></table>`;
+            html += `</tbody> licensierad`;
             container.innerHTML = html;
         }
 
+        // ============ WITHDRAWAL FUNCTIONS WITH APPROVE/REJECT ============
+        
         function loadWithdrawals() {
             const container = document.getElementById('withdrawalsList');
             let withdrawals = localStorage.getItem('winpaisa_withdrawals');
@@ -460,16 +476,129 @@
                 withdrawals = withdrawals ? JSON.parse(withdrawals) : [];
             } catch(e) { withdrawals = []; }
             
+            if(!Array.isArray(withdrawals)) withdrawals = [];
+            
+            const pendingWithdrawals = withdrawals.filter(w => w && w.status === 'pending');
+            document.getElementById('withdrawPendingBadge').innerText = pendingWithdrawals.length;
+            
             if(withdrawals.length === 0) {
-                container.innerHTML = '<div style="text-align:center;padding:40px;">No withdrawals</div>';
+                container.innerHTML = '<div style="text-align:center;padding:40px;">No withdrawal requests</div>';
                 return;
             }
-            let html = `<tr><thead><tr><th>ID</th><th>User</th><th>Amount</th><th>Account</th><th>Status</th><th>Date</th></tr></thead><tbody>`;
+            
+            let html = ` <table> <thead> <tr> <th>ID</th> <th>User</th> <th>Amount</th> <th>Account Type</th> <th>Account Number</th> <th>Status</th> <th>Date</th> <th>Action</th> </tr> </thead> <tbody>`;
+            
             withdrawals.forEach(w => {
-                html += `<tr><td>${w.id}</td><td>${w.userName}</td><td>${w.amount} PKR</td><td>${w.account}</td><td>${w.status}</td><td>${w.timestamp}</td></tr>`;
+                let statusClass = '';
+                if(w.status === 'approved') statusClass = 'status-approved';
+                else if(w.status === 'rejected') statusClass = 'status-rejected';
+                else statusClass = 'status-pending';
+                
+                html += `<tr>
+                    <td>${w.id || 'N/A'}${w.userId ? `<br><small>ID:${w.userId}</small>` : ''}</td>
+                    <td>${w.userName || 'N/A'}<br><small>${w.userMobile || ''}</small></td>
+                    <td><strong>${w.amount || 0} PKR</strong></td>
+                    <td>${w.paymentMethod || w.accountType || 'JazzCash/EasyPaisa'}</td>
+                    <td>${w.accountNumber || w.account || 'N/A'}</td>
+                    <td class="${statusClass}">${w.status === 'pending' ? '⏳ Pending' : (w.status === 'approved' ? '✅ Approved' : '❌ Rejected')}</td>
+                    <td>${w.timestamp || new Date(w.createdAt).toLocaleString()}</td>
+                    <td>
+                        ${w.status === 'pending' ? `
+                            <button class="approve-btn" onclick="approveWithdrawal(${w.id})">✅ Approve</button>
+                            <button class="reject-btn" onclick="rejectWithdrawal(${w.id})">❌ Reject</button>
+                        ` : (w.status === 'approved' ? '✅ Completed' : '❌ Cancelled')}
+                    </td>
+                </tr>`;
             });
-            html += `</tbody></table>`;
+            
+            html += `</tbody> </table>`;
             container.innerHTML = html;
+        }
+
+        function approveWithdrawal(id) {
+            if(!confirm('Approve this withdrawal? Amount will be deducted from user balance.')) return;
+            
+            let usersStr = localStorage.getItem('winpaisa_users');
+            let withdrawalsStr = localStorage.getItem('winpaisa_withdrawals');
+            
+            let users = [];
+            let withdrawals = [];
+            
+            try {
+                users = usersStr ? JSON.parse(usersStr) : [];
+                withdrawals = withdrawalsStr ? JSON.parse(withdrawalsStr) : [];
+            } catch(e) {
+                users = [];
+                withdrawals = [];
+            }
+            
+            if(!Array.isArray(users)) users = [];
+            if(!Array.isArray(withdrawals)) withdrawals = [];
+            
+            const withdrawal = withdrawals.find(w => w && w.id === id);
+            if(!withdrawal || withdrawal.status !== 'pending') {
+                showToast('Invalid withdrawal request', true);
+                return;
+            }
+            
+            // Find user by userId or mobile
+            let user = users.find(u => u && u.id === withdrawal.userId);
+            if(!user && withdrawal.userMobile) {
+                user = users.find(u => u && u.mobile === withdrawal.userMobile);
+            }
+            
+            if(user) {
+                if((user.balance || 0) >= withdrawal.amount) {
+                    user.balance = (user.balance || 0) - withdrawal.amount;
+                    withdrawal.status = 'approved';
+                    
+                    localStorage.setItem('winpaisa_users', JSON.stringify(users));
+                    localStorage.setItem('winpaisa_withdrawals', JSON.stringify(withdrawals));
+                    
+                    // Update current session if same user
+                    const currUser = localStorage.getItem('winpaisa_user');
+                    if(currUser && user) {
+                        let cu = JSON.parse(currUser);
+                        if(cu.id === user.id || cu.mobile === user.mobile) {
+                            cu.balance = user.balance;
+                            localStorage.setItem('winpaisa_user', JSON.stringify(cu));
+                        }
+                    }
+                    
+                    showToast(`✅ Withdrawal of ${withdrawal.amount} PKR approved! Balance deducted.`, false);
+                } else {
+                    showToast(`❌ Insufficient balance! User has only ${user.balance} PKR`, true);
+                    return;
+                }
+            } else {
+                showToast('User not found!', true);
+                return;
+            }
+            
+            refreshAll();
+        }
+
+        function rejectWithdrawal(id) {
+            if(!confirm('Reject this withdrawal request?')) return;
+            
+            let withdrawalsStr = localStorage.getItem('winpaisa_withdrawals');
+            let withdrawals = [];
+            
+            try {
+                withdrawals = withdrawalsStr ? JSON.parse(withdrawalsStr) : [];
+            } catch(e) {
+                withdrawals = [];
+            }
+            
+            if(!Array.isArray(withdrawals)) withdrawals = [];
+            
+            const withdrawal = withdrawals.find(w => w && w.id === id);
+            if(withdrawal && withdrawal.status === 'pending') {
+                withdrawal.status = 'rejected';
+                localStorage.setItem('winpaisa_withdrawals', JSON.stringify(withdrawals));
+                showToast(`❌ Withdrawal request rejected`, false);
+                refreshAll();
+            }
         }
 
         function loadUsers() {
@@ -483,18 +612,18 @@
                 container.innerHTML = '<div style="text-align:center;padding:40px;">No users</div>';
                 return;
             }
-            let html = `<tr><thead><tr><th>ID</th><th>Name</th><th>Mobile</th><th>Balance</th><th>Deposited</th><th>Joined</th></tr></thead><tbody>`;
+            let html = ` <table> <thead> <tr> <th>ID</th> <th>Name</th> <th>Mobile</th> <th>Balance</th> <th>Deposited</th> <th>Joined</th> </tr> </thead> <tbody>`;
             users.forEach(u => {
                 html += `<tr>
                     <td>${u.id}</td>
-                    <td>${u.name}</td>
+                    <td>${u.name || u.fullName || '-'}</td>
                     <td>${u.mobile}</td>
                     <td><strong style="color:#44ff44;">${u.balance || 0} PKR</strong></td>
-                    <td>${u.totalDeposited || 0} PKR}</td>
-                    <td>${new Date(u.createdAt).toLocaleDateString() || '-'}</td>
+                    <td>${u.totalDeposited || 0} PKR</td>
+                    <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '-'}</td>
                 </tr>`;
             });
-            html += `</tbody></table>`;
+            html += `</tbody> </table>`;
             container.innerHTML = html;
         }
 
@@ -555,6 +684,7 @@
             refreshAll();
         }
 
+        // Check if already logged in
         if(localStorage.getItem('adminLoggedIn') === 'true') {
             document.getElementById('adminLogin').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';

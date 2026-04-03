@@ -317,90 +317,96 @@ app.post('/api/game/spinwheel', async (req, res) => {
         
         await db.run('UPDATE users SET balance = balance - ? WHERE id = ?', [betAmount, userId]);
         
-        const prizes = [
-            { value: 0, name: "0 PKR" },
-            { value: 0, name: "0 PKR" },
-            { value: 50, name: "50 PKR" },
-            { value: 100, name: "100 PKR" },
-            { value: 200, name: "200 PKR" },
-            { value: 300, name: "300 PKR" },
-            { value: 500, name: "500 PKR" },
-            { value: 700, name: "700 PKR" },
-            { value: 1000, name: "1000 PKR" },
-            { value: 1500, name: "1500 PKR 🎉" },
-            { value: 2000, name: "2000 PKR 🎉" },
-            { value: 5000, name: "5000 PKR 🔥" }
-        ];
+        const random = Math.random() * 100;
+        let winAmount = 0;
+        let prizeName = "0 PKR";
         
-// Replace your existing probability block with this:
-// Prize selection logic based on bet amount
-// Prize selection logic based on bet amount
-// Prize selection logic based on bet amount
-const random = Math.random() * 100;
-let selected = null;
-const userBet = currentBet; // 50, 100, 200, ya 500
-
-if (userBet === 50) {
-    // Bet ₹50 → ONLY 0, 50, 100, 200 (NO 500, NO 1000, NO 1500)
-    if (random < 70) {
-        selected = { value: 0, label: "LOSE" };
-    } else if (random < 82) {
-        selected = { value: 50, label: "₹50" };
-    } else if (random < 92) {
-        selected = { value: 100, label: "₹100" };
-    } else {
-        selected = { value: 200, label: "₹200" };
-    }
-} 
-else if (userBet === 100) {
-    // Bet ₹100 → ONLY 0, 50, 100, 200, 300
-    if (random < 70) {
-        selected = { value: 0, label: "LOSE" };
-    } else if (random < 80) {
-        selected = { value: 50, label: "₹50" };
-    } else if (random < 88) {
-        selected = { value: 100, label: "₹100" };
-    } else if (random < 95) {
-        selected = { value: 200, label: "₹200" };
-    } else {
-        selected = { value: 300, label: "₹300" };
-    }
-}
-else if (userBet === 200) {
-    // Bet ₹200 → ONLY 0, 50, 100, 200, 500
-    if (random < 70) {
-        selected = { value: 0, label: "LOSE" };
-    } else if (random < 78) {
-        selected = { value: 50, label: "₹50" };
-    } else if (random < 86) {
-        selected = { value: 100, label: "₹100" };
-    } else if (random < 93) {
-        selected = { value: 200, label: "₹200" };
-    } else {
-        selected = { value: 500, label: "₹500" };
-    }
-}
-else if (userBet === 500) {
-    // Bet ₹500 → 0, 50, 100, 200, 500, 1000, 1500
-    if (random < 70) {
-        selected = { value: 0, label: "LOSE" };
-    } else if (random < 77) {
-        selected = { value: 50, label: "₹50" };
-    } else if (random < 84) {
-        selected = { value: 100, label: "₹100" };
-    } else if (random < 90) {
-        selected = { value: 200, label: "₹200" };
-    } else if (random < 95) {
-        selected = { value: 500, label: "₹500" };
-    } else if (random < 98) {
-        selected = { value: 1000, label: "₹1000" };
-    } else {
-        selected = { value: 1500, label: "₹1500" };
-    }
-}
-
-const isWin = selected.value > 0;
-const winAmount = isWin ? selected.value : 0;
+        // 50 ki bet - 85% lose
+        if (betAmount == 50) {
+            if (random < 85) {
+                winAmount = 0;
+                prizeName = "0 PKR";
+            } else if (random < 93) {
+                winAmount = 50;
+                prizeName = "50 PKR";
+            } else if (random < 98) {
+                winAmount = 100;
+                prizeName = "100 PKR";
+            } else {
+                winAmount = 200;
+                prizeName = "200 PKR";
+            }
+        }
+        // 100 ki bet - 85% lose
+        else if (betAmount == 100) {
+            if (random < 85) {
+                winAmount = 0;
+                prizeName = "0 PKR";
+            } else if (random < 91) {
+                winAmount = 50;
+                prizeName = "50 PKR";
+            } else if (random < 95) {
+                winAmount = 100;
+                prizeName = "100 PKR";
+            } else if (random < 98) {
+                winAmount = 200;
+                prizeName = "200 PKR";
+            } else {
+                winAmount = 300;
+                prizeName = "300 PKR";
+            }
+        }
+        // 200 ki bet - 85% lose
+        else if (betAmount == 200) {
+            if (random < 85) {
+                winAmount = 0;
+                prizeName = "0 PKR";
+            } else if (random < 90) {
+                winAmount = 50;
+                prizeName = "50 PKR";
+            } else if (random < 94) {
+                winAmount = 100;
+                prizeName = "100 PKR";
+            } else if (random < 97) {
+                winAmount = 200;
+                prizeName = "200 PKR";
+            } else {
+                winAmount = 500;
+                prizeName = "500 PKR";
+            }
+        }
+        // 500 ki bet - 85% lose
+        else if (betAmount == 500) {
+            if (random < 85) {
+                winAmount = 0;
+                prizeName = "0 PKR";
+            } else if (random < 90) {
+                winAmount = 50;
+                prizeName = "50 PKR";
+            } else if (random < 93) {
+                winAmount = 100;
+                prizeName = "100 PKR";
+            } else if (random < 96) {
+                winAmount = 200;
+                prizeName = "200 PKR";
+            } else if (random < 98) {
+                winAmount = 500;
+                prizeName = "500 PKR";
+            } else if (random < 99) {
+                winAmount = 1000;
+                prizeName = "1000 PKR 🎉";
+            } else {
+                winAmount = 1500;
+                prizeName = "1500 PKR 🎉";
+            }
+        }
+        else {
+            winAmount = 0;
+            prizeName = "0 PKR";
+        }
+        
+        const isWin = winAmount > 0;
+        
         if (isWin) {
             await db.run('UPDATE users SET balance = balance + ? WHERE id = ?', [winAmount, userId]);
             await db.run('UPDATE users SET games_won = games_won + 1 WHERE id = ?', [userId]);
@@ -410,24 +416,24 @@ const winAmount = isWin ? selected.value : 0;
         
         await db.run(
             `INSERT INTO game_history (user_id, game, bet_amount, win_amount, result) VALUES (?, ?, ?, ?, ?)`,
-            [userId, 'spinwheel', betAmount, winAmount, selected.name]
+            [userId, 'spinwheel', betAmount, winAmount, prizeName]
         );
         
         const updatedUser = await db.get('SELECT balance FROM users WHERE id = ?', [userId]);
         
         res.json({
             success: true,
-            segment: selected.name,
-            isWin,
-            winAmount,
+            segment: prizeName,
+            isWin: isWin,
+            winAmount: winAmount,
             newBalance: updatedUser.balance
         });
+        
     } catch (error) {
         console.error('Spin Wheel error:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
-
 // 7. CARD GAME
 app.post('/api/game/cardgame', async (req, res) => {
     try {

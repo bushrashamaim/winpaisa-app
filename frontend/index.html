@@ -937,6 +937,7 @@
     }
 
     // ==================== SPIN WHEEL ====================
+// ==================== SPIN WHEEL FUNCTION ====================
 function spinWheel() {
     if(spinning) { showToast("Wait...", true); return; }
     if(!currentUser) { showToast("Login first", true); document.getElementById('loginModal').style.display = 'flex'; return; }
@@ -944,92 +945,48 @@ function spinWheel() {
     
     spinning = true;
     
-    // Deduct bet immediately
     balance -= wheelBet;
     updateBalanceUI(); 
     saveUser();
     
     playSound('spin');
     
-    // ==================== FIX: Prize selection with weights ====================
+    const wheelCanvas = document.getElementById('wheelCanvas');
     const SEG_COUNT = WHEEL_PRIZES.length;
     const angleStepDeg = 360 / SEG_COUNT;
     
-    // First, randomly select a prize (WITHOUT fixing win/loss)
-    // Randomly select any prize from the wheel
-    const randomPrizeIndex = Math.floor(Math.random() * WHEEL_PRIZES.length);
-    const selectedPrize = WHEEL_PRIZES[randomPrizeIndex];
-    const isWin = selectedPrize.value > 0;
-    const winAmount = isWin ? selectedPrize.value : 0;
-    
-    console.log(`🎡 Selected Prize: ${selectedPrize.label} (${selectedPrize.value} PKR) at index ${randomPrizeIndex}`);
-    
-    // Calculate rotation to land exactly on this prize's CENTER
-    // Each segment has a center angle
-    const segmentCenter = (randomPrizeIndex * angleStepDeg) + (angleStepDeg / 2);
-    
-    // The pointer is at TOP (270 degrees or -90 degrees in CSS rotation)
-    // We want the segment's center to align with the pointer
-    // Rotation needed = (360 - segmentCenter + pointerPosition) % 360
-    // pointerPosition = 90 (since CSS 0deg is right, top is 90deg? Actually need to test)
-    // Let's use a simpler approach: random rotation but ensure we can track result
-    
-    // Alternative: Add random full spins + offset
-    const fullSpins = 360 * (8 + Math.floor(Math.random() * 5)); // 8-12 full rotations
+    const fullSpins = 360 * (8 + Math.floor(Math.random() * 5));
     const randomOffset = Math.random() * 360;
     const finalRotate = fullSpins + randomOffset;
     
-    // Apply wheel animation
-    const wheelCanvas = document.getElementById('wheelCanvas');
     wheelCanvas.style.transition = "transform 4s cubic-bezier(0.2, 0.96, 0.15, 1.02)";
     wheelCanvas.style.transform = `rotate(${finalRotate}deg)`;
     
-    // Calculate which prize it will land on based on final rotation
-    // The pointer is at top (270 degrees in standard math, but CSS is different)
-    // We need to calculate the actual stopping position
-    
     setTimeout(() => {
-        // Get the final rotation value
-        const computedStyle = window.getComputedStyle(wheelCanvas);
-        const transform = computedStyle.getPropertyValue('transform');
+        let currentRotation = finalRotate % 360;
+        if (currentRotation < 0) currentRotation += 360;
         
-        // Extract rotation angle from matrix
-        let currentRotation = 0;
-        if (transform !== 'none') {
-            const values = transform.split('(')[1].split(')')[0].split(',');
-            const angle = Math.round(Math.atan2(values[1], values[0]) * (180 / Math.PI));
-            currentRotation = angle < 0 ? angle + 360 : angle;
-        }
-        
-        // Calculate which segment is at pointer (top = 90 degrees)
-        const pointerAngle = 90; // Top position
+        const pointerAngle = 90;
         let angleAtPointer = (pointerAngle - currentRotation + 360) % 360;
         let segmentIndex = Math.floor(angleAtPointer / angleStepDeg);
-        segmentIndex = segmentIndex % SEG_COUNT;
+        segmentIndex = Math.min(segmentIndex, SEG_COUNT - 1);
         
         const landedPrize = WHEEL_PRIZES[segmentIndex];
-        const landedIsWin = landedPrize.value > 0;
-        const landedWinAmount = landedPrize.value;
+        const isWin = landedPrize.value > 0;
+        const winAmount = landedPrize.value;
         
-        console.log(`🎡 Landed on: ${landedPrize.label} at index ${segmentIndex}`);
-        console.log(`🎡 Selected was: ${selectedPrize.label}`);
-        
-        // Use the LANDED prize, not the selected one
-        const actualIsWin = landedIsWin;
-        const actualWinAmount = landedWinAmount;
-        
-        if(actualIsWin && actualWinAmount > 0) { 
-            balance += actualWinAmount;
+        if(isWin && winAmount > 0) { 
+            balance += winAmount;
             updateBalanceUI(); 
             saveUser();
             
-            showToast(`🎉🎉🎉 CONGRATULATIONS! YOU WON ${actualWinAmount} PKR! 🎉🎉🎉`, false); 
-            addLiveWin(actualWinAmount); 
+            showToast(`🎉🎉🎉 CONGRATULATIONS! YOU WON ${winAmount} PKR! 🎉🎉🎉`, false); 
+            addLiveWin(winAmount); 
             playSound('win');
             wheelCanvas.classList.add('win-pulse'); 
             setTimeout(() => wheelCanvas.classList.remove('win-pulse'), 600);
             
-            showResultModal('wheel', landedPrize.label, true, actualWinAmount);
+            showResultModal('wheel', landedPrize.label, true, winAmount);
         } else { 
             showToast(`😞 SORRY! You lost ${wheelBet} PKR. Wheel stopped on ${landedPrize.label}. Better luck next time! 😞`, true);
             playSound('lose');
@@ -1041,12 +998,14 @@ function spinWheel() {
         
         setTimeout(() => { 
             wheelCanvas.style.transition = "none"; 
-            wheelCanvas.style.transform = `rotate(${finalRotate % 360}deg)`; 
+            wheelCanvas.style.transform = `rotate(${currentRotation}deg)`; 
             setTimeout(() => wheelCanvas.style.transition = "", 50); 
         }, 100);
+        
     }, 4100);
 }
-// Result Modal Function
+
+// ==================== RESULT MODAL FUNCTION ====================
 function showResultModal(game, result, isWin, winAmount) {
     const modal = document.getElementById('resultModal');
     if (!modal) return;

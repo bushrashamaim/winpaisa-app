@@ -332,26 +332,25 @@ app.post('/api/game/spinwheel', async (req, res) => {
             { value: 5000, name: "5000 PKR 🔥" }
         ];
         
-        // Probability based selection
-        const random = Math.random() * 100;
-        let selected = null;
-        
-        if (random < 1) { // 1% chance for 5000
-            selected = prizes.find(p => p.value === 5000);
-        } else if (random < 16) { // 15% chance for 700-1500
-            const mediumPrizes = prizes.filter(p => p.value >= 700 && p.value <= 1500);
-            selected = mediumPrizes[Math.floor(Math.random() * mediumPrizes.length)];
-        } else if (random < 40) { // 24% chance for 200-500
-            const smallPrizes = prizes.filter(p => p.value >= 200 && p.value <= 500);
-            selected = smallPrizes[Math.floor(Math.random() * smallPrizes.length)];
-        } else if (random < 60) { // 20% chance for 50-100
-            const tinyPrizes = prizes.filter(p => p.value >= 50 && p.value <= 100);
-            selected = tinyPrizes[Math.floor(Math.random() * tinyPrizes.length)];
-        } else { // 40% chance for 0
-            const zeroPrizes = prizes.filter(p => p.value === 0);
-            selected = zeroPrizes[Math.floor(Math.random() * zeroPrizes.length)];
-        }
-        
+// Replace your existing probability block with this:
+const random = Math.random() * 100;
+let selected = null;
+
+if (random < 30) {
+    selected = prizes.find(p => p.value === 0);
+} else if (random < 55) {
+    selected = prizes.find(p => p.value === 50);
+} else if (random < 75) {
+    selected = prizes.find(p => p.value === 100);
+} else if (random < 90) {
+    selected = prizes.find(p => p.value === 200);
+} else if (random < 95) {
+    selected = prizes.find(p => p.value === 500);
+} else if (random < 98) {
+    selected = prizes.find(p => p.value === 1000);
+} else {
+    selected = prizes.find(p => p.value === 5000);
+}        
         const isWin = selected.value > 0;
         const winAmount = isWin ? selected.value : 0;
         

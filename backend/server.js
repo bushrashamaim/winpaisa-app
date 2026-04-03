@@ -317,15 +317,18 @@ app.post('/api/game/spinwheel', async (req, res) => {
         
         await db.run('UPDATE users SET balance = balance - ? WHERE id = ?', [betAmount, userId]);
         
+        // ========== SIMPLE LOGIC - KOI PRIZE ARRAY NAHI ==========
         const random = Math.random() * 100;
         let winAmount = 0;
         let prizeName = "0 PKR";
         
-        // 50 ki bet - 85% lose
+        console.log(`User bet: ${betAmount}, Random: ${random}`); // Debug ke liye
+        
+        // ONLY 50 KI BET - SIRF 0,50,100,200
         if (betAmount == 50) {
             if (random < 85) {
                 winAmount = 0;
-                prizeName = "0 PKR";
+                prizeName = "LOSE - 0 PKR";
             } else if (random < 93) {
                 winAmount = 50;
                 prizeName = "50 PKR";
@@ -337,11 +340,11 @@ app.post('/api/game/spinwheel', async (req, res) => {
                 prizeName = "200 PKR";
             }
         }
-        // 100 ki bet - 85% lose
+        // ONLY 100 KI BET - SIRF 0,50,100,200,300
         else if (betAmount == 100) {
             if (random < 85) {
                 winAmount = 0;
-                prizeName = "0 PKR";
+                prizeName = "LOSE - 0 PKR";
             } else if (random < 91) {
                 winAmount = 50;
                 prizeName = "50 PKR";
@@ -356,11 +359,11 @@ app.post('/api/game/spinwheel', async (req, res) => {
                 prizeName = "300 PKR";
             }
         }
-        // 200 ki bet - 85% lose
+        // ONLY 200 KI BET - SIRF 0,50,100,200,500
         else if (betAmount == 200) {
             if (random < 85) {
                 winAmount = 0;
-                prizeName = "0 PKR";
+                prizeName = "LOSE - 0 PKR";
             } else if (random < 90) {
                 winAmount = 50;
                 prizeName = "50 PKR";
@@ -375,11 +378,11 @@ app.post('/api/game/spinwheel', async (req, res) => {
                 prizeName = "500 PKR";
             }
         }
-        // 500 ki bet - 85% lose
+        // ONLY 500 KI BET - SIRF 0,50,100,200,500,1000,1500
         else if (betAmount == 500) {
             if (random < 85) {
                 winAmount = 0;
-                prizeName = "0 PKR";
+                prizeName = "LOSE - 0 PKR";
             } else if (random < 90) {
                 winAmount = 50;
                 prizeName = "50 PKR";
@@ -394,16 +397,18 @@ app.post('/api/game/spinwheel', async (req, res) => {
                 prizeName = "500 PKR";
             } else if (random < 99) {
                 winAmount = 1000;
-                prizeName = "1000 PKR 🎉";
+                prizeName = "1000 PKR";
             } else {
                 winAmount = 1500;
-                prizeName = "1500 PKR 🎉";
+                prizeName = "1500 PKR";
             }
         }
         else {
             winAmount = 0;
             prizeName = "0 PKR";
         }
+        
+        console.log(`Result: ${prizeName} - ${winAmount} PKR`); // Debug ke liye
         
         const isWin = winAmount > 0;
         

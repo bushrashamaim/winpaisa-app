@@ -783,27 +783,40 @@
 <script>
     // WHEEL PRIZES
 const WHEEL_PRIZES = [
-    // LOSE segments (70% of wheel - 9 segments)
+    // ==================== LOSE (0 PKR) - ALAG ALAG SEGMENTS ====================
+      { value: 60, color: "#84cc16", label: "60 PKR" },
     { value: 0, color: "#3b82f6", label: "0 PKR" },
-    { value: 0, color: "#3b82f6", label: "0 PKR" },
-    { value: 0, color: "#3b82f6", label: "0 PKR" },
-    { value: 0, color: "#3b82f6", label: "0 PKR" },
-    { value: 0, color: "#3b82f6", label: "0 PKR" },
-    { value: 0, color: "#3b82f6", label: "0 PKR" },
-    { value: 0, color: "#3b82f6", label: "0 PKR" },
-    { value: 0, color: "#3b82f6", label: "0 PKR" },
-    { value: 0, color: "#3b82f6", label: "0 PKR" },
-    
-    // Small Win segments
-    { value: 50, color: "#22c55e", label: "50 PKR" },
-    { value: 50, color: "#22c55e", label: "50 PKR" },
+    { value: 50, color: "#84cc16", label: "50 PKR" },
     { value: 100, color: "#22c55e", label: "100 PKR" },
+        { value: 0, color: "#3b82f6", label: "0 PKR" },
+
+    // ==================== SMALL WINS ====================
+    { value: 30, color: "#84cc16", label: "30 PKR" },
+        { value: 0, color: "#3b82f6", label: "0 PKR" },
+    { value: 40, color: "#84cc16", label: "40 PKR" },
+        { value: 0, color: "#3b82f6", label: "0 PKR" },
+
+    { value: 50, color: "#84cc16", label: "50 PKR" },
+    { value: 60, color: "#84cc16", label: "60 PKR" },
+        { value: 0, color: "#3b82f6", label: "0 PKR" },
+
+    // ==================== MEDIUM WINS ====================
+    { value: 100, color: "#22c55e", label: "100 PKR" },
+    { value: 150, color: "#22a55e", label: "150 PKR" },
+        { value: 60, color: "#84cc16", label: "60 PKR" },
+
     { value: 200, color: "#22c55e", label: "200 PKR" },
-    { value: 300, color: "#22c55e", label: "300 PKR" },
-    { value: 500, color: "#22c55e", label: "500 PKR" },
-    { value: 1000, color: "#22c55e", label: "1000 PKR" },
+        { value: 0, color: "#3b82f6", label: "0 PKR" },
+
+    // ==================== BIG WINS ====================
+    { value: 300, color: "#eab308", label: "300 PKR" },
+    { value: 500, color: "#eab308", label: "500 PKR" },
+        { value: 0, color: "#3b82f6", label: "0 PKR" },
+
+    // ==================== JACKPOT ====================
+    { value: 1000, color: "#ef4414", label: "1000 PKR" },
     
-    // ATTRACTION ONLY - Will never actually be awarded
+    // ==================== ATTRACTION ONLY (Kabhi nahi aayega) ====================
     { value: 5000, color: "#ef4444", label: "5000 PKR 🎉" }
 ];
     const SEG_COUNT = WHEEL_PRIZES.length;

@@ -317,7 +317,7 @@ app.post('/api/game/spinwheel', async (req, res) => {
         
         await db.run('UPDATE users SET balance = balance - ? WHERE id = ?', [betAmount, userId]);
         
-        // ==================== ACTUAL WIN LOGIC (5000 NEVER COMES) ====================
+        // ==================== AS PER YOUR RULE ====================
         const random = Math.random() * 100;
         let winAmount = 0;
         let prizeName = "0 PKR - LOSE";
@@ -331,22 +331,23 @@ app.post('/api/game/spinwheel', async (req, res) => {
         else {
             // Prize depends on bet amount
             if (betAmount == 50) {
-                const prizes = [50, 100, 200];
+                const prizes = [30, 40, 50, 60, 100];
                 winAmount = prizes[Math.floor(Math.random() * prizes.length)];
                 prizeName = `${winAmount} PKR`;
             }
             else if (betAmount == 100) {
-                const prizes = [50, 100, 200, 300];
+                const prizes = [30, 40, 50, 60, 100, 150, 200];
                 winAmount = prizes[Math.floor(Math.random() * prizes.length)];
                 prizeName = `${winAmount} PKR`;
             }
             else if (betAmount == 200) {
-                const prizes = [50, 100, 200, 500];
+                const prizes = [30, 40, 50, 60, 100, 150, 200, 300, 500];
                 winAmount = prizes[Math.floor(Math.random() * prizes.length)];
                 prizeName = `${winAmount} PKR`;
             }
             else if (betAmount == 500) {
-                const prizes = [50, 100, 200, 500, 1000];
+                // 1000 PKR SIRF 500 KI BET SE - EK BAR (RARE)
+                const prizes = [30, 40, 50, 60, 100, 150, 200, 300, 500, 1000];
                 winAmount = prizes[Math.floor(Math.random() * prizes.length)];
                 prizeName = `${winAmount} PKR`;
             }
@@ -355,6 +356,9 @@ app.post('/api/game/spinwheel', async (req, res) => {
                 prizeName = "0 PKR - LOSE";
             }
         }
+        
+        // ==================== IMPORTANT: 5000 KABHI NAHI AAYEGA ====================
+        // Yahan 5000 ka koi logic nahi hai. Sirf wheel par likha hai attraction ke liye.
         
         console.log(`🎡 Spin: Bet=${betAmount}, Result=${prizeName} (${winAmount} PKR), Random=${random.toFixed(2)}%`);
         

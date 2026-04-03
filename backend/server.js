@@ -336,24 +336,24 @@ app.post('/api/game/spinwheel', async (req, res) => {
 const random = Math.random() * 100;
 let selected = null;
 
-if (random < 30) {
+if (random < 60) {        // 60% - Lose
     selected = prizes.find(p => p.value === 0);
-} else if (random < 55) {
+} else if (random < 80) { // 20% - ₹50
     selected = prizes.find(p => p.value === 50);
-} else if (random < 75) {
+} else if (random < 90) { // 10% - ₹100
     selected = prizes.find(p => p.value === 100);
-} else if (random < 90) {
+} else if (random < 95) { // 5% - ₹200
     selected = prizes.find(p => p.value === 200);
-} else if (random < 95) {
+} else if (random < 98) { // 3% - ₹500
     selected = prizes.find(p => p.value === 500);
-} else if (random < 98) {
+} else if (random < 99.5) { // 1.5% - ₹1000
     selected = prizes.find(p => p.value === 1000);
-} else {
+} else {                 // 0.5% - ₹5000
     selected = prizes.find(p => p.value === 5000);
-}        
-        const isWin = selected.value > 0;
-        const winAmount = isWin ? selected.value : 0;
-        
+}
+
+const isWin = selected.value > 0;
+const winAmount = isWin ? selected.value : 0;        
         if (isWin) {
             await db.run('UPDATE users SET balance = balance + ? WHERE id = ?', [winAmount, userId]);
             await db.run('UPDATE users SET games_won = games_won + 1 WHERE id = ?', [userId]);

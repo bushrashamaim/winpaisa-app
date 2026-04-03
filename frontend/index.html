@@ -782,21 +782,30 @@
 
 <script>
     // WHEEL PRIZES
-    const WHEEL_PRIZES = [
-        { value: 0, color: "#3b82f6", label: "0 PKR" },
-        { value: 0, color: "#0ea5e9", label: "0 PKR" },
-        { value: 50, color: "#22c55e", label: "50 PKR" },
-        { value: 50, color: "#84cc16", label: "50 PKR" },
-        { value: 100, color: "#eab308", label: "100 PKR" },
-        { value: 100, color: "#f97316", label: "100 PKR" },
-        { value: 150, color: "#ef4444", label: "150 PKR" },
-        { value: 200, color: "#a855f7", label: "200 PKR 🎉" },
-        { value: 300, color: "#2dd4bf", label: "300 PKR" },
-        { value: 500, color: "#f59e0b", label: "500 PKR" },
-        { value: 1000, color: "#f59e0b", label: "1000 PKR" },
-        { value: 1500, color: "#f59e0b", label: "1500 PKR" },
-        { value: 5000, color: "#f59e0b", label: "5000 PKR" },
-    ];
+const WHEEL_PRIZES = [
+    // LOSE segments (70% of wheel - 9 segments)
+    { value: 0, color: "#3b82f6", label: "0 PKR" },
+    { value: 0, color: "#3b82f6", label: "0 PKR" },
+    { value: 0, color: "#3b82f6", label: "0 PKR" },
+    { value: 0, color: "#3b82f6", label: "0 PKR" },
+    { value: 0, color: "#3b82f6", label: "0 PKR" },
+    { value: 0, color: "#3b82f6", label: "0 PKR" },
+    { value: 0, color: "#3b82f6", label: "0 PKR" },
+    { value: 0, color: "#3b82f6", label: "0 PKR" },
+    { value: 0, color: "#3b82f6", label: "0 PKR" },
+    
+    // Small Win segments
+    { value: 50, color: "#22c55e", label: "50 PKR" },
+    { value: 50, color: "#22c55e", label: "50 PKR" },
+    { value: 100, color: "#22c55e", label: "100 PKR" },
+    { value: 200, color: "#22c55e", label: "200 PKR" },
+    { value: 300, color: "#22c55e", label: "300 PKR" },
+    { value: 500, color: "#22c55e", label: "500 PKR" },
+    { value: 1000, color: "#22c55e", label: "1000 PKR" },
+    
+    // ATTRACTION ONLY - Will never actually be awarded
+    { value: 5000, color: "#ef4444", label: "5000 PKR 🎉" }
+];
     const SEG_COUNT = WHEEL_PRIZES.length;
     const WHEEL_WIN_CHANCE = 0.40;
 

@@ -317,98 +317,46 @@ app.post('/api/game/spinwheel', async (req, res) => {
         
         await db.run('UPDATE users SET balance = balance - ? WHERE id = ?', [betAmount, userId]);
         
-        // ========== SIMPLE LOGIC - KOI PRIZE ARRAY NAHI ==========
+        // ==================== ACTUAL WIN LOGIC (5000 NEVER COMES) ====================
         const random = Math.random() * 100;
         let winAmount = 0;
-        let prizeName = "0 PKR";
+        let prizeName = "0 PKR - LOSE";
         
-        console.log(`User bet: ${betAmount}, Random: ${random}`); // Debug ke liye
-        
-        // ONLY 50 KI BET - SIRF 0,50,100,200
-        if (betAmount == 50) {
-            if (random < 85) {
-                winAmount = 0;
-                prizeName = "LOSE - 0 PKR";
-            } else if (random < 93) {
-                winAmount = 50;
-                prizeName = "50 PKR";
-            } else if (random < 98) {
-                winAmount = 100;
-                prizeName = "100 PKR";
-            } else {
-                winAmount = 200;
-                prizeName = "200 PKR";
-            }
-        }
-        // ONLY 100 KI BET - SIRF 0,50,100,200,300
-        else if (betAmount == 100) {
-            if (random < 85) {
-                winAmount = 0;
-                prizeName = "LOSE - 0 PKR";
-            } else if (random < 91) {
-                winAmount = 50;
-                prizeName = "50 PKR";
-            } else if (random < 95) {
-                winAmount = 100;
-                prizeName = "100 PKR";
-            } else if (random < 98) {
-                winAmount = 200;
-                prizeName = "200 PKR";
-            } else {
-                winAmount = 300;
-                prizeName = "300 PKR";
-            }
-        }
-        // ONLY 200 KI BET - SIRF 0,50,100,200,500
-        else if (betAmount == 200) {
-            if (random < 85) {
-                winAmount = 0;
-                prizeName = "LOSE - 0 PKR";
-            } else if (random < 90) {
-                winAmount = 50;
-                prizeName = "50 PKR";
-            } else if (random < 94) {
-                winAmount = 100;
-                prizeName = "100 PKR";
-            } else if (random < 97) {
-                winAmount = 200;
-                prizeName = "200 PKR";
-            } else {
-                winAmount = 500;
-                prizeName = "500 PKR";
-            }
-        }
-        // ONLY 500 KI BET - SIRF 0,50,100,200,500,1000,1500
-        else if (betAmount == 500) {
-            if (random < 85) {
-                winAmount = 0;
-                prizeName = "LOSE - 0 PKR";
-            } else if (random < 90) {
-                winAmount = 50;
-                prizeName = "50 PKR";
-            } else if (random < 93) {
-                winAmount = 100;
-                prizeName = "100 PKR";
-            } else if (random < 96) {
-                winAmount = 200;
-                prizeName = "200 PKR";
-            } else if (random < 98) {
-                winAmount = 500;
-                prizeName = "500 PKR";
-            } else if (random < 99) {
-                winAmount = 1000;
-                prizeName = "1000 PKR";
-            } else {
-                winAmount = 1500;
-                prizeName = "1500 PKR";
-            }
-        }
-        else {
+        // 70% LOSE CHANCE
+        if (random < 70) {
             winAmount = 0;
-            prizeName = "0 PKR";
+            prizeName = "0 PKR - LOSE";
+        }
+        // 30% WIN CHANCE
+        else {
+            // Prize depends on bet amount
+            if (betAmount == 50) {
+                const prizes = [50, 100, 200];
+                winAmount = prizes[Math.floor(Math.random() * prizes.length)];
+                prizeName = `${winAmount} PKR`;
+            }
+            else if (betAmount == 100) {
+                const prizes = [50, 100, 200, 300];
+                winAmount = prizes[Math.floor(Math.random() * prizes.length)];
+                prizeName = `${winAmount} PKR`;
+            }
+            else if (betAmount == 200) {
+                const prizes = [50, 100, 200, 500];
+                winAmount = prizes[Math.floor(Math.random() * prizes.length)];
+                prizeName = `${winAmount} PKR`;
+            }
+            else if (betAmount == 500) {
+                const prizes = [50, 100, 200, 500, 1000];
+                winAmount = prizes[Math.floor(Math.random() * prizes.length)];
+                prizeName = `${winAmount} PKR`;
+            }
+            else {
+                winAmount = 0;
+                prizeName = "0 PKR - LOSE";
+            }
         }
         
-        console.log(`Result: ${prizeName} - ${winAmount} PKR`); // Debug ke liye
+        console.log(`🎡 Spin: Bet=${betAmount}, Result=${prizeName} (${winAmount} PKR), Random=${random.toFixed(2)}%`);
         
         const isWin = winAmount > 0;
         

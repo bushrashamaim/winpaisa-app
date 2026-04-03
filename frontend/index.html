@@ -945,6 +945,7 @@ function spinWheel() {
     
     spinning = true;
     
+    // Deduct bet immediately
     balance -= wheelBet;
     updateBalanceUI(); 
     saveUser();
@@ -955,25 +956,45 @@ function spinWheel() {
     const SEG_COUNT = WHEEL_PRIZES.length;
     const angleStepDeg = 360 / SEG_COUNT;
     
-    const fullSpins = 360 * (8 + Math.floor(Math.random() * 5));
+    // ==================== FIX: Calculate random rotation ====================
+    const fullSpins = 360 * (10 + Math.floor(Math.random() * 5));
     const randomOffset = Math.random() * 360;
     const finalRotate = fullSpins + randomOffset;
     
+    // Apply animation
     wheelCanvas.style.transition = "transform 4s cubic-bezier(0.2, 0.96, 0.15, 1.02)";
     wheelCanvas.style.transform = `rotate(${finalRotate}deg)`;
     
+    // ==================== FIX: Calculate exact landing position ====================
     setTimeout(() => {
-        let currentRotation = finalRotate % 360;
-        if (currentRotation < 0) currentRotation += 360;
+        // Get the transform matrix and extract rotation
+        const style = window.getComputedStyle(wheelCanvas);
+        const transform = style.transform;
         
-        const pointerAngle = 90;
-        let angleAtPointer = (pointerAngle - currentRotation + 360) % 360;
+        let currentRotation = finalRotate % 360;
+        
+        // Alternative: Calculate based on finalRotate
+        // The wheel stopped at finalRotate degrees
+        // But CSS rotation is modulo 360
+        let rotationAngle = finalRotate % 360;
+        if (rotationAngle < 0) rotationAngle += 360;
+        
+        // Pointer is at TOP (270 degrees in standard math, but CSS uses different)
+        // In CSS, 0deg = right, 90deg = bottom, 180deg = left, 270deg = top
+        const pointerAngle = 270; // Top position in CSS degrees
+        
+        // Calculate which segment is at pointer
+        let angleAtPointer = (pointerAngle - rotationAngle + 360) % 360;
         let segmentIndex = Math.floor(angleAtPointer / angleStepDeg);
         segmentIndex = Math.min(segmentIndex, SEG_COUNT - 1);
         
         const landedPrize = WHEEL_PRIZES[segmentIndex];
         const isWin = landedPrize.value > 0;
         const winAmount = landedPrize.value;
+        
+        // Debug log
+        console.log(`🎡 Rotation: ${rotationAngle}° | Pointer: ${pointerAngle}° | Angle at pointer: ${angleAtPointer}°`);
+        console.log(`🎡 Segment ${segmentIndex}: ${landedPrize.label} (${landedPrize.value} PKR)`);
         
         if(isWin && winAmount > 0) { 
             balance += winAmount;
@@ -998,13 +1019,12 @@ function spinWheel() {
         
         setTimeout(() => { 
             wheelCanvas.style.transition = "none"; 
-            wheelCanvas.style.transform = `rotate(${currentRotation}deg)`; 
+            wheelCanvas.style.transform = `rotate(${rotationAngle}deg)`; 
             setTimeout(() => wheelCanvas.style.transition = "", 50); 
         }, 100);
         
     }, 4100);
 }
-
 // ==================== RESULT MODAL FUNCTION ====================
 function showResultModal(game, result, isWin, winAmount) {
     const modal = document.getElementById('resultModal');
